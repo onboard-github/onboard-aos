@@ -7,6 +7,9 @@ on:
             - 'main'
             - 'develop'
 
+permissions:
+    pull-requests: write # for comments
+
 jobs:
     build:
 
