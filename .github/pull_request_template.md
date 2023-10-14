@@ -1,11 +1,20 @@
 ## Changes
+-
+
+<br/>
 
 ## 기타 참고 사항
+-
+
+<br/>
 
 ## Reference
 - [Jira Ticket](https://onboardgame.atlassian.net/browse/ONB-)
 
+<br/>
+
 ## 스크린샷/영상
+> 스크린샷, 영상이 없다면 ##스크린샷/영상부터 </table> 까지 모두 지워주세요.
 
 <table>
 <tr>
@@ -21,8 +30,9 @@
 
 </td>
 </tr>
-
 </table>
+
+<br/>
 
 <details>
 <summary> <b> :page_facing_up: 리뷰 시 참고 사항 </b>  </summary>
