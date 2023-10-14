@@ -86,6 +86,7 @@ jobs:
 
             # ktlint test
             -   name: Run ktlint
+                id: ktlintCheck
                 run: ./gradlew ktlintCheck
 
             -   name: Upload build reports
@@ -101,3 +102,19 @@ jobs:
                 with:
                     name: outputs
                     path: app/build/outputs/
+
+            -   name: Comment when Lint was Failed
+                uses: peter-evans/create-or-update-comment@v2
+                if: failure() && steps.ktlintCheck.outcome == 'failure'
+                with:
+                    issue-number: ${{ github.event.pull_request.number }}
+                    body: |
+                        :x: ktlint Failed
+
+            -   name: Comment When All Step Was Passed
+                uses: peter-evans/create-or-update-comment@v2
+                if: success()
+                with:
+                    issue-number: ${{ github.event.pull_request.number }}
+                    body: |
+                        :celebration: CI Passed
