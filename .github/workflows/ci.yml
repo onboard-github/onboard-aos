@@ -61,6 +61,12 @@ jobs:
                     GOOGLE_LOGIN_API_KEY: ${{ secrets.GOOGLE_LOGIN_API_KEY }}
                     GOOGLE_LOGIN_API_KEY_SANDBOX: ${{ secrets.GOOGLE_LOGIN_API_KEY_SANDBOX }}
 
+            # google services json 생성
+            -   name: Write compile time google-services.json file
+                env:
+                    GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+                run: echo $GOOGLE_SERVICES > app/google-services.json
+
             # gradle 캐싱 작업
             -   name: Cache Gradle packages
                 uses: actions/cache@v2
