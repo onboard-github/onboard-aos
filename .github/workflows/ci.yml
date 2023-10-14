@@ -112,7 +112,7 @@ jobs:
                 with:
                     issue-number: ${{ github.event.pull_request.number }}
                     body: |
-                        :x: ktlint Failed
+                        ❌ ktlint Failed
 
             -   name: Comment When All Step Was Passed
                 uses: peter-evans/create-or-update-comment@v2
@@ -120,4 +120,4 @@ jobs:
                 with:
                     issue-number: ${{ github.event.pull_request.number }}
                     body: |
-                        :celebration: CI Passed
+                        🎉 CI Passed
