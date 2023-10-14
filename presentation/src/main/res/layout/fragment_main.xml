@@ -85,7 +85,7 @@
             android:text="카카오로 로그인"
             android:textAppearance="@style/Typography.Body3_M"
             android:textColor="@color/Gray_14"
-            app:layout_constraintBottom_toTopOf="@+id/btn_naver"
+            app:layout_constraintBottom_toTopOf="@+id/btn_google"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -99,41 +99,18 @@
             app:layout_constraintTop_toTopOf="@+id/btn_kakao" />
 
         <TextView
-            android:id="@+id/btn_naver"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginBottom="6dp"
-            android:background="@drawable/bg_green_8dp"
-            android:gravity="center"
-            android:text="네이버로 로그인"
-            android:textAppearance="@style/Typography.Body3_M"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btn_google"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_logonaver"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_naver"
-            app:layout_constraintStart_toStartOf="@+id/btn_naver"
-            app:layout_constraintTop_toTopOf="@+id/btn_naver" />
-
-        <TextView
             android:id="@+id/btn_google"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginHorizontal="18dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="6dp"
             android:background="@drawable/bg_white_radius_gary_5_8dp"
             android:gravity="center"
             android:text="Google로 로그인"
             android:textAppearance="@style/Typography.Body3_M"
             android:textColor="@color/Gray_9"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_apple"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
@@ -144,6 +121,30 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_google"
             app:layout_constraintStart_toStartOf="@+id/btn_google"
             app:layout_constraintTop_toTopOf="@+id/btn_google" />
+
+        <TextView
+            android:id="@+id/btn_apple"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_white_radius_gary_5_8dp"
+            android:backgroundTint="@color/Gray_15"
+            android:gravity="center"
+            android:text="Apple ID로 로그인"
+            android:textAppearance="@style/Typography.Body3_M"
+            android:textColor="@color/Gray_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_logo_apple"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_apple"
+            app:layout_constraintStart_toStartOf="@+id/btn_apple"
+            app:layout_constraintTop_toTopOf="@+id/btn_apple" />
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/pb_loading"
