@@ -24,8 +24,8 @@ class MemberSelectViewModel @Inject constructor(
     private val getMyInfoUseCase: GetMyInfoUseCase,
 ) : ViewModel() {
 
-    private val _members = MutableLiveData(listOf<MemberInfo>())
-    val members: LiveData<List<MemberInfo>> = _members
+    private val _members = MutableLiveData<List<MemberInfo>?>(null)
+    val members: LiveData<List<MemberInfo>?> = _members
 
     private val _players = MutableLiveData(listOf<MemberInfo>())
     val players: LiveData<List<MemberInfo>> = _players

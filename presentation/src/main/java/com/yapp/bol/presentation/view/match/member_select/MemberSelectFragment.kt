@@ -138,6 +138,7 @@ class MemberSelectFragment : BaseFragment<FragmentMemberSelectBinding>(R.layout.
 
     private fun setViewModelObserve() = with(memberSelectViewModel) {
         members.observe(viewLifecycleOwner) { members ->
+            if(members == null) return@observe
             val isVisible = members.isEmpty()
             setSearchResultNothing(isVisible, getInputTextValue())
             membersAdapter.submitList(members)
