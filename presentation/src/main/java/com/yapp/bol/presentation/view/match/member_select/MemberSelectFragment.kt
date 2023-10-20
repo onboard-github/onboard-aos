@@ -65,7 +65,7 @@ class MemberSelectFragment : BaseFragment<FragmentMemberSelectBinding>(R.layout.
             getValidateNickName = { nickname ->
                 memberSelectViewModel.getValidateNickName(
                     matchViewModel.groupId,
-                    nickname
+                    nickname,
                 )
             },
         )
@@ -138,7 +138,7 @@ class MemberSelectFragment : BaseFragment<FragmentMemberSelectBinding>(R.layout.
 
     private fun setViewModelObserve() = with(memberSelectViewModel) {
         members.observe(viewLifecycleOwner) { members ->
-            if(members == null) return@observe
+            if (members == null) return@observe
             val isVisible = members.isEmpty()
             setSearchResultNothing(isVisible, getInputTextValue())
             membersAdapter.submitList(members)
@@ -207,7 +207,7 @@ class MemberSelectFragment : BaseFragment<FragmentMemberSelectBinding>(R.layout.
             }
             findNavController().navigate(
                 R.id.action_memberSelectFragment_to_gameResultFragment,
-                bundle
+                bundle,
             )
         }
     }
