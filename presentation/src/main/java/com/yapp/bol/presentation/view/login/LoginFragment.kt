@@ -122,9 +122,9 @@ class LoginFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) 
             requireActivity().finish()
         }
 
-        binding.btnNaver.setOnClickListener {
+        binding.btnApple.setOnClickListener {
             // Intent(requireActivity(), NaverTestActivity::class.java).also { startActivity(it) }
-            requireContext().showToast("지금 준비중입니다.")
+            requireContext().showToast("준비중입니다.")
         }
     }
 
