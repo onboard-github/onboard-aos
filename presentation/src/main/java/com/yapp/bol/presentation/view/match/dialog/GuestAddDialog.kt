@@ -81,7 +81,6 @@ class GuestAddDialog(
     }
 
     private fun setGuestAddDescription() {
-
         val description = context.resources.getString(R.string.guest_description_text)
         val spannableString = SpannableString(description)
 
@@ -97,22 +96,25 @@ class GuestAddDialog(
             firstColorSpan,
             firstStartIndex,
             firstEndIndex,
-            SpannableString.SPAN_INCLUSIVE_INCLUSIVE
+            SpannableString.SPAN_INCLUSIVE_INCLUSIVE,
         )
         spannableString.setSpan(
             secondColorSpan,
             secondStartIndex,
             secondEndIndex,
-            SpannableString.SPAN_INCLUSIVE_INCLUSIVE
+            SpannableString.SPAN_INCLUSIVE_INCLUSIVE,
         )
 
         binding.tvDescription.text = spannableString
     }
 
-    override fun setNicknameValid(value: Boolean) {
+    override fun setNicknameValid(value: Boolean, reason: String?) {
         binding.btnGuestAdd.isEnabled = value
-        if (binding.etGuestName.text.isNotEmpty()) binding.tvDuplicationGuide.isVisible = value.not()
-        else binding.tvDuplicationGuide.isVisible = false
+        if (binding.etGuestName.text.isNotEmpty() && reason == "DUPLICATED_NICKNAME") {
+            binding.tvDuplicationGuide.isVisible = value.not()
+        } else {
+            binding.tvDuplicationGuide.isVisible = false
+        }
     }
 
     companion object {
