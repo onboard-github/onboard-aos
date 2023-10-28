@@ -12,8 +12,11 @@ class GameDataSourceImpl @Inject constructor(
     private val gameApi: GameApi,
 ) : BaseRepository(), GameDataSource {
 
-    override fun getGameList(groupId: Int): Flow<ApiResult<GameApiResponse>> = flow {
-        val result = safeApiCall { gameApi.getGameList(groupId) }
+    override fun getGameList(
+        groupId: Int,
+        sort: String,
+    ): Flow<ApiResult<GameApiResponse>> = flow {
+        val result = safeApiCall { gameApi.getGameList(groupId, sort) }
         emit(result)
     }
 }

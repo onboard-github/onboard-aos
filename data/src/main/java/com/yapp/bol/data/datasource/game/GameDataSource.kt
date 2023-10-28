@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameDataSource {
 
-    fun getGameList(groupId: Int): Flow<ApiResult<GameApiResponse>>
+    fun getGameList(groupId: Int, sort: String): Flow<ApiResult<GameApiResponse>>
 }
