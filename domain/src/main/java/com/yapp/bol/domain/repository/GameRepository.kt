@@ -6,5 +6,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface GameRepository {
 
-    fun getGameList(groupId: Int): Flow<ApiResult<List<GameItem>>>
+    fun getGameList(groupId: Int, sort: GameSortType = GameSortType.FIXED): Flow<ApiResult<List<GameItem>>>
+}
+
+enum class GameSortType(val value: String) {
+    MATCH_COUNT("MATCH_COUNT"),
+    FIXED("FIXED"),
 }

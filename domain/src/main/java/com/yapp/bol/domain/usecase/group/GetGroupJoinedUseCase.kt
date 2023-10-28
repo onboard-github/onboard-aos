@@ -4,6 +4,7 @@ import com.yapp.bol.domain.model.GameItem
 import com.yapp.bol.domain.model.GetGroupJoinedItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.repository.GameRepository
+import com.yapp.bol.domain.repository.GameSortType
 import com.yapp.bol.domain.repository.GroupRepository
 import com.yapp.bol.domain.repository.UserRepository
 import com.yapp.bol.domain.utils.doWork
@@ -34,11 +35,11 @@ class GetGroupJoinedUseCase @Inject constructor(
         userRepository.getJoinedGroup().doWork(
             isSuccess = { hasJoinedGroup = hasJoinedGroup(it.map { it.id.toInt() }, groupId) },
         )
-        gameRepository.getGameList(groupId).doWork(
+        gameRepository.getGameList(groupId, GameSortType.MATCH_COUNT).doWork(
             isSuccess = { groupGameList = it },
         )
 
-        gameRepository.getGameList(groupId).doWork(
+        gameRepository.getGameList(groupId, GameSortType.MATCH_COUNT).doWork(
             isSuccess = { groupGameList = it },
         )
 
