@@ -9,4 +9,3 @@ interface GameRepository {
 
     fun getGameList(groupId: Int, sort: GameSortType = GameSortType.FIXED): Flow<ApiResult<List<GameItem>>>
 }
-
