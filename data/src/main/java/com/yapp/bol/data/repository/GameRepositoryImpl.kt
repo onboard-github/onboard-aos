@@ -4,8 +4,8 @@ import com.yapp.bol.data.datasource.game.GameDataSource
 import com.yapp.bol.data.mapper.GameMapper.gameToDomain
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.GameItem
+import com.yapp.bol.domain.model.GameSortType
 import com.yapp.bol.domain.repository.GameRepository
-import com.yapp.bol.domain.repository.GameSortType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
