@@ -6,7 +6,7 @@ data class GroupDetailItem(
     val description: String,
     val organization: String,
     val profileImageUrl: String,
-    val accessCode: String,
+    val accessCode: String?,
     val memberCount: Int,
     val owner: OwnerItem,
 ) {
