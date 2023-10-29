@@ -313,8 +313,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setHelpButton() {
         binding.btnHelp.setOnClickListener {
-            val url = binding.root.resources.getString(R.string.home_help_url)
-            Intent(Intent.ACTION_VIEW, Uri.parse(url)).also { startActivity(it) }
+            val email = Intent(Intent.ACTION_SEND)
+            val string = binding.root.resources.getString(R.string.help_email_content)
+            val onboardMail = binding.root.resources.getString(R.string.onboard_mail)
+            val content = String.format(string, viewModel.myId, viewModel.nickName, viewModel.groupId)
+            email.apply {
+                type = "plain/text"
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(onboardMail))
+                putExtra(Intent.EXTRA_SUBJECT, "온보드 문의")
+                putExtra(Intent.EXTRA_TEXT, content)
+            }.also { startActivity(it) }
         }
     }
 
