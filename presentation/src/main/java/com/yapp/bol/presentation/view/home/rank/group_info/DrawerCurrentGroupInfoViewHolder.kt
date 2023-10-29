@@ -30,8 +30,10 @@ class DrawerCurrentGroupInfoViewHolder(
     }
 
     private fun ItemGroupInfoDetailBinding.setOnClickListener(groupDetailItem: GroupDetailItem) {
-        btnCopy.setOnClickListener { onClick(groupDetailItem.accessCode) }
-        tvCode.setOnClickListener { onClick(groupDetailItem.accessCode) }
+        groupDetailItem.accessCode?.let { code ->
+            btnCopy.setOnClickListener { onClick(code) }
+            tvCode.setOnClickListener { onClick(code) }
+        }
     }
 
     companion object {

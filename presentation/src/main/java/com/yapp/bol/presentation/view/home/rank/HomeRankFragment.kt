@@ -179,10 +179,15 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                 viewHeader.tvGroupName.text = item.name
                 tvGroupName.text = item.name
                 viewRankNotFound.tvCode.text = item.accessCode
-                viewRankNotFound.btnCodeCopy.setOnClickListener {
-                    item.accessCode.copyToClipboard(root.context)
-                    showToastForAndroid13Below()
-                }
+
+                item.accessCode?.let { code ->
+                    viewRankNotFound.btnCodeCopy.visibility = View.VISIBLE
+                    viewRankNotFound.btnCodeCopy.setOnClickListener {
+                        code.copyToClipboard(root.context)
+                        showToastForAndroid13Below()
+                    }
+                } ?: kotlin.run { viewRankNotFound.btnCodeCopy.visibility = View.INVISIBLE }
+
             }
         }
     }
