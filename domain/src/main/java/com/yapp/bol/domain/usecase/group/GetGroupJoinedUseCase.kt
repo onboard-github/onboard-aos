@@ -35,9 +35,6 @@ class GetGroupJoinedUseCase @Inject constructor(
         userRepository.getJoinedGroup().doWork(
             isSuccess = { hasJoinedGroup = hasJoinedGroup(it.map { it.id.toInt() }, groupId) },
         )
-        gameRepository.getGameList(groupId, GameSortType.MATCH_COUNT).doWork(
-            isSuccess = { groupGameList = it },
-        )
 
         gameRepository.getGameList(groupId, GameSortType.MATCH_COUNT).doWork(
             isSuccess = { groupGameList = it },
