@@ -25,8 +25,11 @@ class GroupListViewHolder(
             "${groupItem.memberCount}명".also { tvGroupSize.text = it }
             ivGroupImage.setImageWithGlide(groupItem.profileImageUrl)
 
-            if (groupItem.organization.isEmpty()) { viewSeparator.visibility = View.GONE }
-            else { viewSeparator.visibility = View.VISIBLE }
+            if (groupItem.organization.isEmpty()) {
+                viewSeparator.visibility = View.GONE
+            } else {
+                viewSeparator.visibility = View.VISIBLE
+            }
 
             binding.root.setOnClickListener {
                 showJoinGroupDialog(groupItem)
