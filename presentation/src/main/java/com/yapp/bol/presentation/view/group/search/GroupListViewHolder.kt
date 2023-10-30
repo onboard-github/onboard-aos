@@ -1,6 +1,7 @@
 package com.yapp.bol.presentation.view.group.search
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,12 @@ class GroupListViewHolder(
             tvGroupOrganization.text = groupItem.organization
             "${groupItem.memberCount}명".also { tvGroupSize.text = it }
             ivGroupImage.setImageWithGlide(groupItem.profileImageUrl)
+
+            if (groupItem.organization.isEmpty()) {
+                viewSeparator.visibility = View.GONE
+            } else {
+                viewSeparator.visibility = View.VISIBLE
+            }
 
             binding.root.setOnClickListener {
                 showJoinGroupDialog(groupItem)
