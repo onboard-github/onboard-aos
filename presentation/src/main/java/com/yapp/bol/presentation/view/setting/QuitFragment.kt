@@ -1,12 +1,12 @@
 package com.yapp.bol.presentation.view.setting
 
-import android.content.Intent
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentQuitBinding
 import com.yapp.bol.presentation.utils.collectWithLifecycle
+import com.yapp.bol.presentation.utils.sendMailToHelpAddress
 import com.yapp.bol.presentation.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,16 +27,9 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
         }
 
         binding.btnQuit.setOnClickListener {
-            val email = Intent(Intent.ACTION_SEND)
-            val onboardMail = binding.root.resources.getString(R.string.onboard_mail)
             val string = binding.root.resources.getString(R.string.quit_email_content)
             val content = String.format(string, viewModel.getId(), viewModel.getNickName())
-            email.apply {
-                type = "plain/text"
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(onboardMail))
-                putExtra(Intent.EXTRA_SUBJECT, "온보드 회원 탈퇴 신청")
-                putExtra(Intent.EXTRA_TEXT, content)
-            }.also { startActivity(it) }
+            binding.root.context.sendMailToHelpAddress("온보드 회원 탈퇴 신청", content)
         }
     }
 

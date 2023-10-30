@@ -19,6 +19,7 @@ import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
+import com.yapp.bol.presentation.utils.sendMailToHelpAddress
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.home.HomeUiState
@@ -312,16 +313,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setHelpButton() {
         binding.btnHelp.setOnClickListener {
-            val email = Intent(Intent.ACTION_SEND)
             val string = binding.root.resources.getString(R.string.help_email_content)
-            val onboardMail = binding.root.resources.getString(R.string.onboard_mail)
             val content = String.format(string, viewModel.myId, viewModel.nickName, viewModel.groupId)
-            email.apply {
-                type = "plain/text"
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(onboardMail))
-                putExtra(Intent.EXTRA_SUBJECT, "온보드 문의")
-                putExtra(Intent.EXTRA_TEXT, content)
-            }.also { startActivity(it) }
+            it.context.sendMailToHelpAddress("온보드 문의", content)
         }
     }
 
