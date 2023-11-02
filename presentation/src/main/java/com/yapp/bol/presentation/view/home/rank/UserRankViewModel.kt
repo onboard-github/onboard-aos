@@ -50,6 +50,7 @@ class UserRankViewModel @Inject constructor(
     var groupId: Long = GAME_USER_ID_TO_BE_SET
     var gameId: Long = GAME_USER_ID_TO_BE_SET
     var myId: Long = GAME_USER_ID_TO_BE_SET
+    var nickName: String = ""
 
     fun setGameItemSelected(newPosition: Int) {
         val gameUiList: MutableList<HomeGameItemUiModel> =
@@ -139,7 +140,10 @@ class UserRankViewModel @Inject constructor(
                 .combine(myInfoFlow) { _, info ->
                     checkedApiResult(
                         apiResult = info,
-                        success = { data -> myId = data.id.toLong() },
+                        success = { data ->
+                            myId = data.id.toLong()
+                            nickName = data.nickname
+                        },
                         error = { throwable -> throw Exception(throwable.code) }
                     )
                 }
