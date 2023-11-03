@@ -4,6 +4,7 @@ import com.yapp.bol.data.datasource.game.GameDataSource
 import com.yapp.bol.data.mapper.GameMapper.gameToDomain
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.GameItem
+import com.yapp.bol.domain.model.GameSortType
 import com.yapp.bol.domain.repository.GameRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,8 +14,8 @@ class GameRepositoryImpl @Inject constructor(
     private val gameDataSource: GameDataSource,
 ) : GameRepository {
 
-    override fun getGameList(groupId: Int): Flow<ApiResult<List<GameItem>>> {
-        return gameDataSource.getGameList(groupId).map {
+    override fun getGameList(groupId: Int, sort: GameSortType): Flow<ApiResult<List<GameItem>>> {
+        return gameDataSource.getGameList(groupId, sort.value).map {
             it.gameToDomain()
         }
     }

@@ -6,6 +6,7 @@ import android.os.Build
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -175,12 +176,14 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
         binding.apply {
-            currentGroupInfo.groupDetailItem.let { item ->
-                viewHeader.tvGroupName.text = item.name
-                tvGroupName.text = item.name
-                viewRankNotFound.tvCode.text = item.accessCode
+            val item = currentGroupInfo.groupDetailItem
+            viewHeader.tvGroupName.text = item.name
+            tvGroupName.text = item.name
+            viewRankNotFound.tvCode.text = item.accessCode
+            viewRankNotFound.btnCodeCopy.isVisible = item.accessCode != null
+            item.accessCode?.let { code ->
                 viewRankNotFound.btnCodeCopy.setOnClickListener {
-                    item.accessCode.copyToClipboard(root.context)
+                    code.copyToClipboard(root.context)
                     showToastForAndroid13Below()
                 }
             }
