@@ -84,6 +84,11 @@ class LoginFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) 
                 return@observe
             }
 
+            if (it.onBoarding.isEmpty()) {
+                moveGroupSearch()
+                return@observe
+            }
+
             when (it.onBoarding.first()) { // TODO : 현재 배열로 되어있어서 첫번째 부분 확인, 추후 서버분들에게 시작 포인트 내려달라고 요청 예정
                 ONBOARD_TERMS -> loginViewModel.getTerms()
                 UPDATE_TERMS -> {
