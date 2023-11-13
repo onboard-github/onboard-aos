@@ -51,7 +51,7 @@ class NewGroupViewModel @Inject constructor(
     fun createNewGroup(nickName: String) {
         viewModelScope.launch {
             val imageUrl = withContext(Dispatchers.IO) {
-                if(imageFile == null) {
+                if (imageFile == null) {
                     groupRandomImage.value
                 } else {
                     postFileUpload(imageFile)
