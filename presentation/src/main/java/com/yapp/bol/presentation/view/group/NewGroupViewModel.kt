@@ -14,16 +14,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.net.URL
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 @HiltViewModel
 class NewGroupViewModel @Inject constructor(
-    private val newGroupUseCase: NewGroupUseCase
+    private val newGroupUseCase: NewGroupUseCase,
 ) : ViewModel() {
 
     private val _groupName = MutableLiveData(EMPTY_STRING)
@@ -41,7 +38,7 @@ class NewGroupViewModel @Inject constructor(
     var userName = ""
 
     private var groupOrganization = EMPTY_STRING
-    private var imageFile = File(EMPTY_STRING)
+    private var imageFile: File? = null
 
     val isCompleteButtonActivation
         get() = isInputTextValid(groupName.value) && isInputTextValid(groupDescription.value)
@@ -53,19 +50,27 @@ class NewGroupViewModel @Inject constructor(
 
     fun createNewGroup(nickName: String) {
         viewModelScope.launch {
-            val imageUrl = withContext(Dispatchers.IO) { postFileUpload() }
-            postCreateGroup(nickName, imageUrl)
+            val imageUrl = withContext(Dispatchers.IO) {
+                if (imageFile == null) {
+                    groupRandomImage.value
+                } else {
+                    postFileUpload(imageFile)
+                }
+            }
+            postCreateGroup(nickName, imageUrl ?: throw NullPointerException("잘못된 이미지 경로 입니다."))
         }
     }
 
-    private suspend fun postFileUpload(): String {
+    private suspend fun postFileUpload(file: File?): String? {
         var imageUrl = EMPTY_STRING
-        newGroupUseCase.postFileUpload(imageFile).collectLatest {
+
+        newGroupUseCase.postFileUpload(file ?: return null).collectLatest {
             checkedApiResult(
                 apiResult = it,
                 success = { data -> imageUrl = data },
             )
         }
+
         return imageUrl
     }
 
@@ -91,7 +96,6 @@ class NewGroupViewModel @Inject constructor(
                     apiResult = it,
                     success = { data ->
                         _groupRandomImage.value = data
-                        convertUrlToFile(data)
                     },
                 )
             }
@@ -116,31 +120,6 @@ class NewGroupViewModel @Inject constructor(
 
     fun updateImageFile(file: File) {
         imageFile = file
-    }
-
-    private fun convertUrlToFile(imageUrl: String) {
-        viewModelScope.launch {
-            val file = withContext(Dispatchers.IO) {
-                val url = URL(imageUrl)
-                val connection = url.openConnection()
-                connection.connect()
-                val inputStream: InputStream = BufferedInputStream(url.openStream())
-
-                val imageFile = File.createTempFile("image", ".jpg")
-                val outputStream = FileOutputStream(imageFile)
-
-                val buffer = ByteArray(1024)
-                var bytesRead: Int
-                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                    outputStream.write(buffer, 0, bytesRead)
-                }
-                outputStream.close()
-                inputStream.close()
-
-                imageFile
-            }
-            updateImageFile(file)
-        }
     }
 
     companion object {
