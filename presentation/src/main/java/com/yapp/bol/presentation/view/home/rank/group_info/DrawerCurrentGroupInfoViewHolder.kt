@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.databinding.ItemGroupInfoDetailBinding
-import com.yapp.bol.presentation.utils.loadImage
+import com.yapp.bol.presentation.utils.loadRoundImage
 
 class DrawerCurrentGroupInfoViewHolder(
     private val binding: ItemGroupInfoDetailBinding,
@@ -21,7 +21,7 @@ class DrawerCurrentGroupInfoViewHolder(
     }
 
     private fun ItemGroupInfoDetailBinding.bindData(groupDetailItem: GroupDetailItem) {
-        ivGroup.loadImage(groupDetailItem.profileImageUrl, 8)
+        ivGroup.loadRoundImage(groupDetailItem.profileImageUrl, 8)
         tvGroupDescription.text = groupDetailItem.description
         tvGroupOrganization.text = groupDetailItem.organization
         tvMemberCount.text = groupDetailItem.memberCount.toString()
@@ -30,8 +30,10 @@ class DrawerCurrentGroupInfoViewHolder(
     }
 
     private fun ItemGroupInfoDetailBinding.setOnClickListener(groupDetailItem: GroupDetailItem) {
-        btnCopy.setOnClickListener { onClick(groupDetailItem.accessCode) }
-        tvCode.setOnClickListener { onClick(groupDetailItem.accessCode) }
+        groupDetailItem.accessCode?.let { code ->
+            btnCopy.setOnClickListener { onClick(code) }
+            tvCode.setOnClickListener { onClick(code) }
+        }
     }
 
     companion object {

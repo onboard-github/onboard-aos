@@ -16,6 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat.getColor
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
@@ -37,6 +38,7 @@ class InputDialog(
     }
 
     private var onLimitExceeded: ((String, InputDialog) -> Unit)? = null
+    private var onTyping: ((String, InputDialog) -> Unit)? = null
     private var onBackPressed: ((InputDialog) -> Unit)? = null
     private var onLimit: Int = 0
 
@@ -75,7 +77,10 @@ class InputDialog(
         binding.etInput.filters = arrayOf(InputFilter.LengthFilter(onLimit))
 
         binding.etInput.doAfterTextChanged { text ->
+            onTyping?.invoke(text.toString(), this)
+
             binding.tvInputCount.text = "${text?.length ?: 0}/$onLimit"
+
             binding.tvSummit.isEnabled = !text.isNullOrEmpty()
             binding.tvSummit.setTextColor(
                 if (text.isNullOrEmpty()) {
@@ -84,6 +89,15 @@ class InputDialog(
                     getColor(context, R.color.Gray_1)
                 },
             )
+
+            binding.etInput.setTextAppearance(
+                if (text.isNullOrEmpty()) {
+                    R.style.BOL_Group_Join_Input_Hint
+                } else {
+                    R.style.BOL_Group_Join_Input_Title
+                },
+            )
+
             binding.tvErrorMessage.visibility = View.INVISIBLE
 
             if ((text?.count()) == onLimit) {
@@ -94,6 +108,7 @@ class InputDialog(
             } else {
                 binding.tvInputCount.setTextColor(context.getColor(R.color.Gray_8))
             }
+
             if (text?.matches(Regex(NICKNAME_REGEX)) != true) {
                 binding.tvErrorMessage.visibility = View.VISIBLE
                 binding.tvErrorMessage.text = "한글, 영문, 숫자를 조합하여 사용 가능합니다."
@@ -106,6 +121,11 @@ class InputDialog(
         binding.tvSummit.setOnClickListener {
             onSummit(binding.etInput.text.toString(), this)
         }
+        return this
+    }
+
+    fun setOnTyping(onTyping: (String, InputDialog) -> Unit): InputDialog {
+        this.onTyping = onTyping
         return this
     }
 
@@ -125,8 +145,8 @@ class InputDialog(
         return this
     }
 
-    fun setHintText(hint: CharSequence): InputDialog {
-        binding.etInput.hint = hint
+    fun setHintText(@StringRes hintId: Int): InputDialog {
+        binding.etInput.setHint(hintId)
         return this
     }
 
@@ -140,18 +160,13 @@ class InputDialog(
         return this
     }
 
-    fun setTitle(@StringRes title: Int?): InputDialog {
-        binding.tvTitle.text = context.getString(title ?: return this)
+    fun visibleGuestMember(visible: Boolean): InputDialog {
+        binding.llGuestMember.isVisible = visible
         return this
     }
 
-    fun setMessage(message: CharSequence): InputDialog {
-        binding.tvMessage.text = message
-        return this
-    }
-
-    fun setMessage(@StringRes message: Int): InputDialog {
-        binding.tvMessage.text = context.getString(message)
+    fun setMessage(@StringRes messageId: Int): InputDialog {
+        binding.tvMessage.text = context.getString(messageId)
         return this
     }
 
@@ -194,9 +209,13 @@ class InputDialog(
         return this
     }
 
+    fun setGuestOnClicked(click: () -> Unit): InputDialog {
+        binding.llGuestMember.setOnClickListener { click() }
+        return this
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
-
         onBackPressed?.invoke(this)
     }
 }

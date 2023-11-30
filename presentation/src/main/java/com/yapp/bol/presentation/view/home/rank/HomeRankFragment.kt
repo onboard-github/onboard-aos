@@ -2,11 +2,11 @@ package com.yapp.bol.presentation.view.home.rank
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -20,6 +20,7 @@ import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
+import com.yapp.bol.presentation.utils.sendMailToHelpAddress
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.home.HomeUiState
@@ -66,7 +67,10 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun initViewModel() {
-        viewModel.groupId = activityViewModel.groupId
+        viewModel.fetchAll(
+            initGroupId = activityViewModel.groupId,
+            initGameId = activityViewModel.gameId
+        )
     }
 
     private fun setHomeRecyclerView() {
@@ -77,7 +81,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setGameAdapter() {
         val onClick: (position: Int, gameId: Long) -> Unit = { position, gameId ->
             viewModel.setGameItemSelected(position)
-            viewModel.gameId = gameId
+            viewModel.fetchUserList(gameId)
         }
         val scrollAnimation: () -> Unit = {
             binding.rvGameList.smoothScrollToPosition(viewModel.getGameItemSelectedPosition())
@@ -97,7 +101,30 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setUserAdapter() {
         val userRankAdapter = UserRankAdapter()
-        binding.rvUserRank.adapter = userRankAdapter
+        val rvUserRank = binding.rvUserRank
+
+        userRankAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onChanged() {
+                rvUserRank.scrollToPosition(0)
+            }
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                rvUserRank.scrollToPosition(0)
+            }
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                rvUserRank.scrollToPosition(0)
+            }
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                rvUserRank.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                rvUserRank.scrollToPosition(0)
+            }
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int, payload: Any?) {
+                rvUserRank.scrollToPosition(0)
+            }
+        })
+
+        rvUserRank.adapter = userRankAdapter
         observeUserRankUiState(userRankAdapter)
     }
 
@@ -116,9 +143,10 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setDrawerAdapter() {
         val otherGroupOnClick: (Long) -> Unit = { id ->
+            activityViewModel.groupId = id
             viewModel.apply {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
-                groupId = id
+                fetchAll(initGroupId = id)
             }
         }
 
@@ -148,12 +176,14 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
         binding.apply {
-            currentGroupInfo.groupDetailItem.let { item ->
-                viewHeader.tvGroupName.text = item.name
-                tvGroupName.text = item.name
-                viewRankNotFound.tvCode.text = item.accessCode
+            val item = currentGroupInfo.groupDetailItem
+            viewHeader.tvGroupName.text = item.name
+            tvGroupName.text = item.name
+            viewRankNotFound.tvCode.text = item.accessCode
+            viewRankNotFound.btnCodeCopy.isVisible = item.accessCode != null
+            item.accessCode?.let { code ->
                 viewRankNotFound.btnCodeCopy.setOnClickListener {
-                    item.accessCode.copyToClipboard(root.context)
+                    code.copyToClipboard(root.context)
                     showToastForAndroid13Below()
                 }
             }
@@ -185,6 +215,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         viewRankLoading.visibility = View.GONE
                         viewRankNotFound.root.visibility = if (isNoRank) { View.VISIBLE } else { View.GONE }
                         rvUserRank.visibility = if (isNoRank) { View.GONE } else { View.VISIBLE }
+                        rvUserRank.smoothScrollToPosition(0)
                     }
                 }
 
@@ -285,8 +316,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setHelpButton() {
         binding.btnHelp.setOnClickListener {
-            val url = binding.root.resources.getString(R.string.home_help_url)
-            Intent(Intent.ACTION_VIEW, Uri.parse(url)).also { startActivity(it) }
+            val string = binding.root.resources.getString(R.string.help_email_content)
+            val content = String.format(string, viewModel.myId, viewModel.nickName, viewModel.groupId)
+            it.context.sendMailToHelpAddress("온보드 문의", content)
         }
     }
 

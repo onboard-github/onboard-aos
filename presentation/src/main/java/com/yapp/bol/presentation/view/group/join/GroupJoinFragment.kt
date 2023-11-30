@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.yapp.bol.presentation.R
@@ -14,8 +15,12 @@ import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.dpToPx
 import com.yapp.bol.presentation.utils.loadImage
 import com.yapp.bol.presentation.utils.setStatusBarColor
+import com.yapp.bol.presentation.view.group.GroupActivity
+import com.yapp.bol.presentation.view.group.dialog.guest.GuestListDialog
 import com.yapp.bol.presentation.view.group.join.data.Margin
+import com.yapp.bol.presentation.view.group.join.type.GroupResultType
 import com.yapp.bol.presentation.view.home.HomeActivity
+import com.yapp.bol.presentation.view.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.filterNotNull
 
@@ -24,6 +29,38 @@ class GroupJoinFragment : Fragment() {
 
     private lateinit var binding: FragmentGroupJoinBinding
     private val viewModel by viewModels<GroupJoinViewModel>()
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val profileSettingDialog by lazy { InputDialog(requireContext()) }
+    private val redeemDialog by lazy { InputDialog(requireContext()) }
+
+    private val guestListDialog by lazy {
+        GuestListDialog(
+            context = requireContext(),
+            clearGuest = viewModel::cleatGuest,
+            getNextGuest = { viewModel.getMembers() },
+            joinedGroup = { guestId, nickname, _ ->
+                viewModel.joinGroup(viewModel.accessCode, nickname, guestId)
+
+                subscribeObservableGroupResult(
+                    onLoading = { errorMessageId ->
+                        showLoading(true, getString(errorMessageId))
+                    },
+                    onSuccess = {
+                        handleSuccessJoinGroup(nickname)
+                    },
+                    onUnknownError = { errorMessage ->
+                        showLoading(false)
+
+                        redeemDialog.showErrorMessage(errorMessage)
+                    },
+                )
+            },
+        ).apply {
+            setOnDismissListener {
+                if (!viewModel.completedJoinGroup.value) showProfileSettingDialog()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,95 +83,194 @@ class GroupJoinFragment : Fragment() {
         subscribeObservables()
     }
 
-    private fun initView() {
-        binding.tvGroupJoin.setOnClickListener {
+    private fun initView() = binding.run {
+        tvGroupJoin.setOnClickListener {
             if (viewModel.isAlreadyJoinGroup()) {
                 moveHomeActivity()
             } else {
                 showRedeemInputDialog()
             }
         }
-        binding.btnBack.setOnClickListener {
+        btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
     }
 
+    private fun dismissAllDialog() {
+        redeemDialog.dismiss()
+        profileSettingDialog.dismiss()
+        guestListDialog.dismiss()
+    }
+
     private fun showRedeemInputDialog() {
-        InputDialog(requireContext()).apply {
+        redeemDialog.apply {
             this.setTitle("참여 코드 입력")
-                .setMessage(getString(R.string.group_join_code_input_plz))
+                .setMessage(R.string.group_join_code_input_plz)
                 .setLimitSize(6)
                 .setSingleLine(true)
                 .onBackPressed {
                     it.dismiss()
                 }
                 .setTitleIcon(
-                    icon = R.drawable.ic_lock,
+                    icon = R.drawable.ic_code,
                     size = context.dpToPx(20),
                     margin = Margin(rightMargin = context.dpToPx(8)),
                 )
                 .setOnLimit { code, dialog ->
                     viewModel.checkGroupJoinByAccessCode(code)
 
-                    viewModel.successCheckGroupAccessCode.collectWithLifecycle(viewLifecycleOwner) { (success, message) -> // ktlint-disable max-line-length
-                        if (success) {
-                            showProfileSettingDialog(dialog, code)
+                    subscribeObservableGroupResult(
+                        onLoading = { errorMessageId ->
+                            showLoading(true, getString(errorMessageId))
+                        },
+                        onSuccess = {
+                            showLoading(false)
+
+                            viewModel.accessCode = code
+                            showProfileSettingDialog()
+
                             dismiss()
-                        } else {
-                            dialog.showErrorMessage(message.orEmpty())
-                        }
-                    }
+                        },
+                        onUnknownError = { errorMessage ->
+                            showLoading(false)
+
+                            showErrorMessage(errorMessage)
+                        },
+                        onValidationAccessCode = { errorMessageId ->
+                            showLoading(false)
+
+                            dialog.showErrorMessage((getString(errorMessageId)))
+                        },
+                    )
                 }.show()
         }
     }
 
-    private fun showProfileSettingDialog(dialog: InputDialog, code: String) {
-        InputDialog(requireContext())
-            .setTitle("프로필 설정")
-            .setMessage("모임에서 사용할 닉네임을 10자 이하로 입력해주세요.")
-            .setLimitSize(10)
-            .setSingleLine(true)
-            .setText(viewModel.nickName)
-            .setHintText("닉네임을 입력해주세요.")
-            .visibleInputCount(true)
-            .visibleSummitButton(true)
-            .onBackPressed {
-                it.dismiss()
-                dialog.dismiss()
-            }
-            .setOnSummit { nickname, dialog ->
-                viewModel.joinGroup(code, nickname)
+    private fun showLoading(isLoading: Boolean, message: String? = null) {
+        binding.loadingLayout.isVisible = isLoading
+        binding.tvLoadingTitle.text = message
+    }
 
-                viewModel.successJoinGroup.collectWithLifecycle(viewLifecycleOwner) { (success, message) ->
-                    if (success) {
-                        WelcomeJoinDialog(requireContext(), nickname).apply {
-                            setOnDismissListener {
-                                moveHomeActivity()
-                            }
-                        }.show()
-                        dialog.dismiss()
-                    } else {
-                        dialog.showErrorMessage(message.orEmpty())
-                    }
+    private fun showProfileSettingDialog() {
+        profileSettingDialog.apply {
+            setTitle("프로필 설정")
+                .setMessage(R.string.group_join_nickname_modal_message)
+                .setLimitSize(10)
+                .setSingleLine(true)
+                .setText(viewModel.nickName)
+                .setHintText(R.string.group_join_nickname_hint_title)
+                .visibleInputCount(true)
+                .visibleGuestMember(true)
+                .visibleSummitButton(true)
+                .setGuestOnClicked {
+                    dismiss()
+
+                    viewModel.getMembers()
                 }
-            }.show()
+                .onBackPressed {
+                    dismiss()
+                }
+                .setOnTyping { nickname, dialog ->
+                    if (nickname.isNotEmpty()) viewModel.validateNickName(nickname)
+
+                    subscribeObservableGroupResult(
+                        onValidationNickname = { errorMessageId ->
+                            showLoading(false)
+
+                            dialog.showErrorMessage(getString(errorMessageId))
+                        },
+                    )
+                }
+                .setOnSummit { nickname, _ ->
+                    viewModel.joinGroup(viewModel.accessCode, nickname)
+
+                    subscribeObservableGroupResult(
+                        onLoading = { errorMessageId ->
+                            showLoading(true, getString(errorMessageId))
+                        },
+                        onSuccess = {
+                            handleSuccessJoinGroup()
+                        },
+                        onUnknownError = { errorMessage ->
+                            showLoading(false)
+
+                            showErrorMessage(errorMessage)
+                        },
+                    )
+                }.show()
+        }
+    }
+
+    private fun subscribeObservableGroupResult(
+        onLoading: (Int) -> Unit? = {},
+        onSuccess: () -> Unit? = {},
+        onUnknownError: (String) -> Unit? = {},
+        onValidationNickname: (Int) -> Unit? = {},
+        onValidationAccessCode: (Int) -> Unit? = {},
+    ) {
+        viewModel.groupResult.collectWithLifecycle(viewLifecycleOwner) { groupResultType ->
+            when (groupResultType) {
+                is GroupResultType.LOADING -> {
+                    onLoading(groupResultType.message)
+                }
+
+                is GroupResultType.SUCCESS -> {
+                    onSuccess()
+                }
+
+                is GroupResultType.UnknownError -> {
+                    onUnknownError(groupResultType.message)
+                }
+
+                is GroupResultType.ValidationAccessCode -> {
+                    onValidationAccessCode(groupResultType.message)
+                }
+
+                is GroupResultType.ValidationNickname -> {
+                    onValidationNickname(groupResultType.message)
+                }
+            }
+        }
+    }
+
+    private fun handleSuccessJoinGroup(nickname: String = viewModel.nickName) {
+        dismissAllDialog()
+
+        WelcomeJoinDialog(requireContext(), nickname).apply {
+            setOnDismissListener {
+                moveHomeActivity()
+            }
+        }.show()
     }
 
     private fun moveHomeActivity() {
-        HomeActivity.startActivity(binding.root.context, groupId = viewModel.groupItem.value!!.id)
-        requireActivity().finish()
+        val groupId = viewModel.groupId.toLong()
+        when (activity) {
+            is GroupActivity -> {
+                HomeActivity.startActivity(binding.root.context, groupId = groupId)
+                requireActivity().finish()
+            }
+
+            is HomeActivity -> {
+                findNavController().navigate(R.id.action_groupJoinFragment_to_homeRankFragment)
+                homeViewModel.groupId = groupId
+                homeViewModel.gameId = null
+            }
+        }
     }
 
     private fun subscribeObservables() {
         with(viewModel) {
-            loading.collectWithLifecycle(viewLifecycleOwner) { (isLoading, message) ->
-                binding.loadingLayout.isVisible = isLoading
-                binding.tvLoadingTitle.text = message
-            }
             groupItem.filterNotNull().collectWithLifecycle(viewLifecycleOwner) {
-                binding.groupAdminView.setGroupItemDetailTitle(it.ownerNickname)
-                binding.groupMemberView.setGroupItemDetailTitle("${it.memberCount}명")
-                binding.ivGroupJoinBg.loadImage(it.profileImageUrl, 0)
+                binding.groupAdminView.setGroupItemDetailTitle(it.groupDetail.ownerNickname)
+                binding.groupMemberView.setGroupItemDetailTitle("${it.groupDetail.memberCount}명")
+                binding.ivGroupJoinBg.loadImage(it.groupDetail.profileImageUrl)
+            }
+            guestList.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    guestListDialog.guestListAdapter.submitList(it)
+                    guestListDialog.show()
+                }
             }
         }
     }

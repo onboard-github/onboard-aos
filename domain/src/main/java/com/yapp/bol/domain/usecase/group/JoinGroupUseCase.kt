@@ -1,14 +1,15 @@
 package com.yapp.bol.domain.usecase.group
 
-import com.yapp.bol.domain.repository.Repository
+import com.yapp.bol.domain.repository.MemberRepository
 import javax.inject.Inject
 
 class JoinGroupUseCase @Inject constructor(
-    private val repository: Repository,
+    private val repository: MemberRepository,
 ) {
     operator fun invoke(
         groupId: String,
         accessCode: String,
         nickName: String,
-    ) = repository.joinGroup(groupId, accessCode, nickName)
+        guestId: Int?,
+    ) = repository.joinGroup(groupId, accessCode, nickName, guestId)
 }

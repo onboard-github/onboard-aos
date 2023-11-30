@@ -2,14 +2,13 @@ package com.yapp.bol.presentation.view.match.member_select
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.yapp.bol.presentation.R
-import com.yapp.bol.designsystem.R as DR
 import com.yapp.bol.presentation.databinding.RvMemberItemBinding
 import com.yapp.bol.presentation.model.MemberInfo
-import com.yapp.bol.presentation.view.match.MatchActivity.Companion.GUEST
+import com.yapp.bol.presentation.utils.setDiceImageForRole
 
 class MembersAdapter(
     private val memberClickListener: (MemberInfo, Int, Boolean) -> Unit,
@@ -39,13 +38,10 @@ class MembersAdapter(
         fun bind(item: MemberInfo, position: Int) {
             binding.tvMemberName.text = item.nickname
             binding.cbMemberSelect.isChecked = item.isChecked
-            setImageView(item)
-            setClickListener(item, position)
-        }
+            binding.ivMemberLevelIcon.setDiceImageForRole(item.role)
 
-        private fun setImageView(item: MemberInfo) {
-            val image = if (item.role == GUEST) R.drawable.img_dice_empty_small else DR.drawable.img_dice
-            binding.ivMemberLevelIcon.setImageResource(image)
+            setClickListener(item, position)
+            binding.viewMe.root.isVisible = item.isMe
         }
 
         private fun setClickListener(item: MemberInfo, position: Int) {

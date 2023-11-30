@@ -50,9 +50,10 @@
     <string name="guest_description_text">아직 온보드에 가입하지 않은 상대를 모임에\n임시 멤버로 추가하고 게임 기록을 남겨보세요.</string>
     <string name="guest_name_hint">임시 멤버가 사용할 닉네임을 입력해주세요.</string>
     <string name="guest_name_set_tip">Tip :임시 멤버의 닉네임은 기억하기 쉽게 만들어주세요.\n이후 온보드에 가입할 때 기록을 연동할 수 있습니다.</string>
+    <string name="guest_empty">현재 등록된 임시 멤버가 없습니다.</string>
 
     <string name="search_result_nothing">\'%s\'에 대한 검색 결과가 없습니다.</string>
-    <string name="search_result_nothing_guide">함께 보드게임을 플레이한 상대가 온보드에\n 아직 없다면,임시 멤버로 추가해 기록해보세요!</string>
+    <string name="search_result_nothing_guide">함께 보드게임을 플레이한 상대가 온보드에 아직\n 없다면,임시 멤버로 추가해 기록해보세요!</string>
     <string name="guest_add_nothing">임시 멤버 추가</string>
 
     <string name="game_result_rank">%d위</string>
@@ -85,11 +86,10 @@
 
     <string name="member_number_explanation">멤버수</string>
     <string name="member_number">%d명</string>
+    <string name="group_guest_join_title">\'%s\'로 모임 들어가기</string>
     <string name="owner">관리자</string>
-    <string name="group_join_title">모임 들어가기</string>
-    <string name="group_join_code_input_plz">모임 참여 코드를 입력해주세요</string>
-    <string name="group_join_code_input">참여 코드 입력</string>
-
+    <string name="guest_list_dialog_title">임시 멤버 기록 연동</string>
+    <string name="guest_list_dialog_description">활동헀던 임시 멤버 닉네임을 선택해주세요</string>
     <string name="home_help_url">https://docs.google.com/forms/d/e/1FAIpQLSfY23k3wSmAMbrkrSrJbgQuE3abWfY1WO0cqiIyN-F1egysJA/viewform?usp=sf_link</string>
     <string name="quit_email_content">탈퇴 신청 전 확인해주세요!
 \n\n
@@ -102,4 +102,16 @@
 - 계정 정보 확인이 완료되면 즉시 회원 탈퇴 처리가 완료되어 회원님의 계정 정보와 개인정보가 파기됩니다. 파기된 정보는 복구되지 않습니다. (서비스 제공에 필요한 일부 게임 결과 기록은 식별 불가능하게 처리되어 보존될 수 있습니다.)\n
 - 계정 정보 확인이 어려울 경우 회원 탈퇴가 정상적으로 이루어지지 않습니다.\n
 - 처리 결과를 신청하신 메일로 안내해드립니다. 수신 가능한 메일 주소를 사용해주세요.\n</string>
+    <string name="help_email_content">온보드 지원팀에 문의해주셔서 감사합니다.\n
+사용하신 메일로 처리 결과를 안내해 드립니다. 수신 가능한 메일 주소를 사용해주세요.
+\n\n
+- (자동 입력) 유저 ID : %d
+\n
+- (자동 입력) 닉네임 : %s
+\n
+- (자동 입력) 그룹 ID : %d
+\n
+- 문의 내용 :
+    </string>
+    <string name="onboard_mail">help.onboardgame@gmail.com</string>
 </resources>

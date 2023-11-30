@@ -3,10 +3,11 @@ package com.yapp.bol.presentation.view.group.join.component
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.databinding.GroupItemGameBinding
 import com.yapp.bol.presentation.utils.inflate
+import com.yapp.bol.presentation.utils.loadRoundImage
+import com.yapp.bol.presentation.utils.pxToDp
 
 class GroupItemGame(
     context: Context,
@@ -25,7 +26,7 @@ class GroupItemGame(
     private fun bindAttributes(context: Context, attrs: AttributeSet) {
         context.obtainStyledAttributes(attrs, R.styleable.GroupItemGame, 0, 0).apply {
             getString(R.styleable.GroupItemGame_imageUrl)?.let { url ->
-                loadImage(url)
+                setImageUrl(url)
             }
             getString(R.styleable.GroupItemGame_gameTitle)?.let { title ->
                 setGameTitle(title)
@@ -33,13 +34,11 @@ class GroupItemGame(
         }.recycle()
     }
 
-    private fun setGameTitle(title: String) {
-        binding.tvGroupGameTitle.text = title
+    fun setGameTitle(gameTitle: String?) {
+        binding.tvGroupGameTitle.text = gameTitle
     }
 
-    private fun loadImage(url: String) {
-        Glide.with(this)
-            .load(url)
-            .into(binding.ivGroupGroup)
+    fun setImageUrl(url: String?) {
+        binding.ivGroupGroup.loadRoundImage(url ?: return, context.pxToDp(24))
     }
 }

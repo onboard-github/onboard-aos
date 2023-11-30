@@ -7,6 +7,9 @@ on:
             - 'main'
             - 'develop'
 
+permissions:
+    pull-requests: write # for comments
+
 jobs:
     build:
 
@@ -61,6 +64,12 @@ jobs:
                     GOOGLE_LOGIN_API_KEY: ${{ secrets.GOOGLE_LOGIN_API_KEY }}
                     GOOGLE_LOGIN_API_KEY_SANDBOX: ${{ secrets.GOOGLE_LOGIN_API_KEY_SANDBOX }}
 
+            # google services json 생성
+            -   name: Write compile time google-services.json file
+                env:
+                    GOOGLE_SERVICES: ${{ secrets.GOOGLE_SERVICES }}
+                run: echo $GOOGLE_SERVICES > app/google-services.json
+
             # gradle 캐싱 작업
             -   name: Cache Gradle packages
                 uses: actions/cache@v2
@@ -80,6 +89,7 @@ jobs:
 
             # ktlint test
             -   name: Run ktlint
+                id: ktlintCheck
                 run: ./gradlew ktlintCheck
 
             -   name: Upload build reports
@@ -95,3 +105,19 @@ jobs:
                 with:
                     name: outputs
                     path: app/build/outputs/
+
+            -   name: Comment when Lint was Failed
+                uses: peter-evans/create-or-update-comment@v2
+                if: failure() && steps.ktlintCheck.outcome == 'failure'
+                with:
+                    issue-number: ${{ github.event.pull_request.number }}
+                    body: |
+                        ❌ ktlint Failed
+
+            -   name: Comment When All Step Was Passed
+                uses: peter-evans/create-or-update-comment@v2
+                if: success()
+                with:
+                    issue-number: ${{ github.event.pull_request.number }}
+                    body: |
+                        🎉 CI Passed
