@@ -177,7 +177,7 @@
             android:id="@+id/nav_group_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             android:background="@drawable/bg_group_info_drawer">
 
             <androidx.constraintlayout.widget.ConstraintLayout
