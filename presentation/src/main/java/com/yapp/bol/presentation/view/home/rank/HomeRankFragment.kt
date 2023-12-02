@@ -131,13 +131,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setDrawer() {
         setDrawerOpen()
         setDrawerAdapter()
-        bindExploreButton()
-        bindSettingButton()
+        bindGroupQuitButton()
     }
 
     private fun setDrawerOpen() {
         binding.btnGroupName.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
+            binding.drawerLayout.openDrawer(GravityCompat.END)
         }
     }
 
@@ -145,7 +144,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         val otherGroupOnClick: (Long) -> Unit = { id ->
             activityViewModel.groupId = id
             viewModel.apply {
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                binding.drawerLayout.closeDrawer(GravityCompat.END)
                 fetchAll(initGroupId = id)
             }
         }
@@ -162,15 +161,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter
     }
 
-    private fun bindExploreButton() {
-        binding.viewFooter.llBtnExplore.setOnClickListener {
+    private fun bindGroupQuitButton() {
+        binding.viewFooter.llBtnQuit.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_homeExploreFragment)
-        }
-    }
-
-    private fun bindSettingButton() {
-        binding.viewFooter.btnSetting.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_settingFragment)
         }
     }
 
