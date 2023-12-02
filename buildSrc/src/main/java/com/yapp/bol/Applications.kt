@@ -10,9 +10,9 @@ object Applications {
     const val jvmTarget = "1.8"
     const val versionCode = 4
     const val majorVersion = 1
-    const val minorVersion = 1
-    const val patchVersion = 1
-    const val versionName = "$majorVersion.$minorVersion$patchVersion"
+    const val minorVersion = 11
+    const val patchVersion = 0
+    const val versionName = "$majorVersion.$minorVersion.$patchVersion"
     val sourceCompatibilityVersion = JavaVersion.VERSION_1_8
     val targetCompatibilityVersion = JavaVersion.VERSION_1_8
 }
