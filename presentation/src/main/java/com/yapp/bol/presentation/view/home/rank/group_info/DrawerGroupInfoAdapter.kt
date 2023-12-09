@@ -8,7 +8,7 @@ import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 
 class DrawerGroupInfoAdapter(
-    private val otherGroupOnClick: (Long) -> Unit,
+    private val userProfileEditOnClick: (Long) -> Unit,
     private val copyButtonOnClick: (String) -> Unit,
 ) : ListAdapter<DrawerGroupInfoUiModel, RecyclerView.ViewHolder>(diff) {
 
@@ -16,7 +16,7 @@ class DrawerGroupInfoAdapter(
         if (viewType == R.layout.item_group_info_detail) {
             DrawerCurrentGroupInfoViewHolder.create(parent, copyButtonOnClick)
         } else {
-            DrawerOtherGroupViewHolder.create(parent, otherGroupOnClick)
+            DrawerMyProfileViewHolder.create(parent, userProfileEditOnClick)
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -25,8 +25,8 @@ class DrawerGroupInfoAdapter(
             when (uiModel) {
                 is DrawerGroupInfoUiModel.CurrentGroupInfo ->
                     (holder as DrawerCurrentGroupInfoViewHolder).bind(uiModel.groupDetailItem)
-                is DrawerGroupInfoUiModel.OtherGroupInfo ->
-                    (holder as DrawerOtherGroupViewHolder).bind(uiModel.joinedGroupItem)
+                is DrawerGroupInfoUiModel.MyProfileInfo ->
+                    (holder as DrawerMyProfileViewHolder).bind(uiModel.userRankItem)
             }
         }
     }
@@ -34,7 +34,7 @@ class DrawerGroupInfoAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is DrawerGroupInfoUiModel.CurrentGroupInfo -> R.layout.item_group_info_detail
-            is DrawerGroupInfoUiModel.OtherGroupInfo -> R.layout.item_group_info_group_name
+            is DrawerGroupInfoUiModel.MyProfileInfo -> R.layout.view_home_drawer_user_profile
         }
     }
 
@@ -47,9 +47,9 @@ class DrawerGroupInfoAdapter(
                             oldItem.groupDetailItem.id == newItem.groupDetailItem.id
                     }
 
-                    is DrawerGroupInfoUiModel.OtherGroupInfo -> {
-                        newItem is DrawerGroupInfoUiModel.OtherGroupInfo &&
-                            oldItem.joinedGroupItem.id == newItem.joinedGroupItem.id
+                    is DrawerGroupInfoUiModel.MyProfileInfo -> {
+                        newItem is DrawerGroupInfoUiModel.MyProfileInfo &&
+                            oldItem.userRankItem.id == newItem.userRankItem.id
                     }
                 }
             }
