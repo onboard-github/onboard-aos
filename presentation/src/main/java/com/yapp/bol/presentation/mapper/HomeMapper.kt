@@ -3,6 +3,7 @@ package com.yapp.bol.presentation.mapper
 import com.yapp.bol.domain.model.UserRankListItem
 import com.yapp.bol.domain.model.GameItem
 import com.yapp.bol.domain.model.JoinedGroupItem
+import com.yapp.bol.domain.model.UserRankItem
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
@@ -36,6 +37,12 @@ object HomeMapper {
         }
 
         return resultList
+    }
+
+    fun UserRankListItem.getMyInfo(myId: Long): UserRankItem? {
+        return userRankItemList.find {
+            it.userId == myId
+        }
     }
 
     fun List<GameItem>.toHomeGameItemUiModelList(): List<HomeGameItemUiModel> {

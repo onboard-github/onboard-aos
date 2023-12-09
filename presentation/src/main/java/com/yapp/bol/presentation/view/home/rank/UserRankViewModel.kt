@@ -2,11 +2,13 @@ package com.yapp.bol.presentation.view.home.rank
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.yapp.bol.domain.model.UserRankItem
 import com.yapp.bol.domain.usecase.group.GetGroupDetailUseCase
 import com.yapp.bol.domain.usecase.group.GetJoinedGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
+import com.yapp.bol.presentation.mapper.HomeMapper.getMyInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toHomeGameItemUiModelList
 import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfoUiModel
 import com.yapp.bol.presentation.mapper.HomeMapper.toUserRankUiModel
@@ -46,6 +48,9 @@ class UserRankViewModel @Inject constructor(
 
     private val _gameAndGroupUiState = MutableStateFlow<HomeUiState<GameAndGroup>>(HomeUiState.Loading)
     val gameAndGroupUiState: StateFlow<HomeUiState<GameAndGroup>> = _gameAndGroupUiState
+
+    private val _userProfileInfo = MutableStateFlow<HomeUiState<UserRankItem>>(HomeUiState.Loading)
+    val userProfileInfo: StateFlow<HomeUiState<UserRankItem>> = _userProfileInfo
 
     var groupId: Long = GAME_USER_ID_TO_BE_SET
     var gameId: Long = GAME_USER_ID_TO_BE_SET
@@ -175,7 +180,12 @@ class UserRankViewModel @Inject constructor(
             getUserRankUseCase(groupId.toInt(), gameId.toInt()).collectLatest {
                 checkedApiResult(
                     apiResult = it,
-                    success = { data -> _userUiState.value = HomeUiState.Success(data.toUserRankUiModel(myId)) },
+                    success = { data ->
+                        _userUiState.value = HomeUiState.Success(data.toUserRankUiModel(myId))
+                        data.getMyInfo(myId)?.let {
+                                info -> _userProfileInfo.value = HomeUiState.Success(info)
+                        } ?: kotlin.run { HomeUiState.Error(NullPointerException())  }
+                      },
                     error = { throwable ->
                         _userUiState.value = HomeUiState.Error(IllegalArgumentException(Exception(throwable.code)))
                     },
