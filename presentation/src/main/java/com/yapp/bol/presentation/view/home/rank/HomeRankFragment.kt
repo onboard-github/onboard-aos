@@ -141,6 +141,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun setDrawerAdapter() {
+        // todo : 마이페이지 그룹 프로필 수정 화면으로 바로 이동해주어야 할듯.
         val otherGroupOnClick: (Long) -> Unit = { id ->
             activityViewModel.groupId = id
             viewModel.apply {
@@ -155,7 +156,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
 
         drawerGroupInfoAdapter = DrawerGroupInfoAdapter(
-            otherGroupOnClick = otherGroupOnClick,
+            userProfileEditOnClick = otherGroupOnClick,
             copyButtonOnClick = copyButtonOnClick,
         )
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter
@@ -242,27 +243,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         drawerGroupInfoAdapter: DrawerGroupInfoAdapter,
         userRankGameAdapter: UserRankGameAdapter,
     ) {
-        viewModel.gameAndGroupUiState.collectWithLifecycle(this) { uiState ->
+        var gameSnackBarNeedToShow: Boolean = false
+
+        viewModel.gameUiState.collectWithLifecycle(this) { uiState ->
             when (uiState) {
                 is HomeUiState.Success -> {
-                    uiState.data.group.map { uiModel ->
-                        if (uiModel is DrawerGroupInfoUiModel.CurrentGroupInfo) {
-                            setCurrentGroupInfo(uiModel)
-                        }
-                    }
-                    drawerGroupInfoAdapter.submitList(uiState.data.group)
-                    userRankGameAdapter.submitList(uiState.data.game)
-
-                    binding.btnGroupName.visibility = View.VISIBLE
-                    binding.loadingGroupName.visibility = View.INVISIBLE
+                    userRankGameAdapter.submitList(uiState.data)
                     binding.rvGameList.visibility = View.VISIBLE
-
-                    gameSnackBar.dismiss()
                 }
 
                 is HomeUiState.Loading -> {
-                    binding.btnGroupName.visibility = View.INVISIBLE
-                    binding.loadingGroupName.visibility = View.VISIBLE
                     binding.rvGameList.visibility = View.GONE
                 }
 
@@ -271,9 +261,43 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         UpgradeActivity.startActivity(requireContext())
                         requireActivity().finish()
                     }
-                    gameSnackBar.show()
+                    gameSnackBarNeedToShow = true
                 }
             }
+        }
+
+        viewModel.currentGroupUiState.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                is HomeUiState.Success -> {
+                    uiState.data.map { uiModel ->
+                        if (uiModel is DrawerGroupInfoUiModel.CurrentGroupInfo) {
+                            setCurrentGroupInfo(uiModel)
+                        }
+                    }
+                    drawerGroupInfoAdapter.submitList(uiState.data)
+
+                    binding.btnGroupName.visibility = View.VISIBLE
+                    binding.loadingGroupName.visibility = View.INVISIBLE
+                }
+
+                is HomeUiState.Loading -> {
+                    binding.btnGroupName.visibility = View.INVISIBLE
+                    binding.loadingGroupName.visibility = View.VISIBLE
+                }
+
+                is HomeUiState.Error -> {
+                    if (uiState.error.message == "FORCE_UPDATE") {
+                        UpgradeActivity.startActivity(requireContext())
+                        requireActivity().finish()
+                    }
+                    gameSnackBarNeedToShow = false
+                }
+            }
+        }
+
+        when (gameSnackBarNeedToShow) {
+            true -> gameSnackBar.show()
+            false -> gameSnackBar.dismiss()
         }
     }
 

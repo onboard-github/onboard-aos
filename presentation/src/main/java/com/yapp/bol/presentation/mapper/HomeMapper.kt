@@ -55,10 +55,8 @@ object HomeMapper {
         return resultList
     }
 
-    fun List<JoinedGroupItem>.toOtherGroupInfoUiModel(currentGroupId: Long):
-        List<DrawerGroupInfoUiModel.OtherGroupInfo> {
+    fun List<JoinedGroupItem>.toOtherGroupInfo(currentGroupId: Long): List<JoinedGroupItem> {
         return this
             .filter { it.id != currentGroupId }
-            .map { DrawerGroupInfoUiModel.OtherGroupInfo(it) }
     }
 }

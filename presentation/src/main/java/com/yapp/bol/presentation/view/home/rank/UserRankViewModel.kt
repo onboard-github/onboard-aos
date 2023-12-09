@@ -2,7 +2,7 @@ package com.yapp.bol.presentation.view.home.rank
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yapp.bol.domain.model.UserRankItem
+import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.usecase.group.GetGroupDetailUseCase
 import com.yapp.bol.domain.usecase.group.GetJoinedGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
@@ -10,7 +10,7 @@ import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
 import com.yapp.bol.presentation.mapper.HomeMapper.getMyInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toHomeGameItemUiModelList
-import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfoUiModel
+import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toUserRankUiModel
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GameItemWithSelected
@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,21 +47,24 @@ class UserRankViewModel @Inject constructor(
     private val _userUiState = MutableStateFlow<HomeUiState<List<UserRankUiModel>>>(HomeUiState.Loading)
     val userUiState: StateFlow<HomeUiState<List<UserRankUiModel>>> = _userUiState
 
-    private val _gameAndGroupUiState = MutableStateFlow<HomeUiState<GameAndGroup>>(HomeUiState.Loading)
-    val gameAndGroupUiState: StateFlow<HomeUiState<GameAndGroup>> = _gameAndGroupUiState
+    private val _otherGroupListInfo = MutableStateFlow<HomeUiState<List<JoinedGroupItem>>>(HomeUiState.Loading)
+    val otherGroupListInfo: StateFlow<HomeUiState<List<JoinedGroupItem>>> = _otherGroupListInfo
 
-    private val _userProfileInfo = MutableStateFlow<HomeUiState<UserRankItem>>(HomeUiState.Loading)
-    val userProfileInfo: StateFlow<HomeUiState<UserRankItem>> = _userProfileInfo
+    private val _currentGroupUiState = MutableStateFlow<HomeUiState<List<DrawerGroupInfoUiModel>>>(HomeUiState.Loading)
+    val currentGroupUiState: StateFlow<HomeUiState<List<DrawerGroupInfoUiModel>>> = _currentGroupUiState
+
+    private val _gameUiState = MutableStateFlow<HomeUiState<List<HomeGameItemUiModel>>>(HomeUiState.Loading)
+    val gameUiState: StateFlow<HomeUiState<List<HomeGameItemUiModel>>> = _gameUiState
 
     var groupId: Long = GAME_USER_ID_TO_BE_SET
     var gameId: Long = GAME_USER_ID_TO_BE_SET
     var myId: Long = GAME_USER_ID_TO_BE_SET
     var nickName: String = ""
+    // todo: 서버 api 만들어지면 사라질 변수.
+    private var groupInfo: List<DrawerGroupInfoUiModel>? = null
 
     fun setGameItemSelected(newPosition: Int) {
-        val gameUiList: MutableList<HomeGameItemUiModel> =
-            gameAndGroupUiState.value._data?.game?.toMutableList() ?: return
-        val groupUiList: List<DrawerGroupInfoUiModel> = gameAndGroupUiState.value._data?.group ?: return
+        val gameUiList: MutableList<HomeGameItemUiModel> = gameUiState.value._data?.toMutableList() ?: return
 
         val beforePosition = selectedPosition
 
@@ -79,7 +83,7 @@ class UserRankViewModel @Inject constructor(
         }
 
         selectedPosition = newPosition
-        _gameAndGroupUiState.value = HomeUiState.Success(GameAndGroup(gameUiList, groupUiList))
+        _gameUiState.value = HomeUiState.Success(gameUiList)
     }
 
     fun fetchAll(initGroupId: Long? = null, initGameId: Long? = null) {
@@ -94,7 +98,9 @@ class UserRankViewModel @Inject constructor(
 
     private fun fetchAllFromServer(groupId: Long, initGameId: Long? = null) {
         viewModelScope.launch {
-            _gameAndGroupUiState.value = HomeUiState.Loading
+            _gameUiState.value = HomeUiState.Loading
+            _currentGroupUiState.value = HomeUiState.Loading
+            _otherGroupListInfo.value = HomeUiState.Loading
 
             val startPadding = 1
 
@@ -105,6 +111,7 @@ class UserRankViewModel @Inject constructor(
 
             val game: MutableList<HomeGameItemUiModel> = mutableListOf()
             val group: MutableList<DrawerGroupInfoUiModel> = mutableListOf()
+            val otherGroupList: MutableList<JoinedGroupItem> = mutableListOf()
             var gameIndex = -1
 
             fun <T> List<T>.middleIndex() = this.size / 2
@@ -138,7 +145,7 @@ class UserRankViewModel @Inject constructor(
                 .combine(joinedGroupFlow) { _, joinedGroup ->
                     checkedApiResult(
                         apiResult = joinedGroup,
-                        success = { data -> group.addAll(data.toOtherGroupInfoUiModel(currentGroupId = groupId)) },
+                        success = { data -> otherGroupList.addAll(data.toOtherGroupInfo(currentGroupId = groupId)) },
                         error = { throwable -> throw Exception(throwable.code) }
                     )
                 }
@@ -152,9 +159,16 @@ class UserRankViewModel @Inject constructor(
                         error = { throwable -> throw Exception(throwable.code) }
                     )
                 }
-                .catch { _gameAndGroupUiState.value = HomeUiState.Error(it) }
+                .catch {
+                    _gameUiState.value = HomeUiState.Error(it)
+                    _currentGroupUiState.value = HomeUiState.Error(it)
+                    _otherGroupListInfo.value = HomeUiState.Error(it)
+                }
                 .collectLatest {
-                    _gameAndGroupUiState.value = HomeUiState.Success(GameAndGroup(game, group))
+                    _otherGroupListInfo.value = HomeUiState.Success(otherGroupList)
+                    _gameUiState.value = HomeUiState.Success(game)
+
+                    groupInfo = group
                     fetchUserListFromServer(groupId, gameId)
                     setGameItemSelected(gameIndex)
                 }
@@ -174,23 +188,37 @@ class UserRankViewModel @Inject constructor(
         _userUiState.value = HomeUiState.Loading
         userListFetchJob?.cancel()
 
+        val group: MutableList<DrawerGroupInfoUiModel> = mutableListOf()
+        val userRank: MutableList<UserRankUiModel> = mutableListOf()
+
+        groupInfo?.let { group.addAll(it) }
+
         userListFetchJob = viewModelScope.launch {
             delay(USER_RANK_LOAD_FORCE_DELAY)
 
-            getUserRankUseCase(groupId.toInt(), gameId.toInt()).collectLatest {
-                checkedApiResult(
-                    apiResult = it,
-                    success = { data ->
-                        _userUiState.value = HomeUiState.Success(data.toUserRankUiModel(myId))
-                        data.getMyInfo(myId)?.let {
-                                info -> _userProfileInfo.value = HomeUiState.Success(info)
-                        } ?: kotlin.run { HomeUiState.Error(NullPointerException())  }
-                      },
-                    error = { throwable ->
-                        _userUiState.value = HomeUiState.Error(IllegalArgumentException(Exception(throwable.code)))
-                    },
-                )
-            }
+            getUserRankUseCase(groupId.toInt(), gameId.toInt())
+                .map {
+                    if (groupInfo == null) { throw NullPointerException() }
+                    checkedApiResult(
+                        apiResult = it,
+                        success = { data ->
+                            userRank.addAll(data.toUserRankUiModel(myId))
+                            data.getMyInfo(myId)?.let { info ->
+                                group.add(DrawerGroupInfoUiModel.MyProfileInfo(info))
+                            } ?: run { throw NullPointerException() }
+                        },
+                        error = { throwable -> throw IllegalArgumentException(Exception(throwable.message)) }
+                    )
+                }
+                .catch {
+                    _userUiState.value = HomeUiState.Error(it)
+                    _currentGroupUiState.value = HomeUiState.Error(it)
+                }
+                .collectLatest {
+                    _userUiState.value = HomeUiState.Success(userRank)
+                    _currentGroupUiState.value = HomeUiState.Success(group)
+                }
+
         }
     }
 
@@ -199,8 +227,3 @@ class UserRankViewModel @Inject constructor(
         private const val GAME_USER_ID_TO_BE_SET: Long = -1L
     }
 }
-
-data class GameAndGroup(
-    val game: List<HomeGameItemUiModel>,
-    val group: List<DrawerGroupInfoUiModel>,
-)
