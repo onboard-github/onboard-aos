@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.SpannableStringBuilder
-import android.text.style.StyleSpan
 import com.yapp.bol.designsystem.databinding.DialogMessageCancelConfirmBinding
 import com.yapp.bol.designsystem.util.dialogWidthResize
 import com.yapp.bol.designsystem.util.createBoldSpannable
@@ -15,25 +14,26 @@ class MessageCancelConfirmDialog(
     private val context: Context,
     private val message: SpannableStringBuilder,
     private val confirmMessage: String,
-    private val onClick: MessageCancelConfirmOnClick,
 ) : Dialog(context) {
 
     constructor(
         context: Context,
         message: String,
         confirmMessage: String,
-        onClick: MessageCancelConfirmOnClick,
-    ): this(context, SpannableStringBuilder(message), confirmMessage, onClick)
+    ): this(context, SpannableStringBuilder(message), confirmMessage)
 
     constructor(
         context: Context,
         originalMessage: String,
         boldStringFromOriginal: List<String>,
         confirmMessage: String,
-        onClick: MessageCancelConfirmOnClick,
-    ): this(context, createBoldSpannable(originalMessage, boldStringFromOriginal), confirmMessage, onClick)
+    ): this(context, createBoldSpannable(originalMessage, boldStringFromOriginal), confirmMessage)
 
     private lateinit var binding: DialogMessageCancelConfirmBinding
+    var onCancelClickNeedDismissDialog: Boolean = true
+    var onConfirmClickNeedDismissDialog: Boolean = true
+    private var onConfirmClick: () -> Unit = { }
+    private var onCancelClick: () -> Unit = { }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = DialogMessageCancelConfirmBinding.inflate(layoutInflater)
@@ -55,13 +55,13 @@ class MessageCancelConfirmDialog(
     }
 
     private fun setOnClick() {
-        binding.btnCancel.setOnClickListener {
-            onClick.onCancelClick()
-            if (onClick.onCancelClickNeedDismissDialog) { dismiss() }
-        }
         binding.btnConfirm.setOnClickListener {
-            onClick.onConfirmClick()
-            if (onClick.onConfirmClickNeedDismissDialog) { dismiss() }
+            onConfirmClick.invoke()
+            if (onConfirmClickNeedDismissDialog) { dismiss() }
+        }
+        binding.btnCancel.setOnClickListener {
+            onCancelClick.invoke()
+            if (onCancelClickNeedDismissDialog) { dismiss() }
         }
     }
 
@@ -71,5 +71,13 @@ class MessageCancelConfirmDialog(
 
     private fun resizeDialog() {
         context.dialogWidthResize(this, 0.9f)
+    }
+
+    fun setOnConfirmClick(onConfirmClickListener: () -> Unit) {
+        onConfirmClick = onConfirmClickListener
+    }
+
+    fun setOnCancelClick(onCancelClickListener: () -> Unit) {
+        onCancelClick = onCancelClickListener
     }
 }
