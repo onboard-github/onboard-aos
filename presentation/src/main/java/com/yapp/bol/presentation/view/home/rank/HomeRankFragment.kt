@@ -59,7 +59,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         scrollCenterWhenUserRankTouchDown()
 
         setFloatingButton()
-        setHelpButton()
+        setGroupNameButton()
     }
 
     override fun onStart() {
@@ -136,7 +136,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun setDrawerOpen() {
-        binding.btnGroupName.setOnClickListener {
+        binding.btnMeatBall.setOnClickListener {
             binding.drawerLayout.openDrawer(GravityCompat.END)
         }
     }
@@ -352,11 +352,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
-    private fun setHelpButton() {
-        binding.btnHelp.setOnClickListener {
-            val string = binding.root.resources.getString(R.string.help_email_content)
-            val content = String.format(string, viewModel.myId, viewModel.nickName, viewModel.groupId)
-            it.context.sendMailToHelpAddress("온보드 문의", content)
+    private fun setGroupNameButton() {
+        binding.btnGroupName.setOnClickListener {
+            // todo : 그룹 다이얼로그 오픈으로 수정
         }
     }
 
