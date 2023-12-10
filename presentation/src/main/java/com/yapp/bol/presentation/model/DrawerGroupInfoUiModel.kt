@@ -1,7 +1,6 @@
 package com.yapp.bol.presentation.model
 
 import com.yapp.bol.domain.model.GroupDetailItem
-import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.UserRankItem
 
 sealed class DrawerGroupInfoUiModel {

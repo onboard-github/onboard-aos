@@ -1,10 +1,9 @@
 package com.yapp.bol.presentation.mapper
 
-import com.yapp.bol.domain.model.UserRankListItem
 import com.yapp.bol.domain.model.GameItem
 import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.UserRankItem
-import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
+import com.yapp.bol.domain.model.UserRankListItem
 import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
 import com.yapp.bol.presentation.model.HomeUserRankItem

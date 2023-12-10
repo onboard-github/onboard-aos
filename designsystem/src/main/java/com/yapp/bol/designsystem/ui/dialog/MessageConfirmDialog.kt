@@ -20,15 +20,14 @@ class MessageConfirmDialog(
         context: Context,
         message: String,
         confirmMessage: String,
-    ): this(context, SpannableStringBuilder(message), confirmMessage)
+    ) : this(context, SpannableStringBuilder(message), confirmMessage)
 
     constructor(
         context: Context,
         originalMessage: String,
         boldStringFromOriginal: List<String>,
         confirmMessage: String,
-    ): this(context, createBoldSpannable(originalMessage, boldStringFromOriginal), confirmMessage)
-
+    ) : this(context, createBoldSpannable(originalMessage, boldStringFromOriginal), confirmMessage)
 
     private lateinit var binding: DialogMessageConfirmBinding
     var onConfirmClickNeedDismissDialog: Boolean = true
