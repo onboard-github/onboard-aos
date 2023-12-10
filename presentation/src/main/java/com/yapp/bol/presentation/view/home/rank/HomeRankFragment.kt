@@ -172,7 +172,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun makeQuitDialog(): MessageCancelConfirmDialog {
         return MessageCancelConfirmDialog(
             context = binding.root.context,
-            originalMessage = String.format(resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName),
+            originalMessage = String.format(
+                resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName
+            ),
             boldStringFromOriginal = listOf(viewModel.currentGroupName),
             confirmMessage = "나가기",
         ).apply { setOnConfirmClick { groupQuitFailDialog().show() } }

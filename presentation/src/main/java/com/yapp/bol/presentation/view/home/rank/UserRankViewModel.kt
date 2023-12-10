@@ -222,7 +222,6 @@ class UserRankViewModel @Inject constructor(
                     _userUiState.value = HomeUiState.Success(userRank)
                     _currentGroupUiState.value = HomeUiState.Success(group)
                 }
-
         }
     }
 
