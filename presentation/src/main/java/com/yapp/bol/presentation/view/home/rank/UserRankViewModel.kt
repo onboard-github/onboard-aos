@@ -60,6 +60,7 @@ class UserRankViewModel @Inject constructor(
     var gameId: Long = GAME_USER_ID_TO_BE_SET
     var myId: Long = GAME_USER_ID_TO_BE_SET
     var nickName: String = ""
+    var currentGroupName: String = ""
     // todo: 서버 api 만들어지면 사라질 변수.
     private var groupInfo: List<DrawerGroupInfoUiModel>? = null
 
@@ -138,7 +139,10 @@ class UserRankViewModel @Inject constructor(
 
                     checkedApiResult(
                         apiResult = currentGroup,
-                        success = { data -> group.add(DrawerGroupInfoUiModel.CurrentGroupInfo(data)) },
+                        success = { data ->
+                            group.add(DrawerGroupInfoUiModel.CurrentGroupInfo(data))
+                            currentGroupName = data.name
+                        },
                         error = { throwable -> throw Exception(throwable.code) }
                     )
                 }

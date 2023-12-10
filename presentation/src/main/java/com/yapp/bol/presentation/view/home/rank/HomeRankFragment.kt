@@ -9,10 +9,11 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
+import com.yapp.bol.designsystem.ui.dialog.MessageCancelConfirmDialog
+import com.yapp.bol.designsystem.ui.dialog.MessageConfirmDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
@@ -164,8 +165,26 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun bindGroupQuitButton() {
         binding.viewFooter.llBtnQuit.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_homeExploreFragment)
+            makeQuitDialog().show()
         }
+    }
+
+    private fun makeQuitDialog(): MessageCancelConfirmDialog {
+        return MessageCancelConfirmDialog(
+            context = binding.root.context,
+            originalMessage = String.format(resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName),
+            boldStringFromOriginal = listOf(viewModel.currentGroupName),
+            confirmMessage = "나가기",
+        ).apply { setOnConfirmClick { groupQuitFailDialog().show() } }
+    }
+
+    private fun groupQuitFailDialog(): MessageConfirmDialog {
+        return MessageConfirmDialog(
+            context = binding.root.context,
+            originalMessage = resources.getString(R.string.group_quit_fail_cause_owner),
+            boldStringFromOriginal = listOf(resources.getString(R.string.group_quit_fail_cause_owner_bold)),
+            confirmMessage = "나가기",
+        )
     }
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
