@@ -5,6 +5,7 @@ import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
+import com.yapp.bol.domain.model.RandomImageItem
 import com.yapp.bol.domain.model.UserRankListItem
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,7 @@ interface GroupRepository {
         description: String,
         organization: String,
         imageUrl: String,
+        uuid: String,
         nickname: String,
     ): Flow<ApiResult<NewGroupItem>>
 
@@ -23,7 +25,7 @@ interface GroupRepository {
         gameId: Int,
     ): Flow<ApiResult<UserRankListItem>>
 
-    fun getGroupDefaultImage(): Flow<ApiResult<String>>
+    fun getGroupDefaultImage(): Flow<ApiResult<RandomImageItem>>
 
     suspend fun searchGroup(
         name: String,

@@ -24,10 +24,11 @@ class GroupDataSourceImpl @Inject constructor(
         description: String,
         organization: String,
         imageUrl: String,
-        nickname: String
+        uuid: String,
+        nickname: String,
     ): Flow<ApiResult<NewGroupApiResponse>> = flow {
         val result = safeApiCall {
-            groupApi.postCreateGroup(NewGroupApiRequest(name, description, organization, imageUrl, nickname))
+            groupApi.postCreateGroup(NewGroupApiRequest(name, description, organization, imageUrl, uuid, nickname))
         }
         emit(result)
     }
@@ -60,7 +61,7 @@ class GroupDataSourceImpl @Inject constructor(
             safeApiCall {
                 groupApi.getUserRank(
                     groupId = groupId,
-                    gameId = gameId
+                    gameId = gameId,
                 )
             }.also { emit(it) }
         }

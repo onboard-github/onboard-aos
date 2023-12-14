@@ -12,6 +12,7 @@ import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
+import com.yapp.bol.domain.model.RandomImageItem
 import com.yapp.bol.domain.model.UserRankListItem
 import com.yapp.bol.domain.repository.GroupRepository
 import kotlinx.coroutines.flow.Flow
@@ -27,32 +28,33 @@ class GroupRepositoryImpl @Inject constructor(
         description: String,
         organization: String,
         imageUrl: String,
-        nickname: String
+        uuid: String,
+        nickname: String,
     ): Flow<ApiResult<NewGroupItem>> {
-        return groupDataSource.postCreateGroup(name, description, organization, imageUrl, nickname).map {
+        return groupDataSource.postCreateGroup(name, description, organization, imageUrl, uuid, nickname).map {
             it.newGroupToDomain()
         }
     }
 
     override fun getUserRank(
         groupId: Int,
-        gameId: Int
+        gameId: Int,
     ): Flow<ApiResult<UserRankListItem>> =
         groupDataSource.getUserRank(
             groupId = groupId,
-            gameId = gameId
+            gameId = gameId,
         ).map {
             it.toUserRankItem()
         }
 
-    override fun getGroupDefaultImage(): Flow<ApiResult<String>> {
+    override fun getGroupDefaultImage(): Flow<ApiResult<RandomImageItem>> {
         return groupDataSource.getGroupDefaultImage().map { it.toImageDomain() }
     }
 
     override suspend fun searchGroup(
         name: String,
         page: Int,
-        pageSize: Int
+        pageSize: Int,
     ): ApiResult<GroupSearchItem> {
         return groupDataSource.searchGroup(
             name = name,

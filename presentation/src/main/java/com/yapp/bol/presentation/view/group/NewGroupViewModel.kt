@@ -39,6 +39,7 @@ class NewGroupViewModel @Inject constructor(
 
     private var groupOrganization = EMPTY_STRING
     private var imageFile: File? = null
+    private var uuid: String = ""
 
     val isCompleteButtonActivation
         get() = isInputTextValid(groupName.value) && isInputTextValid(groupDescription.value)
@@ -50,36 +51,39 @@ class NewGroupViewModel @Inject constructor(
 
     fun createNewGroup(nickName: String) {
         viewModelScope.launch {
-            val imageUrl = withContext(Dispatchers.IO) {
-                if (imageFile == null) {
-                    groupRandomImage.value
-                } else {
-                    postFileUpload(imageFile)
-                }
+            val (uuid, imageUrl) = withContext(Dispatchers.IO) {
+                imageFile?.let { postFileUpload(it) }
+                    ?: Pair(uuid, groupRandomImage.value.orEmpty())
             }
-            postCreateGroup(nickName, imageUrl ?: throw NullPointerException("잘못된 이미지 경로 입니다."))
+            postCreateGroup(nickName, uuid, imageUrl)
         }
     }
 
-    private suspend fun postFileUpload(file: File?): String? {
-        var imageUrl = EMPTY_STRING
+    /**
+     * first: uuid | second: url
+     */
+    private suspend fun postFileUpload(file: File): Pair<String, String> {
+        var imageInfo = Pair(EMPTY_STRING, EMPTY_STRING)
 
-        newGroupUseCase.postFileUpload(file ?: return null).collectLatest {
+        newGroupUseCase.postFileUpload(file).collectLatest {
             checkedApiResult(
                 apiResult = it,
-                success = { data -> imageUrl = data },
+                success = { data ->
+                    imageInfo = Pair(data.uuid, data.url)
+                },
             )
         }
 
-        return imageUrl
+        return imageInfo
     }
 
-    private suspend fun postCreateGroup(nickName: String, imageUrl: String) {
+    private suspend fun postCreateGroup(nickName: String, uuid: String, imageUrl: String) {
         newGroupUseCase.postCreateGroup(
             name = groupName.value ?: EMPTY_STRING,
             description = groupDescription.value ?: EMPTY_STRING,
             organization = groupOrganization,
             imageUrl = imageUrl,
+            uuid = uuid,
             nickname = nickName,
         ).collectLatest {
             checkedApiResult(
@@ -95,7 +99,8 @@ class NewGroupViewModel @Inject constructor(
                 checkedApiResult(
                     apiResult = it,
                     success = { data ->
-                        _groupRandomImage.value = data
+                        uuid = data.uuid
+                        _groupRandomImage.value = data.url
                     },
                 )
             }
