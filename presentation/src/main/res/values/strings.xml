@@ -117,4 +117,6 @@
 
     <string name="menu_home_rank">랭킹</string>
     <string name="menu_home_my">마이페이지</string>
+
+    <string name="mypage_user_name">%s 님</string>
 </resources>
