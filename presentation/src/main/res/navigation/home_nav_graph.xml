@@ -71,4 +71,9 @@
             android:id="@+id/action_groupJoinFragment_to_homeRankFragment"
             app:destination="@id/homeRankFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.yapp.bol.presentation.view.mypage.MyPageFragment"
+        android:label="MyPageFragment" />
 </navigation>
