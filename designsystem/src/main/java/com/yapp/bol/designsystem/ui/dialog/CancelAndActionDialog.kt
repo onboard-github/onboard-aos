@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.yapp.bol.designsystem.databinding.DialogCancelAndActionBinding
-import com.yapp.bol.designsystem.util.createBoldSpannable
+import com.yapp.bol.designsystem.util.createEmphasizeSpannable
 
 class CancelAndActionDialog(
     private val topMessage: SpannableStringBuilder?,
@@ -22,8 +22,8 @@ class CancelAndActionDialog(
 ) : DialogFragment() {
 
     private constructor(builder: Builder) : this(
-        createBoldSpannable(builder.topMessage, builder.boldStringsOfTopMessage),
-        createBoldSpannable(builder.bottomMessage, builder.boldStringOfBottomMessage),
+        createEmphasizeSpannable(builder.topMessage, builder.boldStringsOfTopMessage),
+        createEmphasizeSpannable(builder.bottomMessage, builder.boldStringOfBottomMessage),
         builder.cancelButtonText,
         builder.actionButtonText,
         builder.onCancelClickDismissDialog,

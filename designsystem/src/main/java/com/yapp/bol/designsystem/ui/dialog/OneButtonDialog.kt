@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import com.yapp.bol.designsystem.databinding.DialogOneButtonBinding
-import com.yapp.bol.designsystem.util.createBoldSpannable
+import com.yapp.bol.designsystem.util.createEmphasizeSpannable
 
 class OneButtonDialog constructor(
     private val topMessage: SpannableStringBuilder?,
@@ -20,8 +20,8 @@ class OneButtonDialog constructor(
 ) : DialogFragment() {
 
     private constructor(builder: Builder) : this(
-        createBoldSpannable(builder.topMessage, builder.boldStringsOfTopMessage),
-        createBoldSpannable(builder.bottomMessage, builder.boldStringOfBottomMessage),
+        createEmphasizeSpannable(builder.topMessage, builder.boldStringsOfTopMessage),
+        createEmphasizeSpannable(builder.bottomMessage, builder.boldStringOfBottomMessage),
         builder.buttonText,
         builder.onButtonClickDismissDialog
     )

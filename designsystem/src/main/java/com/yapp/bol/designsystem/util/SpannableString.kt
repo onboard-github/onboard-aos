@@ -2,9 +2,10 @@ package com.yapp.bol.designsystem.util
 
 import android.graphics.Typeface
 import android.text.SpannableStringBuilder
+import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 
-fun createBoldSpannable(
+fun createEmphasizeSpannable(
     originalString: String?,
     boldStringFromOriginal: List<String>?
 ): SpannableStringBuilder? {
@@ -29,6 +30,7 @@ fun createBoldSpannable(
 
     boldIndexList.forEach { (start, end) ->
         spannableBuilder.setSpan(StyleSpan(Typeface.BOLD), start, end, 0)
+        spannableBuilder.setSpan(RelativeSizeSpan(1.05f), start, end, 0)
     }
 
     return spannableBuilder
