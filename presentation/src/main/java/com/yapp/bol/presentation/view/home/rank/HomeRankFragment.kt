@@ -12,8 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
-import com.yapp.bol.designsystem.ui.dialog.MessageCancelConfirmDialog
-import com.yapp.bol.designsystem.ui.dialog.MessageConfirmDialog
+import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
+import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
@@ -164,28 +164,29 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun bindGroupQuitButton() {
         binding.viewFooter.llBtnQuit.setOnClickListener {
-            makeQuitDialog().show()
+            activity?.supportFragmentManager?.let { makeQuitDialog().show(it, null) }
         }
     }
 
-    private fun makeQuitDialog(): MessageCancelConfirmDialog {
-        return MessageCancelConfirmDialog(
-            context = binding.root.context,
-            originalMessage = String.format(
-                resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName
-            ),
-            boldStringFromOriginal = listOf(viewModel.currentGroupName),
-            confirmMessage = "나가기",
-        ).apply { setOnConfirmClick { groupQuitFailDialog().show() } }
+    private fun makeQuitDialog(): CancelAndActionDialog {
+        val quitDialog = CancelAndActionDialog.create {
+            topMessage = String.format(resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName)
+            boldStringsOfTopMessage = listOf(viewModel.currentGroupName)
+            actionButtonText = "나가기"
+        }
+        quitDialog.setOnActionClickListener {
+            activity?.supportFragmentManager?.let { groupQuitFailDialog().show(it, null) }
+        }
+        return quitDialog
     }
 
-    private fun groupQuitFailDialog(): MessageConfirmDialog {
-        return MessageConfirmDialog(
-            context = binding.root.context,
-            originalMessage = resources.getString(R.string.group_quit_fail_cause_owner),
-            boldStringFromOriginal = listOf(resources.getString(R.string.group_quit_fail_cause_owner_bold)),
-            confirmMessage = "나가기",
-        )
+    private fun groupQuitFailDialog(): OneButtonDialog {
+        return OneButtonDialog.create {
+            topMessage = resources.getString(R.string.group_quit_fail_cause_owner)
+            boldStringsOfTopMessage = listOf(resources.getString(R.string.group_quit_fail_cause_owner_bold))
+            bottomMessage = resources.getString(R.string.group_quit_fail_cause_owner)
+            buttonText = "cancel"
+        }
     }
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
