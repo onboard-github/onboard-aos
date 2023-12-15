@@ -15,7 +15,7 @@ import com.yapp.bol.designsystem.util.createBoldSpannable
 class OneButtonDialog constructor(
     private val topMessage: SpannableStringBuilder?,
     private val bottomMessage: SpannableStringBuilder? = null,
-    private val confirmMessage: String,
+    private val confirmMessage: String = "확인",
     private var onButtonClickDismissDialog: Boolean = true
 ) : DialogFragment() {
 
@@ -40,7 +40,7 @@ class OneButtonDialog constructor(
         var boldStringsOfTopMessage: List<String>? = null
         var bottomMessage: String? = null
         var boldStringOfBottomMessage: List<String>? = null
-        var buttonText: String = ""
+        var buttonText: String = "확인"
         var onButtonClickDismissDialog = true
         fun build() = OneButtonDialog(this)
     }
