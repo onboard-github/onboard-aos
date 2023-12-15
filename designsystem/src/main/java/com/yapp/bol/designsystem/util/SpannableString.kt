@@ -5,14 +5,16 @@ import android.text.SpannableStringBuilder
 import android.text.style.StyleSpan
 
 fun createBoldSpannable(
-    originalString: String,
-    boldStringFromOriginal: List<String>
-): SpannableStringBuilder {
+    originalString: String?,
+    boldStringFromOriginal: List<String>?
+): SpannableStringBuilder? {
+    if (originalString == null) { return null }
+
     val boldIndexList: MutableList<Pair<Int, Int>> = mutableListOf()
 
     val spannableBuilder = SpannableStringBuilder(originalString)
 
-    boldStringFromOriginal.forEach { boldString ->
+    boldStringFromOriginal?.forEach { boldString ->
         var startIndex = 0
         var indexOfBoldString = originalString.indexOf(boldString, startIndex)
 
