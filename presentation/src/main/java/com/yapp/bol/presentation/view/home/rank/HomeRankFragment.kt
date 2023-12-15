@@ -170,21 +170,27 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun makeQuitDialog(): CancelAndActionDialog {
         val quitDialog = CancelAndActionDialog.create {
-            topMessage = String.format(resources.getString(R.string.group_quit_dialog), viewModel.currentGroupName)
-            boldStringsOfTopMessage = listOf(viewModel.currentGroupName)
+            topMessage = resources.getString(R.string.group_quit_dialog_top)
+            bottomMessage = String.format(
+                resources.getString(R.string.group_quit_dialog_bottom), viewModel.currentGroupName
+            )
+            boldStringOfBottomMessage = listOf(viewModel.currentGroupName)
             actionButtonText = "나가기"
         }
         quitDialog.setOnActionClickListener {
-            activity?.supportFragmentManager?.let { groupQuitFailDialog().show(it, null) }
+            // todo: server api 요청으로 변경
+            activity?.supportFragmentManager?.let {
+                groupQuitFailDialog(GroupQuitFailCase.OnlyMember).show(it, null)
+            }
         }
         return quitDialog
     }
 
-    private fun groupQuitFailDialog(): OneButtonDialog {
+    private fun groupQuitFailDialog(case: GroupQuitFailCase): OneButtonDialog {
         return OneButtonDialog.create {
-            topMessage = resources.getString(R.string.group_quit_fail_cause_owner)
-            boldStringsOfTopMessage = listOf(resources.getString(R.string.group_quit_fail_cause_owner_bold))
-            bottomMessage = resources.getString(R.string.group_quit_fail_cause_owner)
+            topMessage = resources.getString(case.dialogTopMessageId)
+            boldStringsOfTopMessage = listOf(resources.getString(case.dialogTopBoldMessageId))
+            bottomMessage = resources.getString(case.dialogBottomMessageId)
             buttonText = "cancel"
         }
     }

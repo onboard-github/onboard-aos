@@ -77,11 +77,18 @@
     <string name="setting_terms_service">서비스 이용 약관</string>
 
     <!-- Home -->
-    <string name="group_quit_dialog">그룹에서 나가면 내 랭킹과 게임 기록이 모두\n삭제되며, 취소 또는 복구는 불가능합니다.\n%s 그룹을 나가시겠습니까?</string>
-    <string name="group_quit_fail_cause_owner">현재 모임의 유일한 멤버입니다. 모임을\n
-나가시려면 모임 설정 > 모임 삭제 메뉴에서\n
-모임을 삭제해주세요.</string>
-    <string name="group_quit_fail_cause_owner_bold">모임 설정 > 모임 삭제</string>
+    <string name="group_quit_dialog_bottom">%s에서 나가시겠습니까?</string>
+    <string name="group_quit_dialog_top">모임에서 나가면 내 랭킹과 게임 기록이 모두\n삭제되며, 취소 또는 복구는 불가능합니다.</string>
+    <string name="group_quit_fail_cause_owner_top">현재 모임의 관리자입니다. 모임을 나가시려면\n
+        모임 설정 > 관리자 변경 메뉴에서 다른 멤버를\n
+        관리자로 지정한 후 다시 시도해 주세요.</string>
+    <string name="group_quit_fail_cause_owner_top_bold">모임 설정 > 관리자 변경</string>
+    <string name="group_quit_fail_cause_owner_bottom">관리자 변경 페이지로 이동하시겠습니까?</string>
+    <string name="group_quit_fail_cause_only_member_top">현재 모임의 유일한 멤버입니다. 모임을\n
+        나가시려면 모임 설정 > 모임 삭제 메뉴에서\n
+        모임을 삭제해주세요.</string>
+    <string name="group_quit_fail_cause_only_member_top_bold">모임 설정 > 모임 삭제</string>
+    <string name="group_quit_fail_cause_only_member_bottom">모임 삭제 페이지로 이동하시겠습니까?</string>
 
     <!-- 회원 탈퇴 -->
     <string name="quit_text_1">현재(2023.08) 베타 버전에서는 즉각적인 회원 탈퇴가 불가능합니다. 아래 탈퇴 요청하기 버튼을 누르시면 탈퇴 요청 메일 전송이 가능합니다.</string>
