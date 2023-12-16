@@ -96,6 +96,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             loadingGroupName.isVisible = isGroupIdExist
             btnGroupName.isVisible = isGroupIdExist
             btnMeatBall.isVisible = isGroupIdExist
+            btnCreateGroup.isVisible = isGroupIdExist
         }
     }
 
