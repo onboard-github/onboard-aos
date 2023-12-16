@@ -145,6 +145,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/view_rv_bg" />
 
+            <include
+                android:id="@+id/view_no_joined_group"
+                layout="@layout/view_no_joined_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="18dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/view_rv_bg" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/btn_create_group"
