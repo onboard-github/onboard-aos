@@ -13,7 +13,7 @@ data class UserRankItem(
     val score: Int?,
     val playCount: Int?,
     val isChangeRecent: Boolean,
-    val role: Role
+    val role: Role,
 )
 
 sealed class Role(val string: String) {

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/homeRankFragment"
+        android:icon="@drawable/ic_rank1"
+        android:title="@string/menu_home_rank"/>
+
+    <item
+        android:id="@+id/myPageFragment"
+        android:icon="@drawable/ic_my"
+        android:title="@string/menu_home_my"/>
+</menu>

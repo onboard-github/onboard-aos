@@ -15,6 +15,7 @@
             app:exitAnim="@animator/exit_to_left"
             app:popEnterAnim="@animator/enter_from_left"
             app:popExitAnim="@animator/exit_to_right" />
+        <!--    Todo : 없어져야하는 액션    -->
         <action
             android:id="@+id/action_homeRankFragment_to_settingFragment"
             app:destination="@id/settingFragment"
@@ -70,5 +71,15 @@
         <action
             android:id="@+id/action_groupJoinFragment_to_homeRankFragment"
             app:destination="@id/homeRankFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/myPageFragment"
+        android:name="com.yapp.bol.presentation.view.mypage.MyPageFragment"
+        android:label="MyPageFragment" >
+        <!--      Todo : Home에서 설정으로 가는 액션 없어지면 2 사라질 에정      -->
+        <action
+            android:id="@+id/action_myPageFragment_to_settingFragment2"
+            app:destination="@id/settingFragment" />
     </fragment>
 </navigation>
