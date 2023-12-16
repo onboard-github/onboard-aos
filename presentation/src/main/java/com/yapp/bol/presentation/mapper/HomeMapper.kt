@@ -7,6 +7,7 @@ import com.yapp.bol.domain.model.UserRankListItem
 import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
 import com.yapp.bol.presentation.model.HomeUserRankItem
+import com.yapp.bol.presentation.model.JoinedGroupViewItem
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.config.HomeConfig
 
@@ -54,8 +55,12 @@ object HomeMapper {
         return resultList
     }
 
-    fun List<JoinedGroupItem>.toOtherGroupInfo(currentGroupId: Long): List<JoinedGroupItem> {
-        return this
-            .filter { it.id != currentGroupId }
+    fun List<JoinedGroupItem>.toOtherGroupInfo(currentGroupId: Long): List<JoinedGroupViewItem> {
+        return this.map {
+            JoinedGroupViewItem(
+                joinedGroupItem = it,
+                isCurrentGroup = it.id == currentGroupId
+            )
+        }
     }
 }

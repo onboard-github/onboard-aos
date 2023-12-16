@@ -2,7 +2,6 @@ package com.yapp.bol.presentation.view.home.rank
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.usecase.group.GetGroupDetailUseCase
 import com.yapp.bol.domain.usecase.group.GetJoinedGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
@@ -15,6 +14,7 @@ import com.yapp.bol.presentation.mapper.HomeMapper.toUserRankUiModel
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
+import com.yapp.bol.presentation.model.JoinedGroupViewItem
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.checkedApiResult
 import com.yapp.bol.presentation.utils.config.HomeConfig.USER_RANK_LOAD_FORCE_DELAY
@@ -47,8 +47,8 @@ class UserRankViewModel @Inject constructor(
     private val _userUiState = MutableStateFlow<HomeUiState<List<UserRankUiModel>>>(HomeUiState.Loading)
     val userUiState: StateFlow<HomeUiState<List<UserRankUiModel>>> = _userUiState
 
-    private val _otherGroupListInfo = MutableStateFlow<HomeUiState<List<JoinedGroupItem>>>(HomeUiState.Loading)
-    val otherGroupListInfo: StateFlow<HomeUiState<List<JoinedGroupItem>>> = _otherGroupListInfo
+    private val _joinedGroupUiState = MutableStateFlow<HomeUiState<List<JoinedGroupViewItem>>>(HomeUiState.Loading)
+    val joinedGroupUiState: StateFlow<HomeUiState<List<JoinedGroupViewItem>>> = _joinedGroupUiState
 
     private val _currentGroupUiState = MutableStateFlow<HomeUiState<List<DrawerGroupInfoUiModel>>>(HomeUiState.Loading)
     val currentGroupUiState: StateFlow<HomeUiState<List<DrawerGroupInfoUiModel>>> = _currentGroupUiState
@@ -101,7 +101,7 @@ class UserRankViewModel @Inject constructor(
         viewModelScope.launch {
             _gameUiState.value = HomeUiState.Loading
             _currentGroupUiState.value = HomeUiState.Loading
-            _otherGroupListInfo.value = HomeUiState.Loading
+            _joinedGroupUiState.value = HomeUiState.Loading
 
             val startPadding = 1
 
@@ -112,7 +112,7 @@ class UserRankViewModel @Inject constructor(
 
             val game: MutableList<HomeGameItemUiModel> = mutableListOf()
             val group: MutableList<DrawerGroupInfoUiModel> = mutableListOf()
-            val otherGroupList: MutableList<JoinedGroupItem> = mutableListOf()
+            val otherGroupList: MutableList<JoinedGroupViewItem> = mutableListOf()
             var gameIndex = -1
 
             fun <T> List<T>.middleIndex() = this.size / 2
@@ -166,10 +166,10 @@ class UserRankViewModel @Inject constructor(
                 .catch {
                     _gameUiState.value = HomeUiState.Error(it)
                     _currentGroupUiState.value = HomeUiState.Error(it)
-                    _otherGroupListInfo.value = HomeUiState.Error(it)
+                    _joinedGroupUiState.value = HomeUiState.Error(it)
                 }
                 .collectLatest {
-                    _otherGroupListInfo.value = HomeUiState.Success(otherGroupList)
+                    _joinedGroupUiState.value = HomeUiState.Success(otherGroupList)
                     _gameUiState.value = HomeUiState.Success(game)
 
                     groupInfo = group
