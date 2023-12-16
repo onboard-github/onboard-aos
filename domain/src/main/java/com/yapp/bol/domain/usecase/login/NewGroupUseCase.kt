@@ -1,6 +1,7 @@
 package com.yapp.bol.domain.usecase.login
 
 import com.yapp.bol.domain.model.ApiResult
+import com.yapp.bol.domain.model.ImageFileItem
 import com.yapp.bol.domain.model.NewGroupItem
 import com.yapp.bol.domain.repository.FileRepository
 import com.yapp.bol.domain.repository.GroupRepository
@@ -14,7 +15,7 @@ class NewGroupUseCase @Inject constructor(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository,
 ) {
-    fun postFileUpload(file: File): Flow<ApiResult<String>> {
+    fun postFileUpload(file: File): Flow<ApiResult<ImageFileItem>> {
         return fileRepository.postFileUpload(file)
     }
 
@@ -23,9 +24,10 @@ class NewGroupUseCase @Inject constructor(
         description: String,
         organization: String,
         imageUrl: String,
+        uuid: String,
         nickname: String,
     ): Flow<ApiResult<NewGroupItem>> {
-        return groupRepository.postCreateGroup(name, description, organization, imageUrl, nickname)
+        return groupRepository.postCreateGroup(name, description, organization, imageUrl, uuid, nickname)
     }
 
     fun getRandomImage() = groupRepository.getGroupDefaultImage()
