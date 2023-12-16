@@ -56,8 +56,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     override fun onViewCreatedAction() {
         super.onViewCreatedAction()
 
-        initViewModel()
-
         setHomeRecyclerView()
         setDrawer()
         observeGameAndGroupUiState(drawerGroupInfoAdapter, userRankGameAdapter)
@@ -70,18 +68,39 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
         setFloatingButton()
         setGroupNameButton()
+        setGroupSearchButton()
     }
 
     override fun onStart() {
         super.onStart()
-        initViewModel()
+        initGroupData()
     }
 
-    private fun initViewModel() {
-        viewModel.fetchAll(
-            initGroupId = activityViewModel.groupId,
-            initGameId = activityViewModel.gameId
-        )
+    private fun initGroupData() {
+        initUi(activityViewModel.groupId != null)
+        activityViewModel.groupId?.let {
+            viewModel.fetchAll(
+                initGroupId = activityViewModel.groupId,
+                initGameId = activityViewModel.gameId
+            )
+        }
+    }
+
+    private fun initUi(isGroupIdExist: Boolean) {
+        binding.apply {
+            viewRankLoading.isVisible = isGroupIdExist
+            rvUserRank.isVisible = isGroupIdExist
+            rvGameList.visibility = if (isGroupIdExist) { View.VISIBLE } else { View.INVISIBLE }
+            viewNoJoinedGroup.root.isVisible = !isGroupIdExist
+            viewRankLoading.isVisible = isGroupIdExist
+            loadingGroupName.isVisible = isGroupIdExist
+            btnGroupName.isVisible = isGroupIdExist
+            btnMeatBall.isVisible = isGroupIdExist
+        }
+    }
+
+    private fun navigateToGroupSearchFragment() {
+        binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
     }
 
     private fun setHomeRecyclerView() {
@@ -220,6 +239,8 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
+    private fun isNoJoinedGroup() = activityViewModel.groupId == null
+
     private val userRankSnackBar: SnackBarHomeReload by lazy {
         SnackBarHomeReload.make(
             view = binding.root,
@@ -229,6 +250,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun observeUserRankUiState(userRankAdapter: UserRankAdapter) {
         viewModel.userUiState.collectWithLifecycle(this) { uiState ->
+            if (isNoJoinedGroup()) { return@collectWithLifecycle }
             fun List<UserRankUiModel>.isNoRank(): Boolean = this.isEmpty()
 
             when (uiState) {
@@ -271,7 +293,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private val gameSnackBar: SnackBarHomeReload by lazy {
         SnackBarHomeReload.make(
             view = binding.root,
-            onClick = { viewModel.fetchAll() }
+            onClick = { viewModel.fetchAll(initGroupId = activityViewModel.groupId) }
         )
     }
 
@@ -280,6 +302,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         userRankGameAdapter: UserRankGameAdapter,
     ) {
         viewModel.gameUiState.collectWithLifecycle(this) { uiState ->
+            if (isNoJoinedGroup()) { return@collectWithLifecycle }
             when (uiState) {
                 is HomeUiState.Success -> {
                     userRankGameAdapter.submitList(uiState.data)
@@ -301,6 +324,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
 
         viewModel.currentGroupUiState.collectWithLifecycle(this) { uiState ->
+            if (isNoJoinedGroup()) { return@collectWithLifecycle }
             when (uiState) {
                 is HomeUiState.Success -> {
                     uiState.data.map { uiModel ->
@@ -383,6 +407,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setGroupNameButtonEnable(isEnable: Boolean) {
         binding.btnGroupName.isClickable = isEnable
+    }
+
+    private fun setGroupSearchButton() {
+        binding.viewNoJoinedGroup.btnGroupSearch.setOnClickListener {
+            navigateToGroupSearchFragment()
+        }
     }
 
     companion object {
