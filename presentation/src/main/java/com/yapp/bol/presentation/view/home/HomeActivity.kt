@@ -15,9 +15,15 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
     override fun onCreateAction() {
         super.onCreateAction()
-        viewModel.groupId = intent.getLongExtra(HOME_GROUP_ID_KEY, -1L)
-        intent.getLongExtra(HOME_GAME_ID_KEY, -1L).also {
-            if (it == -1L) {
+        intent.getLongExtra(HOME_GROUP_ID_KEY, NO_VALUE_PASSED).also {
+            if (it == NO_VALUE_PASSED) {
+                viewModel.groupId = null
+            } else {
+                viewModel.groupId = it
+            }
+        }
+        intent.getLongExtra(HOME_GAME_ID_KEY, NO_VALUE_PASSED).also {
+            if (it == NO_VALUE_PASSED) {
                 viewModel.gameId = null
             } else {
                 viewModel.gameId = it
@@ -28,15 +34,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
     companion object {
         const val HOME_GROUP_ID_KEY = "HOME_GROUP_ID"
         const val HOME_GAME_ID_KEY = "HOME_GAME_ID"
+        private const val NO_VALUE_PASSED = -1L
 
-        fun startActivity(context: Context, groupId: Long, gameId: Long? = null) {
+        fun startActivity(context: Context, groupId: Long?, gameId: Long? = null) {
             context.startActivity(
                 Intent(context, HomeActivity::class.java)
-                    .putExtra(HOME_GROUP_ID_KEY, groupId)
                     .apply {
-                        gameId?.let {
-                            putExtra(HOME_GAME_ID_KEY, gameId)
-                        }
+                        groupId?.let { putExtra(HOME_GAME_ID_KEY, groupId) }
+                        gameId?.let { putExtra(HOME_GAME_ID_KEY, gameId) }
                     },
             )
         }
