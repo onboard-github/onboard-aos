@@ -45,6 +45,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private lateinit var drawerGroupInfoAdapter: DrawerGroupInfoAdapter
     private lateinit var userRankGameAdapter: UserRankGameAdapter
+    private val userRankAdapter by lazy { UserRankAdapter() }
     private val groupChangeDialog by lazy { GroupChangeDialog (
         onGroupClick = { viewModel.fetchAll(it) },
         onSearchGroupClick = {
@@ -61,6 +62,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         setDrawer()
         observeGameAndGroupUiState(drawerGroupInfoAdapter, userRankGameAdapter)
         observeJoinedGroupUiState(groupChangeDialog)
+        observeUserRankUiState(userRankAdapter)
 
         setStatusBarColor(this@HomeRankFragment.requireActivity(), designsystemR.color.Gray_15, isIconBlack = false)
 
@@ -109,7 +111,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun setUserAdapter() {
-        val userRankAdapter = UserRankAdapter()
         val rvUserRank = binding.rvUserRank
 
         userRankAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -134,7 +135,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         })
 
         rvUserRank.adapter = userRankAdapter
-        observeUserRankUiState(userRankAdapter)
     }
 
     private fun setDrawer() {
