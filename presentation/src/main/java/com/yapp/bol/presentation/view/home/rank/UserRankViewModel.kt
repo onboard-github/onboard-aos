@@ -87,13 +87,11 @@ class UserRankViewModel @Inject constructor(
         _gameUiState.value = HomeUiState.Success(gameUiList)
     }
 
-    fun fetchAll(initGroupId: Long? = null, initGameId: Long? = null) {
+    fun fetchAll(initGroupId: Long?, initGameId: Long? = null) {
         initGroupId?.let {
             groupId = it
             initGameId?.let { id -> gameId = id }
             fetchAllFromServer(it, initGameId)
-        } ?: kotlin.run {
-            fetchAllFromServer(groupId)
         }
     }
 
