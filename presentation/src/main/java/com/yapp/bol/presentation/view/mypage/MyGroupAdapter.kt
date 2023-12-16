@@ -23,7 +23,9 @@ class MyGroupAdapter : ListAdapter<MyGroupUiModel, MyGroupAdapter.MyGroupViewHol
         private val binding: ItemMypageGroupBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: MyGroupUiModel) {
+        fun bind(item: MyGroupUiModel) = with(binding) {
+            tvGroupName.text = item.name
+            tvGroupOrganization.text = item.organization
         }
     }
 

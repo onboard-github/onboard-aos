@@ -7,7 +7,7 @@
         android:title="@string/menu_home_rank"/>
 
     <item
-        android:id="@+id/settingFragment"
+        android:id="@+id/myPageFragment"
         android:icon="@drawable/ic_my"
         android:title="@string/menu_home_my"/>
 </menu>

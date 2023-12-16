@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -14,9 +14,9 @@
             android:id="@+id/iv_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_setting_variant2"
-            android:layout_marginVertical="14dp"
+            android:layout_marginTop="14dp"
             android:layout_marginEnd="18dp"
+            android:src="@drawable/ic_setting_variant2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/Gray_13" />
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
+            android:layout_marginTop="14dp"
             android:maxLines="1"
             android:textAppearance="@style/Typography.Headline"
             android:textColor="@color/Gray_15"
@@ -74,10 +75,10 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_mypage_group"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_group_profile" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_group_profile"
+            tools:listitem="@layout/item_mypage_group" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
