@@ -279,8 +279,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         drawerGroupInfoAdapter: DrawerGroupInfoAdapter,
         userRankGameAdapter: UserRankGameAdapter,
     ) {
-        var gameSnackBarNeedToShow: Boolean = false
-
         viewModel.gameUiState.collectWithLifecycle(this) { uiState ->
             when (uiState) {
                 is HomeUiState.Success -> {
@@ -289,7 +287,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                 }
 
                 is HomeUiState.Loading -> {
-                    binding.rvGameList.visibility = View.GONE
+                    binding.rvGameList.visibility = View.INVISIBLE
                 }
 
                 is HomeUiState.Error -> {
@@ -297,7 +295,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         UpgradeActivity.startActivity(requireContext())
                         requireActivity().finish()
                     }
-                    gameSnackBarNeedToShow = true
+                    gameSnackBar.show()
                 }
             }
         }
@@ -326,14 +324,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         UpgradeActivity.startActivity(requireContext())
                         requireActivity().finish()
                     }
-                    gameSnackBarNeedToShow = false
+                    gameSnackBar.show()
                 }
             }
-        }
-
-        when (gameSnackBarNeedToShow) {
-            true -> gameSnackBar.show()
-            false -> gameSnackBar.dismiss()
         }
     }
 
