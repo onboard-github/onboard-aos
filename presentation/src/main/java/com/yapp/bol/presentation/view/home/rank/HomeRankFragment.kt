@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -46,7 +47,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private lateinit var userRankGameAdapter: UserRankGameAdapter
     private val groupChangeDialog by lazy { GroupChangeDialog (
         onGroupClick = { viewModel.fetchAll(it) },
-        onSearchGroupClick = {  }
+        onSearchGroupClick = {
+            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+        }
     ) }
 
     override fun onViewCreatedAction() {

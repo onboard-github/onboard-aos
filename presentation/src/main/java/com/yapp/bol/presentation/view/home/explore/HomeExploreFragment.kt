@@ -32,6 +32,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import com.yapp.bol.designsystem.R as designsystemR
 
+// todo 제거 필요
 @AndroidEntryPoint
 class HomeExploreFragment : BaseFragment<FragmentHomeExploreBinding>(R.layout.fragment_home_explore) {
 
@@ -49,7 +50,7 @@ class HomeExploreFragment : BaseFragment<FragmentHomeExploreBinding>(R.layout.fr
         val adapter = GroupListAdapter(
             showJoinGroupDialog = {
                 view?.findNavController()?.navigateFragment(
-                    R.id.action_homeExploreFragment_to_groupJoinFragment,
+                    R.id.action_groupSearchFragment_to_groupJoinFragment,
                     "groupId" to it.id
                 )
             },
