@@ -57,7 +57,10 @@ class GroupChangeDialog(
             onGroupClick?.onClick(it)
             dismiss()
         }
-        binding.btnGroupSearch.setOnClickListener { onSearchGroupClick?.onClick() }
+        binding.btnGroupSearch.setOnClickListener {
+            dismiss()
+            onSearchGroupClick?.onClick()
+        }
     }
 
     private fun setWindow() {
