@@ -14,19 +14,18 @@ class GroupChangeViewHolder(
 
     fun bind(item: JoinedGroupViewItem) {
         configureUI(item)
-        handleEvent(item.joinedGroupItem.id)
+        handleEvent(item.joinedGroupItem.id, item.isCurrentGroup)
     }
 
     private fun configureUI(item: JoinedGroupViewItem) {
         binding.tvGroupName.text = item.joinedGroupItem.name
         binding.viewSelectedGroup.isVisible = item.isCurrentGroup
         binding.ivCheck.isVisible = item.isCurrentGroup
-        binding.root.isClickable = !(item.isCurrentGroup)
     }
 
-    private fun handleEvent(groupId: Long) {
+    private fun handleEvent(groupId: Long, isCurrentGroup: Boolean) {
         binding.root.setOnClickListener {
-            onClick?.onClick(groupId)
+            if (!isCurrentGroup) { onClick?.onClick(groupId) }
         }
     }
 
