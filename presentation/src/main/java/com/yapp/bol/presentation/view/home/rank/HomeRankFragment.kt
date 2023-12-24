@@ -47,7 +47,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private lateinit var userRankGameAdapter: UserRankGameAdapter
     private val userRankAdapter by lazy { UserRankAdapter() }
     private val groupChangeDialog by lazy {
-        GroupChangeDialog (
+        GroupChangeDialog(
             onGroupClick = { viewModel.fetchAll(it) },
             onSearchGroupClick = {
                 binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)

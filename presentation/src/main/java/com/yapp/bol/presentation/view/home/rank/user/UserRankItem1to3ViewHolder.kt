@@ -67,7 +67,7 @@ class UserRankItem1to3ViewHolder(
                 imgDice.visibility = View.VISIBLE
                 imgDiceGuest.visibility = View.INVISIBLE
             }
-        }?: kotlin.run {
+        } ?: kotlin.run {
             tvRank.text = EMPTY_TEXT
             tvName.text = EMPTY_TEXT
             tvPlayCount.visibility = View.INVISIBLE
