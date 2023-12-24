@@ -41,7 +41,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
             context.startActivity(
                 Intent(context, HomeActivity::class.java)
                     .apply {
-                        groupId?.let { putExtra(HOME_GAME_ID_KEY, groupId) }
+                        groupId?.let { putExtra(HOME_GROUP_ID_KEY, groupId) }
                         gameId?.let { putExtra(HOME_GAME_ID_KEY, gameId) }
                     },
             )
