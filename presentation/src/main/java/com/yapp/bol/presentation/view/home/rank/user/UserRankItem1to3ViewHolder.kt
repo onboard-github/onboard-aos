@@ -33,9 +33,10 @@ class UserRankItem1to3ViewHolder(
 
     fun bind(itemList: List<HomeUserRankItem>) {
 
-        if (itemList.size == USER_NOT_FULL) {
-            binding.viewRank3.setItems(null, false, Second)
-        }
+        // for ui init
+        binding.viewRank1.setItems(null, false, First)
+        binding.viewRank2.setItems(null, false, Second)
+        binding.viewRank3.setItems(null, false, Third)
 
         itemList.forEachIndexed { index, item ->
             when (index) {
@@ -46,24 +47,33 @@ class UserRankItem1to3ViewHolder(
         }
     }
 
-    private fun ViewRank1stBinding.setItems(userRankItem: UserRankItem, isMe: Boolean, rank: Ordinal) {
-        userRankItem.apply {
-            if (this.rank != null) {
+    private fun ViewRank1stBinding.setItems(userRankItem: UserRankItem?, isMe: Boolean, rank: Ordinal) {
+        userRankItem?.let {
+            tvPlayCount.visibility = View.VISIBLE
+            llWinRate.visibility = View.VISIBLE
+            if (it.rank != null) {
                 tvRank.text = rank.presentData
             } else { tvRank.text = EMPTY_TEXT }
-            tvName.text = name
-            tvPlayCount.text = playCount.convertPlayCount()
-            tvWinRate.text = score.convertScore()
-            ivRecentUser.visibility = if (isChangeRecent) {
+            tvName.text = it.name
+            tvPlayCount.text = it.playCount.convertPlayCount()
+            tvWinRate.text = it.score.convertScore()
+            ivRecentUser.visibility = if (it.isChangeRecent) {
                 View.VISIBLE
             } else { View.GONE }
-            if (role is Role.GUEST) {
+            if (it.role is Role.GUEST) {
                 imgDice.visibility = View.INVISIBLE
                 imgDiceGuest.visibility = View.VISIBLE
             } else {
                 imgDice.visibility = View.VISIBLE
                 imgDiceGuest.visibility = View.INVISIBLE
             }
+        }?: kotlin.run {
+            tvRank.text = EMPTY_TEXT
+            tvName.text = EMPTY_TEXT
+            tvPlayCount.visibility = View.INVISIBLE
+            llWinRate.visibility = View.INVISIBLE
+            imgDice.visibility = View.INVISIBLE
+            ivRecentUser.visibility = View.GONE
         }
 
         if (isMe) {
@@ -73,24 +83,33 @@ class UserRankItem1to3ViewHolder(
         }
     }
 
-    private fun ViewRank2ndBinding.setItems(userRankItem: UserRankItem, isMe: Boolean, rank: Ordinal) {
-        userRankItem.apply {
-            if (this.rank != null) {
+    private fun ViewRank2ndBinding.setItems(userRankItem: UserRankItem?, isMe: Boolean, rank: Ordinal) {
+        userRankItem?.let {
+            tvPlayCount.visibility = View.VISIBLE
+            llWinRate.visibility = View.VISIBLE
+            if (it.rank != null) {
                 tvRank.text = rank.presentData
             } else { tvRank.text = "-" }
-            tvName.text = name
-            tvPlayCount.text = playCount.convertPlayCount()
-            tvWinRate.text = score.convertScore()
-            ivRecentUser.visibility = if (isChangeRecent) {
+            tvName.text = it.name
+            tvPlayCount.text = it.playCount.convertPlayCount()
+            tvWinRate.text = it.score.convertScore()
+            ivRecentUser.visibility = if (it.isChangeRecent) {
                 View.VISIBLE
             } else { View.GONE }
-            if (role is Role.GUEST) {
+            if (it.role is Role.GUEST) {
                 imgDice.visibility = View.INVISIBLE
                 imgDiceGuest.visibility = View.VISIBLE
             } else {
                 imgDice.visibility = View.VISIBLE
                 imgDiceGuest.visibility = View.INVISIBLE
             }
+        } ?: kotlin.run {
+            tvRank.text = EMPTY_TEXT
+            tvName.text = EMPTY_TEXT
+            tvPlayCount.visibility = View.INVISIBLE
+            llWinRate.visibility = View.INVISIBLE
+            imgDice.visibility = View.INVISIBLE
+            ivRecentUser.visibility = View.GONE
         }
 
         if (isMe) {
@@ -102,6 +121,8 @@ class UserRankItem1to3ViewHolder(
 
     private fun ViewRank3rdBinding.setItems(userRankItem: UserRankItem?, isMe: Boolean = false, rank: Ordinal) {
         userRankItem?.let {
+            tvPlayCount.visibility = View.VISIBLE
+            llWinRate.visibility = View.VISIBLE
             if (it.rank != null) {
                 tvRank.text = rank.presentData
             } else { tvRank.text = EMPTY_TEXT }
@@ -121,8 +142,9 @@ class UserRankItem1to3ViewHolder(
         } ?: kotlin.run {
             tvRank.text = EMPTY_TEXT
             tvName.text = EMPTY_TEXT
-            tvPlayCount.text = EMPTY_TEXT
-            tvWinRate.text = EMPTY_TEXT
+            tvPlayCount.visibility = View.INVISIBLE
+            llWinRate.visibility = View.INVISIBLE
+            imgDice.visibility = View.INVISIBLE
             ivRecentUser.visibility = View.GONE
         }
 
