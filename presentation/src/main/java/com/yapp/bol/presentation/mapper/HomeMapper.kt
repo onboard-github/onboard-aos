@@ -35,10 +35,13 @@ object HomeMapper {
 
         userRankItemList.forEach { userRankItem ->
             userRankItem.rank?.let {
-                if (it <= 3) { userRank1To3.add(HomeUserRankItem(userRankItem, myId == userRankItem.userId)) }
-                else { userRankAfter4.add(
-                    UserRankUiModel.UserRankAfter4(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
-                ) }
+                if (it <= 3) {
+                    userRank1To3.add(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
+                } else {
+                    userRankAfter4.add(
+                        UserRankUiModel.UserRankAfter4(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
+                    )
+                }
             } ?: kotlin.run {
                 userRankAfter4.add(
                     UserRankUiModel.UserRankAfter4(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
