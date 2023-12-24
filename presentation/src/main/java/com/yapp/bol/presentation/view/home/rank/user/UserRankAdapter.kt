@@ -14,6 +14,8 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
             UserRankItem1to3ViewHolder.create(parent)
         } else if (viewType == R.layout.item_rank_after_4) {
             UserRankItemAfter4ViewHolder.create(parent)
+        } else if (viewType == R.layout.item_rank_no_rank) {
+            UserNoRankItemViewHolder.create(parent)
         } else {
             UserRankPaddingViewHolder.create(parent)
         }
@@ -30,6 +32,9 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
 
                 is UserRankUiModel.UserRankPadding ->
                     (holder as UserRankPaddingViewHolder)
+
+                is UserRankUiModel.UserRankNoRank ->
+                    (holder as UserNoRankItemViewHolder)
             }
         }
     }
@@ -39,6 +44,7 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
             is UserRankUiModel.UserRank1to3 -> R.layout.item_rank_1_to_3
             is UserRankUiModel.UserRankAfter4 -> R.layout.item_rank_after_4
             is UserRankUiModel.UserRankPadding -> R.layout.item_rank_padding
+            is UserRankUiModel.UserRankNoRank -> R.layout.item_rank_no_rank
         }
     }
 
@@ -61,6 +67,8 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
                     }
 
                     is UserRankUiModel.UserRankPadding -> true
+
+                    is UserRankUiModel.UserRankNoRank -> true
                 }
             }
 

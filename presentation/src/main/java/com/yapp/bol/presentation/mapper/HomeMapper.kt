@@ -18,12 +18,28 @@ object HomeMapper {
         val userRankAfter4 = mutableListOf<UserRankUiModel>()
         val resultList = mutableListOf<UserRankUiModel>()
 
+        // 멤버가 그룹장 자신 혼자인 경우 - 초대 UI를 위한 empty list return
         if (userRankItemList.size <= HomeConfig.NO_RANK_THRESHOLD) { return resultList }
 
-        userRankItemList.forEachIndexed { index, userRankItem ->
-            if (index < HomeConfig.USER_RV_1_TO_3_UI_RANK_THRESHOLD) {
-                userRank1To3.add(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
-            } else {
+        // 랭킹 없는 멤버들만 있는 경우 (size는 반드시 1 초과)
+        if (userRankItemList.first().rank == null) {
+            resultList.add(UserRankUiModel.UserRankNoRank)
+            resultList.addAll(
+                userRankItemList.map {
+                    UserRankUiModel.UserRankAfter4(HomeUserRankItem(it, myId == it.userId))
+                }
+            )
+            resultList.add(UserRankUiModel.UserRankPadding)
+            return resultList
+        }
+
+        userRankItemList.forEach { userRankItem ->
+            userRankItem.rank?.let {
+                if (it <= 3) { userRank1To3.add(HomeUserRankItem(userRankItem, myId == userRankItem.userId)) }
+                else { userRankAfter4.add(
+                    UserRankUiModel.UserRankAfter4(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
+                ) }
+            } ?: kotlin.run {
                 userRankAfter4.add(
                     UserRankUiModel.UserRankAfter4(HomeUserRankItem(userRankItem, myId == userRankItem.userId))
                 )
