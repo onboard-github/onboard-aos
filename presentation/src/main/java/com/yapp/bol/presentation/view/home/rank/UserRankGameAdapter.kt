@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.yapp.bol.domain.model.GameItem
 
+// todo : 중복 코드
+// 작업 둘 다 멈췄을 때 삭제 필요
 class UserRankGameAdapter : ListAdapter<GameItem, UserRankGameViewHolder>(diff) {
 
     private var selectedPosition: Int? = null

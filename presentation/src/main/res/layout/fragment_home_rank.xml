@@ -36,23 +36,24 @@
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_marginStart="2dp"
-                    android:src="@drawable/ic_open"/>
+                    android:src="@drawable/ic_open"
+                    android:rotation="90"/>
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/btn_help"
-                android:layout_width="64dp"
-                android:layout_height="wrap_content"
-                android:text="문의"
-                android:textColor="@color/Gray_9"
-                android:textAlignment="textEnd"
-                android:gravity="end
-"               android:layout_marginEnd="17dp"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_meat_ball"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_meatball"
+                android:rotation="90"
+                android:layout_marginEnd="16dp"
                 android:textAppearance="@style/Typography.Body5_R"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/btn_group_name"
-                app:layout_constraintBottom_toBottomOf="@id/btn_group_name"/>
+                app:layout_constraintBottom_toBottomOf="@id/btn_group_name"
+                android:padding="4dp"
+                app:tint="@color/Gray_1" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/loading_group_name"
@@ -177,7 +178,7 @@
             android:id="@+id/nav_group_info"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity="end"
             android:background="@drawable/bg_group_info_drawer">
 
             <androidx.constraintlayout.widget.ConstraintLayout

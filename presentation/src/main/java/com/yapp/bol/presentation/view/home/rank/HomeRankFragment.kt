@@ -9,10 +9,11 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
+import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
+import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
@@ -20,7 +21,6 @@ import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
-import com.yapp.bol.presentation.utils.sendMailToHelpAddress
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.home.HomeUiState
@@ -58,7 +58,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         scrollCenterWhenUserRankTouchDown()
 
         setFloatingButton()
-        setHelpButton()
+        setGroupNameButton()
     }
 
     override fun onStart() {
@@ -131,21 +131,21 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setDrawer() {
         setDrawerOpen()
         setDrawerAdapter()
-        bindExploreButton()
-        bindSettingButton()
+        bindGroupQuitButton()
     }
 
     private fun setDrawerOpen() {
-        binding.btnGroupName.setOnClickListener {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
+        binding.btnMeatBall.setOnClickListener {
+            binding.drawerLayout.openDrawer(GravityCompat.END)
         }
     }
 
     private fun setDrawerAdapter() {
+        // todo : 마이페이지 그룹 프로필 수정 화면으로 바로 이동해주어야 할듯.
         val otherGroupOnClick: (Long) -> Unit = { id ->
             activityViewModel.groupId = id
             viewModel.apply {
-                binding.drawerLayout.closeDrawer(GravityCompat.START)
+                binding.drawerLayout.closeDrawer(GravityCompat.END)
                 fetchAll(initGroupId = id)
             }
         }
@@ -156,21 +156,42 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
 
         drawerGroupInfoAdapter = DrawerGroupInfoAdapter(
-            otherGroupOnClick = otherGroupOnClick,
+            userProfileEditOnClick = otherGroupOnClick,
             copyButtonOnClick = copyButtonOnClick,
         )
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter
     }
 
-    private fun bindExploreButton() {
-        binding.viewFooter.llBtnExplore.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_homeExploreFragment)
+    private fun bindGroupQuitButton() {
+        binding.viewFooter.llBtnQuit.setOnClickListener {
+            activity?.supportFragmentManager?.let { makeQuitDialog().show(it, null) }
         }
     }
 
-    private fun bindSettingButton() {
-        binding.viewFooter.btnSetting.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_settingFragment)
+    private fun makeQuitDialog(): CancelAndActionDialog {
+        val quitDialog = CancelAndActionDialog.create {
+            topMessage = resources.getString(R.string.group_quit_dialog_top)
+            bottomMessage = String.format(
+                resources.getString(R.string.group_quit_dialog_bottom), viewModel.currentGroupName
+            )
+            boldStringOfBottomMessage = listOf(viewModel.currentGroupName)
+            actionButtonText = "나가기"
+        }
+        quitDialog.setOnActionClickListener {
+            // todo: server api 요청으로 변경
+            activity?.supportFragmentManager?.let {
+                groupQuitFailDialog(GroupQuitFailCase.OnlyMember).show(it, null)
+            }
+        }
+        return quitDialog
+    }
+
+    private fun groupQuitFailDialog(case: GroupQuitFailCase): OneButtonDialog {
+        return OneButtonDialog.create {
+            topMessage = resources.getString(case.dialogTopMessageId)
+            boldStringsOfTopMessage = listOf(resources.getString(case.dialogTopBoldMessageId))
+            bottomMessage = resources.getString(case.dialogBottomMessageId)
+            buttonText = "cancel"
         }
     }
 
@@ -249,27 +270,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         drawerGroupInfoAdapter: DrawerGroupInfoAdapter,
         userRankGameAdapter: UserRankGameAdapter,
     ) {
-        viewModel.gameAndGroupUiState.collectWithLifecycle(this) { uiState ->
+        var gameSnackBarNeedToShow: Boolean = false
+
+        viewModel.gameUiState.collectWithLifecycle(this) { uiState ->
             when (uiState) {
                 is HomeUiState.Success -> {
-                    uiState.data.group.map { uiModel ->
-                        if (uiModel is DrawerGroupInfoUiModel.CurrentGroupInfo) {
-                            setCurrentGroupInfo(uiModel)
-                        }
-                    }
-                    drawerGroupInfoAdapter.submitList(uiState.data.group)
-                    userRankGameAdapter.submitList(uiState.data.game)
-
-                    binding.btnGroupName.visibility = View.VISIBLE
-                    binding.loadingGroupName.visibility = View.INVISIBLE
+                    userRankGameAdapter.submitList(uiState.data)
                     binding.rvGameList.visibility = View.VISIBLE
-
-                    gameSnackBar.dismiss()
                 }
 
                 is HomeUiState.Loading -> {
-                    binding.btnGroupName.visibility = View.INVISIBLE
-                    binding.loadingGroupName.visibility = View.VISIBLE
                     binding.rvGameList.visibility = View.GONE
                 }
 
@@ -278,9 +288,43 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         UpgradeActivity.startActivity(requireContext())
                         requireActivity().finish()
                     }
-                    gameSnackBar.show()
+                    gameSnackBarNeedToShow = true
                 }
             }
+        }
+
+        viewModel.currentGroupUiState.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                is HomeUiState.Success -> {
+                    uiState.data.map { uiModel ->
+                        if (uiModel is DrawerGroupInfoUiModel.CurrentGroupInfo) {
+                            setCurrentGroupInfo(uiModel)
+                        }
+                    }
+                    drawerGroupInfoAdapter.submitList(uiState.data)
+
+                    binding.btnGroupName.visibility = View.VISIBLE
+                    binding.loadingGroupName.visibility = View.INVISIBLE
+                }
+
+                is HomeUiState.Loading -> {
+                    binding.btnGroupName.visibility = View.INVISIBLE
+                    binding.loadingGroupName.visibility = View.VISIBLE
+                }
+
+                is HomeUiState.Error -> {
+                    if (uiState.error.message == "FORCE_UPDATE") {
+                        UpgradeActivity.startActivity(requireContext())
+                        requireActivity().finish()
+                    }
+                    gameSnackBarNeedToShow = false
+                }
+            }
+        }
+
+        when (gameSnackBarNeedToShow) {
+            true -> gameSnackBar.show()
+            false -> gameSnackBar.dismiss()
         }
     }
 
@@ -314,11 +358,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
-    private fun setHelpButton() {
-        binding.btnHelp.setOnClickListener {
-            val string = binding.root.resources.getString(R.string.help_email_content)
-            val content = String.format(string, viewModel.myId, viewModel.nickName, viewModel.groupId)
-            it.context.sendMailToHelpAddress("온보드 문의", content)
+    private fun setGroupNameButton() {
+        binding.btnGroupName.setOnClickListener {
+            // todo : 그룹 다이얼로그 오픈으로 수정
         }
     }
 
