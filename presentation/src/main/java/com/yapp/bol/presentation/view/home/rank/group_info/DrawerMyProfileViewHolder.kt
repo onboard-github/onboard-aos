@@ -16,7 +16,7 @@ class DrawerMyProfileViewHolder(
     fun bind(userRankItem: UserRankItem) {
         binding.tvName.text = userRankItem.name
         binding.tvPlayCount.text = userRankItem.playCount.convertPlayCount()
-        binding.root.setOnClickListener {
+        binding.btnEdit.setOnClickListener {
             onClick(userRankItem.id)
         }
     }
