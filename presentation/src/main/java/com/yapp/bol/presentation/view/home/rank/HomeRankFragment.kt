@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -26,6 +27,7 @@ import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.home.HomeUiState
 import com.yapp.bol.presentation.view.home.HomeViewModel
 import com.yapp.bol.presentation.view.home.rank.UserRankViewModel.Companion.RV_SELECTED_POSITION_RESET
+import com.yapp.bol.presentation.view.home.rank.change_group.GroupChangeDialog
 import com.yapp.bol.presentation.view.home.rank.game.UserRankGameAdapter
 import com.yapp.bol.presentation.view.home.rank.game.UserRankGameLayoutManager
 import com.yapp.bol.presentation.view.home.rank.group_info.DrawerGroupInfoAdapter
@@ -43,6 +45,14 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private lateinit var drawerGroupInfoAdapter: DrawerGroupInfoAdapter
     private lateinit var userRankGameAdapter: UserRankGameAdapter
+    private val groupChangeDialog by lazy {
+        GroupChangeDialog(
+            onGroupClick = { viewModel.fetchAll(it) },
+            onSearchGroupClick = {
+                binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+            }
+        )
+    }
 
     override fun onViewCreatedAction() {
         super.onViewCreatedAction()
@@ -52,6 +62,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         setHomeRecyclerView()
         setDrawer()
         observeGameAndGroupUiState(drawerGroupInfoAdapter, userRankGameAdapter)
+        observeJoinedGroupUiState(groupChangeDialog)
 
         setStatusBarColor(this@HomeRankFragment.requireActivity(), designsystemR.color.Gray_15, isIconBlack = false)
 
@@ -328,6 +339,19 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
+    private fun observeJoinedGroupUiState(groupChangeDialog: GroupChangeDialog) {
+        viewModel.joinedGroupUiState.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                is HomeUiState.Success -> {
+                    groupChangeDialog.submitGroupList(uiState.data)
+                    setGroupNameButtonEnable(true)
+                }
+                is HomeUiState.Loading -> { setGroupNameButtonEnable(false) }
+                is HomeUiState.Error -> { setGroupNameButtonEnable(false) }
+            }
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun scrollCenterWhenUserRankTouchDown() {
         binding.rvUserRank.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -360,8 +384,14 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setGroupNameButton() {
         binding.btnGroupName.setOnClickListener {
-            // todo : 그룹 다이얼로그 오픈으로 수정
+            activity?.supportFragmentManager?.let {
+                if (!groupChangeDialog.isAdded) { groupChangeDialog.show(it, null) }
+            }
         }
+    }
+
+    private fun setGroupNameButtonEnable(isEnable: Boolean) {
+        binding.btnGroupName.isClickable = isEnable
     }
 
     companion object {

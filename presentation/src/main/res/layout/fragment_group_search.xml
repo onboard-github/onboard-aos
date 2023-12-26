@@ -10,17 +10,30 @@
         android:paddingHorizontal="18dp"
         android:background="@color/Gray_2">
 
-        <TextView
-            android:id="@+id/tv_title"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="37dp"
             android:layout_marginBottom="26dp"
-            android:textColor="@color/Gray_15"
-            android:text="@string/group_search_title"
-            android:textAppearance="@style/Typography.Title1"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="모임 둘러보기"
+                android:textAppearance="@style/Typography.Title1"
+                android:textColor="@color/Gray_15"/>
+
+        </LinearLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

@@ -7,7 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.PagingData
@@ -33,12 +33,13 @@ import com.yapp.bol.designsystem.R as designsystemR
 @AndroidEntryPoint
 class GroupSearchFragment : BaseFragment<FragmentGroupSearchBinding>(R.layout.fragment_group_search) {
 
-    private val viewModel: GroupSearchViewModel by activityViewModels()
+    private val viewModel: GroupSearchViewModel by viewModels()
 
     override fun onViewCreatedAction() {
         super.onViewCreatedAction()
         binding.viewGroupListLoading.root.visibility = View.GONE
         setAdapter()
+        setBackButton()
         setStatusBarColor(this@GroupSearchFragment.requireActivity(), designsystemR.color.Gray_2, isIconBlack = true)
     }
 
@@ -164,4 +165,10 @@ class GroupSearchFragment : BaseFragment<FragmentGroupSearchBinding>(R.layout.fr
                 )
             }
         }
+
+    private fun setBackButton() {
+        binding.btnBack.setOnClickListener {
+            binding.root.findNavController().popBackStack()
+        }
+    }
 }
