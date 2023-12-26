@@ -110,6 +110,8 @@ dependencies {
 
     // Navigation
     implementation(com.yapp.bol.Navigation.NAVIGATION)
+    implementation(com.yapp.bol.Navigation.BOTTOM_UI)
+    implementation(com.yapp.bol.Navigation.BOTTOM_FRAGMENT)
 
     // Paging3
     implementation(com.yapp.bol.AndroidX.PAGING)
