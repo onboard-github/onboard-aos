@@ -5,19 +5,19 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.yapp.bol.presentation.databinding.ItemChangeGroupBinding
-import com.yapp.bol.presentation.model.JoinedGroupViewItem
+import com.yapp.bol.presentation.model.JoinedGroupUiModel
 
 class GroupChangeViewHolder(
     private val binding: ItemChangeGroupBinding,
     private val onClick: GroupChangeItemClickListener?,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: JoinedGroupViewItem) {
+    fun bind(item: JoinedGroupUiModel) {
         configureUI(item)
         handleEvent(item.joinedGroupItem.id, item.isCurrentGroup)
     }
 
-    private fun configureUI(item: JoinedGroupViewItem) {
+    private fun configureUI(item: JoinedGroupUiModel) {
         binding.tvGroupName.text = item.joinedGroupItem.name
         binding.viewSelectedGroup.isVisible = item.isCurrentGroup
         binding.ivCheck.isVisible = item.isCurrentGroup

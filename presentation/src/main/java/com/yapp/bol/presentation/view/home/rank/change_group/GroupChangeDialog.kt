@@ -10,7 +10,7 @@ import android.view.Window
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.databinding.DialogChangeGroupBinding
-import com.yapp.bol.presentation.model.JoinedGroupViewItem
+import com.yapp.bol.presentation.model.JoinedGroupUiModel
 
 class GroupChangeDialog(
     private val onGroupClick: GroupChangeItemClickListener? = null,
@@ -27,7 +27,7 @@ class GroupChangeDialog(
         fun onClick()
     }
 
-    fun submitGroupList(list: List<JoinedGroupViewItem>) {
+    fun submitGroupList(list: List<JoinedGroupUiModel>) {
         groupChangeAdapter.submitList(list)
     }
 

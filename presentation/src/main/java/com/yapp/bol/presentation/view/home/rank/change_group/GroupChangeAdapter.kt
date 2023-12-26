@@ -3,7 +3,7 @@ package com.yapp.bol.presentation.view.home.rank.change_group
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import com.yapp.bol.presentation.model.JoinedGroupViewItem as Item
+import com.yapp.bol.presentation.model.JoinedGroupUiModel as Item
 
 class GroupChangeAdapter : ListAdapter<Item, GroupChangeViewHolder>(diff) {
 

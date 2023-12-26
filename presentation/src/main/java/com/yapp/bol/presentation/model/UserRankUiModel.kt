@@ -8,6 +8,7 @@ sealed class UserRankUiModel {
         val item: HomeUserRankItem
     ) : UserRankUiModel()
     object UserRankPadding : UserRankUiModel()
+    object UserRankNoRank : UserRankUiModel()
 }
 
 data class HomeUserRankItem(
