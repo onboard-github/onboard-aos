@@ -14,6 +14,7 @@ import com.yapp.bol.domain.model.GroupItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
 import com.yapp.bol.domain.model.OwnerItem
+import com.yapp.bol.domain.model.RandomImageItem
 import com.yapp.bol.domain.model.Role
 import com.yapp.bol.domain.model.UserRankItem
 import com.yapp.bol.domain.model.UserRankListItem
@@ -35,7 +36,7 @@ object GroupMapper {
             this.owner,
             this.organization,
             this.profileImageUrl,
-            this.accessCode
+            this.accessCode,
         )
     }
 
@@ -54,7 +55,7 @@ object GroupMapper {
             profileImageUrl = this.profileImageUrl,
             accessCode = this.accessCode,
             memberCount = this.memberCount,
-            owner = this.owner.toItem()
+            owner = this.owner.toItem(),
         )
 
     private fun OwnerDTO.toItem(): OwnerItem =
@@ -62,15 +63,15 @@ object GroupMapper {
             id = this.id,
             role = this.role,
             nickname = this.nickname,
-            level = this.level
+            level = this.level,
         )
 
     fun ApiResult<UserRankApiResponse>.toUserRankItem(): ApiResult<UserRankListItem> =
         when (this) {
             is ApiResult.Success -> ApiResult.Success(
                 UserRankListItem(
-                    userRankItemList = data.toDomain()
-                )
+                    userRankItemList = data.toDomain(),
+                ),
             )
             is ApiResult.Error -> ApiResult.Error(exception)
         }
@@ -90,7 +91,7 @@ object GroupMapper {
                     Role.GUEST.string -> Role.GUEST
                     Role.HOST.string -> Role.HOST
                     else -> Role.OWNER
-                }
+                },
             )
         }
 
@@ -100,7 +101,7 @@ object GroupMapper {
                 GroupSearchItem(
                     hasNext = this.data.hasNext,
                     groupItemList = data.toItem(),
-                )
+                ),
             )
 
             is ApiResult.Error -> ApiResult.Error(exception)
@@ -115,7 +116,7 @@ object GroupMapper {
                 description = groupItem.description,
                 organization = groupItem.organization,
                 profileImageUrl = groupItem.profileImageUrl,
-                memberCount = groupItem.memberCount
+                memberCount = groupItem.memberCount,
             )
         }
     }
@@ -128,9 +129,14 @@ object GroupMapper {
         }
     }
 
-    fun ApiResult<RandomImageResponse>.toImageDomain(): ApiResult<String> {
+    fun ApiResult<RandomImageResponse>.toImageDomain(): ApiResult<RandomImageItem> {
         return when (this) {
-            is ApiResult.Success -> ApiResult.Success(data.url)
+            is ApiResult.Success -> ApiResult.Success(
+                RandomImageItem(
+                    data.uuid,
+                    data.url,
+                ),
+            )
             is ApiResult.Error -> ApiResult.Error(exception)
         }
     }

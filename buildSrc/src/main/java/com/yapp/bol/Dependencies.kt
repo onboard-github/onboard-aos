@@ -1,5 +1,6 @@
 package com.yapp.bol
 
+import com.yapp.bol.Versions.BOTTOM_NAVIGATION
 import com.yapp.bol.Versions.DATA_STORE_VERSION
 import com.yapp.bol.Versions.HILT_VERSION
 import com.yapp.bol.Versions.KAKAO_VERSION
@@ -18,6 +19,7 @@ object Versions {
     const val DATA_STORE_VERSION = "1.0.0"
     const val FIRBASE_ANALYSIS = "18.0.2"
     const val FIREBASE_CLASHLYTICS = "17.4.1"
+    const val BOTTOM_NAVIGATION = "2.5.3"
 }
 
 object Android {
@@ -110,6 +112,8 @@ object Glide {
 
 object Navigation {
     const val NAVIGATION = "androidx.navigation:navigation-dynamic-features-fragment:2.5.3"
+    const val BOTTOM_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:$BOTTOM_NAVIGATION"
+    const val BOTTOM_UI = "androidx.navigation:navigation-ui-ktx:$BOTTOM_NAVIGATION"
 }
 
 object Shimmer {

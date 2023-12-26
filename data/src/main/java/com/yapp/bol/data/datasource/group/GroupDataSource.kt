@@ -16,6 +16,7 @@ interface GroupDataSource {
         description: String,
         organization: String,
         imageUrl: String,
+        uuid: String,
         nickname: String,
     ): Flow<ApiResult<NewGroupApiResponse>>
 
