@@ -45,12 +45,14 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private lateinit var drawerGroupInfoAdapter: DrawerGroupInfoAdapter
     private lateinit var userRankGameAdapter: UserRankGameAdapter
-    private val groupChangeDialog by lazy { GroupChangeDialog (
-        onGroupClick = { viewModel.fetchAll(it) },
-        onSearchGroupClick = {
-            binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
-        }
-    ) }
+    private val groupChangeDialog by lazy {
+        GroupChangeDialog(
+            onGroupClick = { viewModel.fetchAll(it) },
+            onSearchGroupClick = {
+                binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+            }
+        )
+    }
 
     override fun onViewCreatedAction() {
         super.onViewCreatedAction()
