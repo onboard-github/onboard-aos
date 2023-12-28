@@ -3,7 +3,7 @@ package com.yapp.bol.data.repository
 import com.yapp.bol.data.datasource.user.UserDataSource
 import com.yapp.bol.data.mapper.UserMapper.toBoardDomain
 import com.yapp.bol.data.mapper.UserMapper.toJoinedGroupItem
-import com.yapp.bol.data.mapper.UserMapper.toTotalMatchCountItem
+import com.yapp.bol.data.mapper.UserMapper.totalMatchCountToDomain
 import com.yapp.bol.data.mapper.UserMapper.toUserDomain
 import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.domain.model.ApiResult
@@ -38,6 +38,6 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getMyTotalMatchCount(): Flow<ApiResult<TotalMatchCountItem>> {
-        return userDataSource.getMyTotalMatchCount().map { it.toTotalMatchCountItem() }
+        return userDataSource.getMyTotalMatchCount().map { it.totalMatchCountToDomain() }
     }
 }

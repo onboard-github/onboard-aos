@@ -1,6 +1,5 @@
 package com.yapp.bol.data.mapper
 
-import com.yapp.bol.data.mapper.UserMapper.toBoardDomain
 import com.yapp.bol.data.model.user.JoinedGroupResponse
 import com.yapp.bol.data.model.user.OnBoardResponse
 import com.yapp.bol.data.model.user.TotalMatchCountResponse
@@ -44,7 +43,7 @@ object UserMapper {
         }
     }
 
-    fun ApiResult<TotalMatchCountResponse>.toTotalMatchCountItem(): ApiResult<TotalMatchCountItem> {
+    fun ApiResult<TotalMatchCountResponse>.totalMatchCountToDomain(): ApiResult<TotalMatchCountItem> {
         return when (this) {
             is ApiResult.Success -> ApiResult.Success(TotalMatchCountItem(this.data.matchCount))
             is ApiResult.Error -> ApiResult.Error(exception)
