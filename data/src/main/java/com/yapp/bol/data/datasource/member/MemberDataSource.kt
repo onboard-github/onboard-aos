@@ -1,6 +1,7 @@
 package com.yapp.bol.data.datasource.member
 
 import com.yapp.bol.data.model.base.ErrorResponse
+import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
 import com.yapp.bol.domain.model.ApiResult
@@ -28,4 +29,6 @@ interface MemberDataSource {
         nickname: String,
         guestId: Int?,
     ): Flow<ApiResult<ErrorResponse>>
+
+    fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupResponse>>
 }

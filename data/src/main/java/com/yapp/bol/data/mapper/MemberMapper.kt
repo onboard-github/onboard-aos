@@ -1,9 +1,11 @@
 package com.yapp.bol.data.mapper
 
+import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
 import com.yapp.bol.domain.model.ApiResult
+import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
@@ -38,5 +40,12 @@ object MemberMapper {
             nickname = this.nickname,
             level = this.level
         )
+    }
+
+    fun ApiResult<MatchCountInGroupResponse>.matchCountToDomain(): ApiResult<MatchCountInGroupItem> {
+        return when (this) {
+            is ApiResult.Success -> ApiResult.Success(MatchCountInGroupItem(data.matchCount))
+            is ApiResult.Error -> ApiResult.Error(exception)
+        }
     }
 }
