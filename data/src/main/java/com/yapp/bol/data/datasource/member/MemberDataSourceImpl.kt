@@ -3,6 +3,7 @@ package com.yapp.bol.data.datasource.member
 import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.member.GuestAddApiRequest
 import com.yapp.bol.data.model.member.JoinGroupApiRequest
+import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
 import com.yapp.bol.data.remote.MemberApi
@@ -46,5 +47,9 @@ class MemberDataSourceImpl @Inject constructor(
     ): Flow<ApiResult<ErrorResponse>> = flow {
         val result = safeApiCall { memberApi.joinGroup(groupId, JoinGroupApiRequest(nickname, accessCode, guestId)) }
         emit(result)
+    }
+
+    override fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupResponse>> = flow {
+        emit(safeApiCall { memberApi.getMatchCountInGroup(groupId) })
     }
 }

@@ -2,6 +2,7 @@ package com.yapp.bol.data.datasource.user
 
 import com.yapp.bol.data.model.user.JoinedGroupResponse
 import com.yapp.bol.data.model.user.OnBoardResponse
+import com.yapp.bol.data.model.user.TotalMatchCountResponse
 import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.data.model.user.UserResponse
 import com.yapp.bol.data.remote.UserApi
@@ -34,5 +35,9 @@ class UserDataSourceImpl @Inject constructor(
     override fun getUserInfo(): Flow<ApiResult<UserResponse>> = flow {
         val result = safeApiCall { userApi.getUserInfo() }
         emit(result)
+    }
+
+    override fun getMyTotalMatchCount(): Flow<ApiResult<TotalMatchCountResponse>> = flow {
+        emit(safeApiCall { userApi.getMyTotalMatchCount() })
     }
 }

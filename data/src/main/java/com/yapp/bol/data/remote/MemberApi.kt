@@ -3,6 +3,7 @@ package com.yapp.bol.data.remote
 import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.member.GuestAddApiRequest
 import com.yapp.bol.data.model.member.JoinGroupApiRequest
+import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
 import retrofit2.Response
@@ -39,4 +40,9 @@ interface MemberApi {
         @Path("groupId") groupId: String,
         @Body request: JoinGroupApiRequest,
     ): Response<ErrorResponse>
+
+    @GET("/api/v1/user/me/group/{groupId}/match/count")
+    suspend fun getMatchCountInGroup(
+        @Path("groupId") groupId: Long,
+    ): Response<MatchCountInGroupResponse>
 }

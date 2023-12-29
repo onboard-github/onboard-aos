@@ -2,6 +2,7 @@ package com.yapp.bol.domain.repository
 
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.ErrorItem
+import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
 import kotlinx.coroutines.flow.Flow
@@ -28,4 +29,6 @@ interface MemberRepository {
         nickname: String,
         guestId: Int?,
     ): Flow<ApiResult<ErrorItem>>
+
+    fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupItem>>
 }

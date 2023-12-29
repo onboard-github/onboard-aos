@@ -2,6 +2,7 @@ package com.yapp.bol.data.remote
 
 import com.yapp.bol.data.model.user.JoinedGroupResponse
 import com.yapp.bol.data.model.user.OnBoardResponse
+import com.yapp.bol.data.model.user.TotalMatchCountResponse
 import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.data.model.user.UserResponse
 import retrofit2.Response
@@ -24,4 +25,7 @@ interface UserApi {
 
     @GET("/v1/user/me")
     suspend fun getUserInfo(): Response<UserResponse>
+
+    @GET("/v1/user/me/match/count")
+    suspend fun getMyTotalMatchCount(): Response<TotalMatchCountResponse>
 }
