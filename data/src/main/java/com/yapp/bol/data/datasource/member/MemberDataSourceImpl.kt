@@ -1,6 +1,5 @@
 package com.yapp.bol.data.datasource.member
 
-import android.util.Log
 import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.member.GroupQuitRequest
 import com.yapp.bol.data.model.member.GuestAddApiRequest
@@ -11,10 +10,8 @@ import com.yapp.bol.data.model.member.MemberValidApiResponse
 import com.yapp.bol.data.remote.MemberApi
 import com.yapp.bol.domain.handle.BaseRepository
 import com.yapp.bol.domain.model.ApiResult
-import com.yapp.bol.domain.model.ErrorItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
