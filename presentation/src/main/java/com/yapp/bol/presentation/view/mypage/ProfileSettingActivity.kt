@@ -53,7 +53,7 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
         }
 
         profileSettingViewModel.newNickname.observe(this) {
-            if (binding.etUserName.text.toString() == it) binding.root.findNavController().popBackStack()
+            if (binding.etUserName.text.toString() == it) finish()
         }
     }
 
