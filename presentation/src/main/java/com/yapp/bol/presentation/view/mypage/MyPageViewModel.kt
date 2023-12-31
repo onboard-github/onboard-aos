@@ -27,14 +27,18 @@ class MyPageViewModel @Inject constructor(
     private val _userName = MutableLiveData(EMPTY_STRING)
     val userName: LiveData<String> = _userName
 
+    private val _matchTotalCount = MutableLiveData<Long>()
+    val matchTotalCount: LiveData<Long> = _matchTotalCount
+
     init {
         getJoinedGroup()
         getMyInfo()
+        getMyTotalMatchCount()
     }
 
-    private fun getJoinedGroup() {
+    fun getJoinedGroup() {
         viewModelScope.launch {
-            getJoinedGroupUseCase().collectLatest {
+            getJoinedGroupUseCase.fetchV2().collectLatest {
                 checkedApiResult(
                     apiResult = it,
                     success = { data ->
@@ -45,12 +49,23 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    private fun getMyInfo() {
+    fun getMyInfo() {
         viewModelScope.launch {
             getMyInfoUseCase().collectLatest {
                 checkedApiResult(
                     apiResult = it,
                     success = { data -> _userName.value = data.nickname },
+                )
+            }
+        }
+    }
+
+    fun getMyTotalMatchCount() {
+        viewModelScope.launch {
+            getMyInfoUseCase.getMyTotalMatchCount().collectLatest {
+                checkedApiResult(
+                    apiResult = it,
+                    success = { data -> _matchTotalCount.value = data.matchCount },
                 )
             }
         }
