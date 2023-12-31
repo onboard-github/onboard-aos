@@ -1,10 +1,13 @@
 package com.yapp.bol.presentation.view.home.rank
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.bol.domain.model.Role
+import com.yapp.bol.domain.model.user.GroupQuitItem
 import com.yapp.bol.domain.usecase.group.GetGroupDetailUseCase
 import com.yapp.bol.domain.usecase.group.GetJoinedGroupUseCase
+import com.yapp.bol.domain.usecase.group.QuitGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
@@ -14,6 +17,7 @@ import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toUserRankUiModel
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GameItemWithSelected
+import com.yapp.bol.presentation.model.GroupQuitUiModel
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
 import com.yapp.bol.presentation.model.JoinedGroupUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
@@ -39,6 +43,7 @@ class UserRankViewModel @Inject constructor(
     private val getJoinedGroupUseCase: GetJoinedGroupUseCase,
     private val getGroupDetailUseCase: GetGroupDetailUseCase,
     private val getMyInfoUseCase: GetMyInfoUseCase,
+    private val quitGroupUseCase: QuitGroupUseCase,
 ) : ViewModel() {
 
     private var userListFetchJob: Job? = null
@@ -59,6 +64,9 @@ class UserRankViewModel @Inject constructor(
 
     private val _ownerCheckUiState = MutableStateFlow<HomeUiState<Boolean>>(HomeUiState.Loading)
     val ownerCheckUiState: StateFlow<HomeUiState<Boolean>> = _ownerCheckUiState
+
+    private val _groupQuitUiState = MutableStateFlow<GroupQuitUiModel>(GroupQuitUiModel.Loading)
+    val groupQuitUiState: StateFlow<GroupQuitUiModel> = _groupQuitUiState
 
     var groupId: Long = GAME_USER_ID_TO_BE_SET
     var gameId: Long = GAME_USER_ID_TO_BE_SET
@@ -231,6 +239,28 @@ class UserRankViewModel @Inject constructor(
                     _currentGroupUiState.value = HomeUiState.Success(group)
                     _ownerCheckUiState.value = HomeUiState.Success(isOwner)
                 }
+        }
+    }
+
+    fun quitGroup() {
+        _groupQuitUiState.value = GroupQuitUiModel.Loading
+        viewModelScope.launch {
+            quitGroupUseCase.invoke(groupId, nickName).collectLatest {
+                when (it) {
+                    is GroupQuitItem.Success -> {
+                        _groupQuitUiState.value = GroupQuitUiModel.Success
+                    }
+                    is GroupQuitItem.FailCauseOwner -> {
+                        _groupQuitUiState.value = GroupQuitUiModel.FailCauseOwner
+                    }
+                    is GroupQuitItem.FailCauseOnlyOneMember -> {
+                        _groupQuitUiState.value = GroupQuitUiModel.FailCauseOnlyOneMember
+                    }
+                    is GroupQuitItem.FailUnknownError -> {
+                        _groupQuitUiState.value = GroupQuitUiModel.FailUnknownError
+                    }
+                }
+            }
         }
     }
 

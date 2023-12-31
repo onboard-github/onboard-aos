@@ -1,5 +1,6 @@
 package com.yapp.bol.data.mapper
 
+import com.yapp.bol.data.model.member.GroupQuitResponse
 import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.data.model.member.MemberListResponse
@@ -9,6 +10,8 @@ import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
+import com.yapp.bol.domain.model.user.GroupQuitItem
+import okhttp3.ResponseBody
 
 object MemberMapper {
 
@@ -46,6 +49,19 @@ object MemberMapper {
         return when (this) {
             is ApiResult.Success -> ApiResult.Success(MatchCountInGroupItem(data.matchCount))
             is ApiResult.Error -> ApiResult.Error(exception)
+        }
+    }
+
+    fun ApiResult<ResponseBody>.groupQuitToDomain(): GroupQuitItem {
+        return when (this) {
+            is ApiResult.Success -> GroupQuitItem.Success
+            is ApiResult.Error -> {
+                when (exception.code) {
+                    GroupQuitResponse.FailCauseOwner.code -> GroupQuitItem.FailCauseOwner
+                    GroupQuitResponse.FailCauseOnlyOneMember.code -> GroupQuitItem.FailCauseOnlyOneMember
+                    else -> GroupQuitItem.FailUnknownError
+                }
+            }
         }
     }
 }

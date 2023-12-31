@@ -5,8 +5,8 @@ import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
+import com.yapp.bol.domain.model.user.GroupQuitItem
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
 
 interface MemberRepository {
 
@@ -36,5 +36,5 @@ interface MemberRepository {
     fun quitGroup(
         groupId: Long,
         nickname: String,
-    ): Flow<ApiResult<ResponseBody>>
+    ): Flow<GroupQuitItem>
 }
