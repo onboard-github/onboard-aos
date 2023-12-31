@@ -9,6 +9,9 @@
 
     <application>
         <activity
+            android:name=".view.setting.group.GroupSettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.setting.UpgradeActivity"
             android:exported="false" />
         <activity
