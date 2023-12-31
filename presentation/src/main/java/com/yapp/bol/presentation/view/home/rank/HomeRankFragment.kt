@@ -247,7 +247,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         }
                         fragmentManager?.let { manager -> dialog.show(manager, null) }
                     }
-                    is GroupQuitUiModel.Loading -> {  }
+                    is GroupQuitUiModel.Loading -> {}
                 }
             }
         }
