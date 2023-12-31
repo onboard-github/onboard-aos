@@ -63,6 +63,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         observeGameAndGroupUiState(drawerGroupInfoAdapter, userRankGameAdapter)
         observeJoinedGroupUiState(groupChangeDialog)
         observeUserRankUiState(userRankAdapter)
+        observeOwnerCheckUiState()
 
         setStatusBarColor(this@HomeRankFragment.requireActivity(), designsystemR.color.Gray_15, isIconBlack = false)
 
@@ -162,6 +163,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setDrawer() {
         setDrawerOpen()
         setDrawerAdapter()
+        setDrawerGroupSettingButton()
         bindGroupQuitButton()
     }
 
@@ -191,6 +193,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             copyButtonOnClick = copyButtonOnClick,
         )
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter
+    }
+
+    private fun setDrawerGroupSettingButton() {
+        binding.viewHeader.btnGroupSetting.setOnClickListener {
+            // todo group setting 연결
+        }
     }
 
     private fun bindGroupQuitButton() {
@@ -366,6 +374,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                 }
                 is HomeUiState.Loading -> { setGroupNameButtonEnable(false) }
                 is HomeUiState.Error -> { setGroupNameButtonEnable(false) }
+            }
+        }
+    }
+
+    private fun observeOwnerCheckUiState() {
+        viewModel.ownerCheckUiState.collectWithLifecycle(this) {uiState ->
+            when (uiState) {
+                is HomeUiState.Success -> { binding.viewHeader.btnGroupSetting.isVisible = uiState.data }
+                is HomeUiState.Loading -> { binding.viewHeader.btnGroupSetting.isVisible = false }
+                is HomeUiState.Error -> { binding.viewHeader.btnGroupSetting.isVisible = false }
             }
         }
     }
