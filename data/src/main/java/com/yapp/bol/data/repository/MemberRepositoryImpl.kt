@@ -13,6 +13,7 @@ import com.yapp.bol.domain.model.NicknameValidItem
 import com.yapp.bol.domain.repository.MemberRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class MemberRepositoryImpl @Inject constructor(
@@ -51,5 +52,12 @@ class MemberRepositoryImpl @Inject constructor(
 
     override fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupItem>> {
         return memberDataSource.getMatchCountInGroup(groupId).map { it.matchCountToDomain() }
+    }
+
+    override fun quitGroup(
+        groupId: Long,
+        nickname: String,
+    ): Flow<ApiResult<ResponseBody>> {
+        return memberDataSource.quitGroup(groupId, nickname)
     }
 }

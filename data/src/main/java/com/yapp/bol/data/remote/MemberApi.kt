@@ -1,17 +1,22 @@
 package com.yapp.bol.data.remote
 
 import com.yapp.bol.data.model.base.ErrorResponse
+import com.yapp.bol.data.model.member.GroupQuitRequest
 import com.yapp.bol.data.model.member.GuestAddApiRequest
 import com.yapp.bol.data.model.member.JoinGroupApiRequest
 import com.yapp.bol.data.model.member.MatchCountInGroupResponse
 import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+
 
 interface MemberApi {
 
@@ -45,4 +50,10 @@ interface MemberApi {
     suspend fun getMatchCountInGroup(
         @Path("groupId") groupId: Long,
     ): Response<MatchCountInGroupResponse>
+
+    @HTTP(method="DELETE", hasBody = true, path = "api/v1/group/{groupId}/me")
+    suspend fun quitGroup(
+        @Path("groupId") groupId: Long,
+        @Body groupQuitRequest: GroupQuitRequest,
+    ): Response<ResponseBody>
 }
