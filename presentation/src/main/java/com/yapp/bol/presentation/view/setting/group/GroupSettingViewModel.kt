@@ -5,9 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class GroupSettingViewModel @Inject constructor(
-
-) : ViewModel() {
+class GroupSettingViewModel @Inject constructor () : ViewModel() {
     private var groupId: Long = NEED_TO_SET
 
     fun setGroupId(groupId: Long) {
