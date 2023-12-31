@@ -1,6 +1,5 @@
 package com.yapp.bol.presentation.view.home.rank
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.bol.domain.model.Role
