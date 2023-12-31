@@ -16,7 +16,6 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface MemberApi {
 
     @GET("/v1/group/{groupId}/member/validateNickname")
@@ -50,7 +49,7 @@ interface MemberApi {
         @Path("groupId") groupId: Long,
     ): Response<MatchCountInGroupResponse>
 
-    @HTTP(method="DELETE", hasBody = true, path = "api/v1/group/{groupId}/me")
+    @HTTP(method = "DELETE", hasBody = true, path = "api/v1/group/{groupId}/me")
     suspend fun quitGroup(
         @Path("groupId") groupId: Long,
         @Body groupQuitRequest: GroupQuitRequest,
