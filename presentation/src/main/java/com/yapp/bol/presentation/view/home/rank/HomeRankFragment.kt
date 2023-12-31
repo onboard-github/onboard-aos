@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
-import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
+import com.yapp.bol.presentation.model.GroupQuitUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
@@ -32,9 +32,11 @@ import com.yapp.bol.presentation.view.home.rank.game.UserRankGameAdapter
 import com.yapp.bol.presentation.view.home.rank.game.UserRankGameLayoutManager
 import com.yapp.bol.presentation.view.home.rank.group_info.DrawerGroupInfoAdapter
 import com.yapp.bol.presentation.view.home.rank.user.UserRankAdapter
+import com.yapp.bol.presentation.view.login.splash.SplashActivity
 import com.yapp.bol.presentation.view.match.MatchActivity
 import com.yapp.bol.presentation.view.setting.UpgradeActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import com.yapp.bol.designsystem.R as designsystemR
 
 @AndroidEntryPoint
@@ -217,21 +219,52 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             actionButtonText = "나가기"
         }
         quitDialog.setOnActionClickListener {
-            // todo: server api 요청으로 변경
-            activity?.supportFragmentManager?.let {
-                groupQuitFailDialog(GroupQuitFailCase.OnlyMember).show(it, null)
+            viewModel.quitGroup()
+            val fragmentManager = activity?.supportFragmentManager
+            viewModel.groupQuitUiState.collectWithLifecycle(this) {
+                when (it) {
+                    is GroupQuitUiModel.Success -> {
+                        this.cancel()
+                        val intent = Intent(binding.root.context, SplashActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    is GroupQuitUiModel.FailCauseOwner -> {
+                        this.cancel()
+                        val dialog = makeFailCause(GroupQuitFailCase.Owner) {
+                            // todo 이동하기 로직 연결
+                        }
+                        fragmentManager?.let { manager -> dialog.show(manager, null) }
+                    }
+                    is GroupQuitUiModel.FailUnknownError -> {
+                        this.cancel()
+                        binding.root.context.showToast("알 수 없는 에러가 발생했습니다. 다음에 다시 시도해주세요.")
+                    }
+                    is GroupQuitUiModel.FailCauseOnlyOneMember -> {
+                        this.cancel()
+                        val dialog = makeFailCause(GroupQuitFailCase.OnlyMember) {
+                            // todo 이동하기 로직 연결
+                        }
+                        fragmentManager?.let { manager -> dialog.show(manager, null) }
+                    }
+                    is GroupQuitUiModel.Loading -> {  }
+                }
             }
         }
         return quitDialog
     }
 
-    private fun groupQuitFailDialog(case: GroupQuitFailCase): OneButtonDialog {
-        return OneButtonDialog.create {
+    private fun makeFailCause(case: GroupQuitFailCase, onAction: () -> Unit): CancelAndActionDialog {
+        val dialog = CancelAndActionDialog.create {
             topMessage = resources.getString(case.dialogTopMessageId)
             boldStringsOfTopMessage = listOf(resources.getString(case.dialogTopBoldMessageId))
             bottomMessage = resources.getString(case.dialogBottomMessageId)
-            buttonText = "cancel"
+            actionButtonText = "이동하기"
         }
+        dialog.setOnActionClickListener {
+            onAction.invoke()
+        }
+        return dialog
     }
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
@@ -345,12 +378,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                     }
                     drawerGroupInfoAdapter.submitList(uiState.data)
 
-                    binding.btnGroupName.visibility = View.VISIBLE
+                    binding.tvGroupName.visibility = View.VISIBLE
                     binding.loadingGroupName.visibility = View.INVISIBLE
                 }
 
                 is HomeUiState.Loading -> {
-                    binding.btnGroupName.visibility = View.INVISIBLE
+                    binding.tvGroupName.visibility = View.INVISIBLE
                     binding.loadingGroupName.visibility = View.VISIBLE
                 }
 
@@ -379,7 +412,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun observeOwnerCheckUiState() {
-        viewModel.ownerCheckUiState.collectWithLifecycle(this) {uiState ->
+        viewModel.ownerCheckUiState.collectWithLifecycle(this) { uiState ->
             when (uiState) {
                 is HomeUiState.Success -> { binding.viewHeader.btnGroupSetting.isVisible = uiState.data }
                 is HomeUiState.Loading -> { binding.viewHeader.btnGroupSetting.isVisible = false }
