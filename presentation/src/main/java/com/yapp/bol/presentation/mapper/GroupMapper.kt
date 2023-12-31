@@ -1,6 +1,5 @@
 package com.yapp.bol.presentation.mapper
 
-import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.JoinedGroupV2Item
 import com.yapp.bol.presentation.model.MyGroupUiModel
 

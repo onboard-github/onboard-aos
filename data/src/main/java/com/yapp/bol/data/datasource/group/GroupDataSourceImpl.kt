@@ -83,11 +83,15 @@ class GroupDataSourceImpl @Inject constructor(
     override fun patchGroupMemberNickname(
         groupId: Int,
         memberId: Int,
-        newNickname: String
+        newNickname: String,
     ): Flow<ApiResult<MemberDTO>> {
         return flow {
             val result = safeApiCall {
-                groupApi.patchGroupMemberNickname(groupId.toString(), memberId.toString(), GroupMemberRequest(newNickname))
+                groupApi.patchGroupMemberNickname(
+                    groupId.toString(),
+                    memberId.toString(),
+                    GroupMemberRequest(newNickname),
+                )
             }
             emit(result)
         }
