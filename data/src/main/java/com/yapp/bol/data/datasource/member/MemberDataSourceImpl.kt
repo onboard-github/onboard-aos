@@ -1,6 +1,7 @@
 package com.yapp.bol.data.datasource.member
 
 import com.yapp.bol.data.model.base.ErrorResponse
+import com.yapp.bol.data.model.member.GroupQuitRequest
 import com.yapp.bol.data.model.member.GuestAddApiRequest
 import com.yapp.bol.data.model.member.JoinGroupApiRequest
 import com.yapp.bol.data.model.member.MatchCountInGroupResponse
@@ -11,6 +12,7 @@ import com.yapp.bol.domain.handle.BaseRepository
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class MemberDataSourceImpl @Inject constructor(
@@ -51,5 +53,13 @@ class MemberDataSourceImpl @Inject constructor(
 
     override fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupResponse>> = flow {
         emit(safeApiCall { memberApi.getMatchCountInGroup(groupId) })
+    }
+
+    override fun quitGroup(
+        groupId: Long,
+        nickname: String,
+    ): Flow<ApiResult<ResponseBody>> = flow {
+        val result = safeApiCall { memberApi.quitGroup(groupId, GroupQuitRequest(nickname)) }
+        emit(result)
     }
 }
