@@ -1,6 +1,5 @@
 package com.yapp.bol.data.mapper
 
-import com.yapp.bol.data.mapper.GroupMapper.toImageDomain
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
 import com.yapp.bol.data.model.group.GroupDetailResponse
 import com.yapp.bol.data.model.group.GroupSearchApiResponse
