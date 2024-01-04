@@ -2,7 +2,6 @@ package com.yapp.bol.presentation.view.setting
 
 import android.content.Intent
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.yapp.bol.presentation.R
@@ -35,6 +34,14 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 
     private fun setNavigateButton() {
         binding.apply {
+            btnProfileSetting.setOnClickListener {
+                findNavController().navigateFragment(R.id.action_settingFragment_to_userSettingFragment)
+            }
+
+            btnHelp.setOnClickListener {
+                // TODO : 문의하기 기능
+            }
+
             btnQuit.setOnClickListener {
                 findNavController().navigateFragment(R.id.action_settingFragment_to_quitFragment)
             }
@@ -60,7 +67,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(R.layout.fragment_s
 
     private fun setBackButton() {
         binding.btnBack.setOnClickListener {
-            binding.root.findNavController().popBackStack()
+            requireActivity().finish()
         }
     }
 }

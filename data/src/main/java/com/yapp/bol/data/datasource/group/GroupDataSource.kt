@@ -6,6 +6,7 @@ import com.yapp.bol.data.model.group.GroupSearchApiResponse
 import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
 
@@ -39,4 +40,10 @@ interface GroupDataSource {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeResponse>>
+
+    fun patchGroupMemberNickname(
+        groupId: Int,
+        memberId: Int,
+        newNickname: String,
+    ): Flow<ApiResult<MemberDTO>>
 }

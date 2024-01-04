@@ -8,9 +8,12 @@ import com.yapp.bol.data.model.group.GroupSearchApiResponse
 import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import com.yapp.bol.data.model.member.GroupMemberRequest
+import com.yapp.bol.data.model.member.MemberDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -48,4 +51,11 @@ interface GroupApi {
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
     ): Response<CheckGroupJoinByAccessCodeResponse>
+
+    @PATCH("/api/v1/group/{groupId}/member/{memberId}")
+    suspend fun patchGroupMemberNickname(
+        @Path("groupId") groupId: String,
+        @Path("memberId") memberId: String,
+        @Body groupMemberRequest: GroupMemberRequest
+    ): Response<MemberDTO>
 }

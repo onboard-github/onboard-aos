@@ -6,10 +6,12 @@ import com.yapp.bol.data.mapper.GroupMapper.newGroupToDomain
 import com.yapp.bol.data.mapper.GroupMapper.toDetailItem
 import com.yapp.bol.data.mapper.GroupMapper.toDomain
 import com.yapp.bol.data.mapper.GroupMapper.toImageDomain
+import com.yapp.bol.data.mapper.GroupMapper.toMemberDomain
 import com.yapp.bol.data.mapper.GroupMapper.toUserRankItem
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.GroupDetailItem
+import com.yapp.bol.domain.model.GroupMemberItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
 import com.yapp.bol.domain.model.RandomImageItem
@@ -72,6 +74,16 @@ class GroupRepositoryImpl @Inject constructor(
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeItem>> {
         return groupDataSource.checkGroupJoinAccessCode(groupId, accessCode).map {
             it.mapperToCheckGroupJoinByAccessCodeItem()
+        }
+    }
+
+    override fun patchGroupMemberNickname(
+        groupId: Int,
+        memberId: Int,
+        newNickname: String,
+    ): Flow<ApiResult<GroupMemberItem>> {
+        return groupDataSource.patchGroupMemberNickname(groupId, memberId, newNickname).map {
+            it.toMemberDomain()
         }
     }
 }

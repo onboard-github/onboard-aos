@@ -15,14 +15,6 @@
             app:exitAnim="@animator/exit_to_left"
             app:popEnterAnim="@animator/enter_from_left"
             app:popExitAnim="@animator/exit_to_right" />
-        <!--    Todo : 없어져야하는 액션    -->
-        <action
-            android:id="@+id/action_homeRankFragment_to_settingFragment"
-            app:destination="@id/settingFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -36,33 +28,7 @@
             app:popEnterAnim="@animator/enter_from_left"
             app:popExitAnim="@animator/exit_to_right"/>
     </fragment>
-    <fragment
-        android:id="@+id/settingFragment"
-        android:name="com.yapp.bol.presentation.view.setting.SettingFragment"
-        android:label="SettingFragment" >
-        <action
-            android:id="@+id/action_settingFragment_to_quitFragment"
-            app:destination="@id/quitFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
-        <action
-            android:id="@+id/action_settingFragment_to_termFragment"
-            app:destination="@id/termFragment"
-            app:enterAnim="@animator/enter_from_right"
-            app:exitAnim="@animator/exit_to_left"
-            app:popEnterAnim="@animator/enter_from_left"
-            app:popExitAnim="@animator/exit_to_right" />
-    </fragment>
-    <fragment
-        android:id="@+id/quitFragment"
-        android:name="com.yapp.bol.presentation.view.setting.QuitFragment"
-        android:label="QuitFragment" />
-    <fragment
-        android:id="@+id/termFragment"
-        android:name="com.yapp.bol.presentation.view.setting.TermFragment"
-        android:label="TermFragment" />
+
     <fragment
         android:id="@+id/groupJoinFragment"
         android:name="com.yapp.bol.presentation.view.group.join.GroupJoinFragment"
@@ -77,9 +43,5 @@
         android:id="@+id/myPageFragment"
         android:name="com.yapp.bol.presentation.view.mypage.MyPageFragment"
         android:label="MyPageFragment" >
-        <!--      Todo : Home에서 설정으로 가는 액션 없어지면 2 사라질 에정      -->
-        <action
-            android:id="@+id/action_myPageFragment_to_settingFragment2"
-            app:destination="@id/settingFragment" />
     </fragment>
 </navigation>

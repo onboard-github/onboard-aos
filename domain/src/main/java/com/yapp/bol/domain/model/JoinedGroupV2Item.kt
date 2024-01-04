@@ -1,6 +1,6 @@
-package com.yapp.bol.presentation.model
+package com.yapp.bol.domain.model
 
-data class MyGroupUiModel(
+data class JoinedGroupV2Item(
     val groupId: Int,
     val groupName: String,
     val nickname: String,

@@ -89,10 +89,9 @@
                     app:layout_constraintTop_toBottomOf="@+id/iv_image" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="6dp"
+                    android:layout_height="8dp"
                     android:layout_marginStart="1dp"
-                    android:layout_marginTop="4dp"
                     android:src="@drawable/ic_required"
                     app:layout_constraintStart_toEndOf="@+id/tv_group_name"
                     app:layout_constraintTop_toTopOf="@+id/tv_group_name" />
@@ -146,7 +145,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="1dp"
-                    android:layout_marginTop="4dp"
                     android:src="@drawable/ic_required"
                     app:layout_constraintStart_toEndOf="@+id/tv_group_description"
                     app:layout_constraintTop_toTopOf="@+id/tv_group_description" />
