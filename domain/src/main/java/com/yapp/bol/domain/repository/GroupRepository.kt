@@ -39,4 +39,8 @@ interface GroupRepository {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeItem>>
+
+    fun deleteGroup(
+        groupId: String,
+    ): Flow<ApiResult<String>>
 }

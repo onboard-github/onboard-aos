@@ -8,8 +8,10 @@ import com.yapp.bol.data.model.group.GroupSearchApiResponse
 import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -48,4 +50,9 @@ interface GroupApi {
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
     ): Response<CheckGroupJoinByAccessCodeResponse>
+
+    @DELETE("/v1/group/{groupId}")
+    suspend fun deleteGroup(
+        @Path("groupId") groupId: String,
+    ): Response<ResponseBody>
 }
