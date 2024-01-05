@@ -5,6 +5,7 @@ import com.yapp.bol.data.mapper.GroupMapper.mapperToCheckGroupJoinByAccessCodeIt
 import com.yapp.bol.data.mapper.GroupMapper.newGroupToDomain
 import com.yapp.bol.data.mapper.GroupMapper.toDetailItem
 import com.yapp.bol.data.mapper.GroupMapper.toDomain
+import com.yapp.bol.data.mapper.GroupMapper.toGroupDeleteItem
 import com.yapp.bol.data.mapper.GroupMapper.toImageDomain
 import com.yapp.bol.data.mapper.GroupMapper.toUserRankItem
 import com.yapp.bol.domain.model.ApiResult
@@ -73,5 +74,9 @@ class GroupRepositoryImpl @Inject constructor(
         return groupDataSource.checkGroupJoinAccessCode(groupId, accessCode).map {
             it.mapperToCheckGroupJoinByAccessCodeItem()
         }
+    }
+
+    override fun deleteGroup(groupId: String): Flow<ApiResult<String>> {
+        return groupDataSource.deleteGroup(groupId).map { it.toGroupDeleteItem() }
     }
 }

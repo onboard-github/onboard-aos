@@ -172,7 +172,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             // todo : test 위해서 setting 열리게 했습니다. 삭제 되어야 하는 코드입니다.
             // todo : 내가 이 group의 owner일 때만 이 액티비티가 열려야 합니다. 아닐 때는 열리긴 하지만 열어서는 안 됨.
             // 현재 머지 전 브랜치엔 다 작업 되어있습니다! 머지가 아직 안 되어서 테스트용으로만 이렇게 해두었습니다.
-            GroupSettingActivity.startActivity(binding.root.context, viewModel.groupId)
+            GroupSettingActivity.startActivity(binding.root.context, viewModel.groupId, viewModel.currentGroupName)
         }
     }
 
