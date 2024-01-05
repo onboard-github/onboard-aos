@@ -45,7 +45,7 @@ interface GroupApi {
         @Path("groupId") groupId: Long
     ): Response<GroupDetailResponse>
 
-    @POST("v1/group/{groupId}/accessCode")
+    @POST("/v1/group/{groupId}/accessCode")
     suspend fun checkGroupJoinAccessCode(
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
