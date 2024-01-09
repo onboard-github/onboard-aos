@@ -42,7 +42,7 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
         binding.tvNickname.text = nickname
 
         profileSettingViewModel.nicknameValidate.observe(this) {
-            setNicknameValid(it.isAvailable, it.reason)
+            checkNicknameValid(it.isAvailable, it.reason)
         }
         binding.btnSettingComplete.setOnClickListener {
             profileSettingViewModel.patchGroupMemberNicknameUseCase(
@@ -86,7 +86,7 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
         }
     }
 
-    private fun setNicknameValid(value: Boolean, reason: String?) = with(binding) {
+    private fun checkNicknameValid(value: Boolean, reason: String?) = with(binding) {
         val isNicknameValid = isNicknameValid(nickname)
         val isUserNameNotEmpty = etUserName.text.isNotEmpty()
 
