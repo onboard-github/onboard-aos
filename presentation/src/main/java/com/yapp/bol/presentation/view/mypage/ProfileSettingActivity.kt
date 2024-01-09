@@ -18,6 +18,7 @@ import com.yapp.bol.presentation.view.mypage.MyPageFragment.Companion.NICKNAME
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
+import com.yapp.bol.designsystem.R as designR
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -74,7 +75,7 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
     }
 
     private fun setNicknameCount(start: Int, count: Int) {
-        val color = if (count != 10) com.yapp.bol.designsystem.R.color.Gray_8 else com.yapp.bol.designsystem.R.color.Red
+        val color = if (count != 10) designR.color.Gray_8 else designR.color.Red
         binding.tvUserNameCount.setTextColor(ContextCompat.getColor(this, color))
         binding.tvUserNameCount.text = Converter.convertLengthToString(10, start + count)
     }
@@ -99,8 +100,8 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
         tvNicknameSettingGuide.text = getString(guideTextResId)
 
         val guideTextColorResId = when {
-            isUserNameNotEmpty && isNicknameValid -> if (value) com.yapp.bol.designsystem.R.color.Gray_8 else com.yapp.bol.designsystem.R.color.Red // ktlint-disable max-line-length
-            isUserNameNotEmpty && reason == "DUPLICATED_NICKNAME" -> com.yapp.bol.designsystem.R.color.Red
+            isUserNameNotEmpty && isNicknameValid -> if (value) designR.color.Gray_8 else designR.color.Red // ktlint-disable max-line-length
+            isUserNameNotEmpty && reason == "DUPLICATED_NICKNAME" -> designR.color.Red
             else -> com.yapp.bol.designsystem.R.color.Gray_8
         }
         tvNicknameSettingGuide.setTextColor(ContextCompat.getColor(applicationContext, guideTextColorResId))
