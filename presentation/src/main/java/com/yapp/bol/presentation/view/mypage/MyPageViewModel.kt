@@ -60,7 +60,7 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun getMyTotalMatchCount() {
+    private fun getMyTotalMatchCount() {
         viewModelScope.launch {
             getMyInfoUseCase.getMyTotalMatchCount().collectLatest {
                 checkedApiResult(
