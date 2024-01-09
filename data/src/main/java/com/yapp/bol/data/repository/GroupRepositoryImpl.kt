@@ -78,8 +78,8 @@ class GroupRepositoryImpl @Inject constructor(
     }
 
     override fun patchGroupMemberNickname(
-        groupId: Int,
-        memberId: Int,
+        groupId: Long,
+        memberId: Long,
         newNickname: String,
     ): Flow<ApiResult<GroupMemberItem>> {
         return groupDataSource.patchGroupMemberNickname(groupId, memberId, newNickname).map {

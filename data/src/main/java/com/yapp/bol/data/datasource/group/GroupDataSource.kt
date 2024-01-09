@@ -42,8 +42,8 @@ interface GroupDataSource {
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeResponse>>
 
     fun patchGroupMemberNickname(
-        groupId: Int,
-        memberId: Int,
+        groupId: Long,
+        memberId: Long,
         newNickname: String,
     ): Flow<ApiResult<MemberDTO>>
 }

@@ -42,8 +42,8 @@ interface GroupRepository {
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeItem>>
 
     fun patchGroupMemberNickname(
-        groupId: Int,
-        memberId: Int,
+        groupId: Long,
+        memberId: Long,
         newNickname: String,
     ): Flow<ApiResult<GroupMemberItem>>
 }

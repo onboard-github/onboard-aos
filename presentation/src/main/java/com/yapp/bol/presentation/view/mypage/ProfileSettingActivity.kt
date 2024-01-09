@@ -45,8 +45,8 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
         }
         binding.btnSettingComplete.setOnClickListener {
             profileSettingViewModel.patchGroupMemberNicknameUseCase(
-                groupId,
-                memberId,
+                groupId.toLong(),
+                memberId.toLong(),
                 binding.etUserName.text.toString(),
             )
         }

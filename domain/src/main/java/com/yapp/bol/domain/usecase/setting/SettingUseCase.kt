@@ -16,7 +16,7 @@ class SettingUseCase @Inject constructor(
     fun getValidateNickName(groupId: Int, nickname: String): Flow<ApiResult<NicknameValidItem>> {
         return memberRepository.getValidateNickName(groupId, nickname)
     }
-    fun patchGroupMemberNickname(groupId: Int, memberId: Int, newNickname: String): Flow<ApiResult<GroupMemberItem>> {
+    fun patchGroupMemberNickname(groupId: Long, memberId: Long, newNickname: String): Flow<ApiResult<GroupMemberItem>> {
         return groupRepository.patchGroupMemberNickname(groupId, memberId, newNickname)
     }
 }

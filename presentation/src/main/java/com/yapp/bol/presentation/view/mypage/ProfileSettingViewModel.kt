@@ -35,7 +35,7 @@ class ProfileSettingViewModel @Inject constructor(
         }
     }
 
-    fun patchGroupMemberNicknameUseCase(groupId: Int, memberId: Int, nickname: String) {
+    fun patchGroupMemberNicknameUseCase(groupId: Long, memberId: Long, nickname: String) {
         viewModelScope.launch {
             settingUseCase.patchGroupMemberNickname(groupId, memberId, nickname).collect {
                 checkedApiResult(
