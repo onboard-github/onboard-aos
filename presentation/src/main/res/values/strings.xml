@@ -133,4 +133,5 @@
     <string name="menu_home_my">마이페이지</string>
 
     <string name="mypage_user_name">%s 님</string>
+    <string name="group_match_count">%d회 플레이</string>
 </resources>

@@ -3,6 +3,9 @@ package com.yapp.bol.presentation.view.home
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseActivity
 import com.yapp.bol.presentation.databinding.ActivityHomeBinding
@@ -12,6 +15,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private val navHostFragment: NavHostFragment by lazy {
+        supportFragmentManager.findFragmentById(R.id.home_nav_host) as NavHostFragment
+    }
 
     override fun onCreateAction() {
         super.onCreateAction()
@@ -29,6 +36,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
                 viewModel.gameId = it
             }
         }
+        setBottomNavigation()
+    }
+
+    private fun setBottomNavigation() {
+        binding.menu.setupWithNavController(navHostFragment.findNavController())
     }
 
     companion object {

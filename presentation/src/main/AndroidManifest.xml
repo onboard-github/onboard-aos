@@ -9,6 +9,14 @@
 
     <application>
         <activity
+            android:name=".view.mypage.SettingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.mypage.ProfileSettingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".view.setting.UpgradeActivity"
             android:exported="false" />
         <activity
