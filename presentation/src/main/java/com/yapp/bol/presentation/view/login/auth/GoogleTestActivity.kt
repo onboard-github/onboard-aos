@@ -14,7 +14,7 @@ import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseActivity
 import com.yapp.bol.presentation.databinding.ActivityGoogleTestBinding
 import com.yapp.bol.presentation.utils.collectWithLifecycle
-import com.yapp.bol.presentation.view.group.GroupActivity
+import com.yapp.bol.presentation.view.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -70,7 +70,7 @@ class GoogleTestActivity : BaseActivity<ActivityGoogleTestBinding>(R.layout.acti
 
     private fun subscribeObservables() {
         authViewModel.loginResult.collectWithLifecycle(this) {
-            startActivity(Intent(this@GoogleTestActivity, GroupActivity::class.java))
+            HomeActivity.startActivity(binding.root.context, null)
         }
     }
 }
