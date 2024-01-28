@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentChangeOwnerBinding
@@ -31,6 +32,19 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
 
     private val keyboardManager by lazy {
         KeyboardManager(requireActivity())
+    }
+
+    val dialog by lazy {
+        CancelAndActionDialog.create {
+            topMessage = "관리자 권한을 넘기면 취소가 불가능합니다."
+            boldStringOfBottomMessage = listOf(changeOwnerViewModel.selectedMember?.nickname ?: "")
+            bottomMessage = "관리자를 ${changeOwnerViewModel.selectedMember?.nickname} 님으로\n변경하시겠습니까?"
+            actionButtonText = "변경하기"
+        }.apply {
+            setOnActionClickListener {
+                changeOwnerViewModel.updateOwner(groupId)
+            }
+        }
     }
 
     private val membersAdapter = MembersAdapter(
@@ -75,6 +89,19 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
             }
         }
         binding.rvMembers.addOnScrollListener(scrollListener)
+
+        changeOwnerViewModel.isCompleteButtonEnabled.observe(viewLifecycleOwner) {
+            binding.btnComplete.isEnabled = it
+        }
+
+        changeOwnerViewModel.ownerState.observe(viewLifecycleOwner) {
+            if (it.not()) return@observe
+            requireActivity().finish()
+        }
+
+        binding.btnComplete.setOnClickListener {
+            activity?.supportFragmentManager?.let { dialog.show(it, null) }
+        }
     }
     private fun setViewModelObverse() = with(changeOwnerViewModel) {
         members.observe(viewLifecycleOwner) { members ->

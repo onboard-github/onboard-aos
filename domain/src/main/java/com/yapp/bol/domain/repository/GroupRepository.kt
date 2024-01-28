@@ -2,6 +2,7 @@ package com.yapp.bol.domain.repository
 
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
+import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
@@ -39,4 +40,6 @@ interface GroupRepository {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeItem>>
+
+    fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorItem>>
 }

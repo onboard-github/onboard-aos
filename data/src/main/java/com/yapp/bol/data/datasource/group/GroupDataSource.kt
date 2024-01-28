@@ -1,5 +1,6 @@
 package com.yapp.bol.data.datasource.group
 
+import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
 import com.yapp.bol.data.model.group.GroupDetailResponse
 import com.yapp.bol.data.model.group.GroupSearchApiResponse
@@ -39,4 +40,6 @@ interface GroupDataSource {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeResponse>>
+
+    fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorResponse>>
 }

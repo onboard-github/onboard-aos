@@ -1,5 +1,6 @@
 package com.yapp.bol.data.remote
 
+import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.group.CheckGroupJonByAccessCodeRequest
 import com.yapp.bol.data.model.group.NewGroupApiRequest
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
@@ -11,6 +12,7 @@ import com.yapp.bol.data.model.group.UserRankApiResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -48,4 +50,10 @@ interface GroupApi {
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
     ): Response<CheckGroupJoinByAccessCodeResponse>
+
+    @PATCH("/v1/group/{groupId}/member/{memberId}/assign-owner")
+    suspend fun updateOwner(
+        @Path("groupId") groupId: String,
+        @Path("memberId") memberId: String,
+    ): Response<ErrorResponse>
 }

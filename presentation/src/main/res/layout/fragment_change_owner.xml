@@ -115,13 +115,12 @@
             android:background="@drawable/bg_gary_to_orange_radius_8dp"
             android:enabled="false"
             android:gravity="center"
-            android:text="@string/player_complete_guide"
+            android:text="@string/select_complete"
             android:textAppearance="@style/Typography.Label3_M"
             android:textColor="@drawable/tc_white_to_gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

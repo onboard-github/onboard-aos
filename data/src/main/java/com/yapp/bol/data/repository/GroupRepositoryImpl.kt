@@ -1,6 +1,7 @@
 package com.yapp.bol.data.repository
 
 import com.yapp.bol.data.datasource.group.GroupDataSource
+import com.yapp.bol.data.mapper.CoreMapper.mapperToBaseItem
 import com.yapp.bol.data.mapper.GroupMapper.mapperToCheckGroupJoinByAccessCodeItem
 import com.yapp.bol.data.mapper.GroupMapper.newGroupToDomain
 import com.yapp.bol.data.mapper.GroupMapper.toDetailItem
@@ -9,6 +10,7 @@ import com.yapp.bol.data.mapper.GroupMapper.toImageDomain
 import com.yapp.bol.data.mapper.GroupMapper.toUserRankItem
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
+import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
@@ -73,5 +75,9 @@ class GroupRepositoryImpl @Inject constructor(
         return groupDataSource.checkGroupJoinAccessCode(groupId, accessCode).map {
             it.mapperToCheckGroupJoinByAccessCodeItem()
         }
+    }
+
+    override fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorItem>> {
+        return groupDataSource.updateOwner(groupId, memberId).map { it.mapperToBaseItem() }
     }
 }
