@@ -168,7 +168,7 @@ class GroupSearchFragment : BaseFragment<FragmentGroupSearchBinding>(R.layout.fr
 
     private fun setBackButton() {
         binding.btnBack.setOnClickListener {
-            binding.root.findNavController().popBackStack()
+            requireActivity().finish()
         }
     }
 }

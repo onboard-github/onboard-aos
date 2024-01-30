@@ -244,13 +244,7 @@ class GroupJoinFragment : Fragment() {
 
     private fun moveHomeActivity() {
         val groupId = viewModel.groupId.toLong()
-        when (activity) {
-            is HomeActivity -> {
-                findNavController().navigate(R.id.action_groupJoinFragment_to_homeRankFragment)
-                homeViewModel.groupId = groupId
-                homeViewModel.gameId = null
-            }
-        }
+        HomeActivity.startActivity(binding.root.context, groupId)
     }
 
     private fun subscribeObservables() {
