@@ -9,7 +9,6 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -24,6 +23,7 @@ import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
+import com.yapp.bol.presentation.view.group.GroupDiscoveryActivity
 import com.yapp.bol.presentation.view.home.HomeUiState
 import com.yapp.bol.presentation.view.home.HomeViewModel
 import com.yapp.bol.presentation.view.home.rank.UserRankViewModel.Companion.RV_SELECTED_POSITION_RESET
@@ -50,7 +50,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         GroupChangeDialog(
             onGroupClick = { viewModel.fetchAll(it) },
             onSearchGroupClick = {
-                binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+                moveToGroupDiscovery()
             }
         )
     }
@@ -102,8 +102,11 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
-    private fun navigateToGroupSearchFragment() {
-        binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+    private fun moveToGroupDiscovery() {
+        // todo 잘 돌아가는지 체크 필요
+        Intent(binding.root.context, GroupDiscoveryActivity::class.java).apply {
+            startActivity(this)
+        }
     }
 
     private fun setHomeRecyclerView() {
@@ -414,7 +417,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setGroupSearchButton() {
         binding.viewNoJoinedGroup.btnGroupSearch.setOnClickListener {
-            navigateToGroupSearchFragment()
+            moveToGroupDiscovery()
         }
     }
 
