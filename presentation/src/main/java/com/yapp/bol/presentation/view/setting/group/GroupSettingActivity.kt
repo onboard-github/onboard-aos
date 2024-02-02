@@ -24,7 +24,7 @@ class GroupSettingActivity : BaseActivity<ActivityGroupSettingBinding>(R.layout.
             if (it == noValuePassed) {
                 finish()
             } else {
-                viewModel.setGroupId(it)
+                viewModel.groupId = it
             }
         }
         intent.getStringExtra(GROUP_NAME_FOR_SETTING)?.let {

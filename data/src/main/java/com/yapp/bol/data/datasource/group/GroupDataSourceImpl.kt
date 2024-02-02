@@ -1,5 +1,6 @@
 package com.yapp.bol.data.datasource.group
 
+import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.group.CheckGroupJonByAccessCodeRequest
 import com.yapp.bol.data.model.group.NewGroupApiRequest
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
@@ -78,6 +79,9 @@ class GroupDataSourceImpl @Inject constructor(
             emit(result)
         }
     }
+
+    override fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorResponse>> = flow {
+        val result = safeApiCall { groupApi.updateOwner(groupId = groupId.toString(), memberId = memberId.toString()) }
 
     override fun deleteGroup(groupId: String): Flow<ApiResult<ResponseBody>> = flow {
         val result = safeApiCall { groupApi.deleteGroup(groupId) }
