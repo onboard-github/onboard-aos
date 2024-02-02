@@ -42,4 +42,8 @@ interface GroupRepository {
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeItem>>
 
     fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorItem>>
+
+    fun deleteGroup(
+        groupId: String,
+    ): Flow<ApiResult<String>>
 }

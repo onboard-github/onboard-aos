@@ -1,13 +1,27 @@
 package com.yapp.bol.presentation.view.setting.group
 
+import android.content.Intent
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentGroupSettingBinding
+import com.yapp.bol.presentation.utils.showToast
+import com.yapp.bol.presentation.view.home.HomeActivity
 
 class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.fragment_group_setting) {
+
     private val activityViewModel: GroupSettingViewModel by activityViewModels()
+
+    val dialog by lazy {
+        CancelAndActionDialog.create {
+            topMessage = "모임 삭제 시 모임과 관련된 모든 기록이\n삭제되며, 취소 또는 복구는 불가능합니다."
+            boldStringOfBottomMessage = listOf(activityViewModel.groupName)
+            bottomMessage = "${activityViewModel.groupName} 모임을 삭제하시겠습니까 ?"
+            actionButtonText = "삭제하기"
+        }
+    }
 
     override fun onViewCreatedAction() {
         super.onViewCreatedAction()
@@ -18,6 +32,7 @@ class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.
         setBackEventHandler()
         setOwnerChangeEventHandler()
         setGroupDeleteEventHandler()
+        setObserve()
     }
 
     private fun setBackEventHandler() {
@@ -32,9 +47,25 @@ class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.
         }
     }
 
+    private fun setObserve() {
+        activityViewModel.isGroupDeleted.observe(viewLifecycleOwner) { isGroupDeleted ->
+            if (isGroupDeleted == null) return@observe
+            if (isGroupDeleted) {
+                val intent = Intent(requireActivity(), HomeActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            } else {
+                binding.root.context.showToast("알 수 없는 에러가 발생했습니다. 다음에 다시 시도해주세요.")
+            }
+        }
+    }
+
     private fun setGroupDeleteEventHandler() {
         binding.btnDeleteGroup.setOnClickListener {
-            // todo 재홍 오빠 작업 부분
+            activity?.supportFragmentManager?.let { dialog.show(it, null) }
+        }
+        dialog.setOnActionClickListener {
+            activityViewModel.deleteGroup()
         }
     }
 }

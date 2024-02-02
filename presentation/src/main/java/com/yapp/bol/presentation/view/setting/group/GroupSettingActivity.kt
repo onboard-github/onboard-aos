@@ -27,15 +27,20 @@ class GroupSettingActivity : BaseActivity<ActivityGroupSettingBinding>(R.layout.
                 viewModel.groupId = it
             }
         }
+        intent.getStringExtra(GROUP_NAME_FOR_SETTING)?.let {
+            viewModel.setGroupName(it)
+        } ?: finish()
     }
 
     companion object {
         const val GROUP_ID_FOR_SETTING = "HOME_GROUP_ID"
-        fun startActivity(context: Context, groupId: Long) {
+        const val GROUP_NAME_FOR_SETTING = "HOME_GROUP_NAME"
+        fun startActivity(context: Context, groupId: Long, groupName: String) {
             context.startActivity(
                 Intent(context, GroupSettingActivity::class.java)
                     .apply {
                         putExtra(GROUP_ID_FOR_SETTING, groupId)
+                        putExtra(GROUP_NAME_FOR_SETTING, groupName)
                     }
             )
         }
