@@ -13,6 +13,7 @@ import com.yapp.bol.domain.handle.BaseRepository
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class GroupDataSourceImpl @Inject constructor(
@@ -76,5 +77,10 @@ class GroupDataSourceImpl @Inject constructor(
             }
             emit(result)
         }
+    }
+
+    override fun deleteGroup(groupId: String): Flow<ApiResult<ResponseBody>> = flow {
+        val result = safeApiCall { groupApi.deleteGroup(groupId) }
+        emit(result)
     }
 }

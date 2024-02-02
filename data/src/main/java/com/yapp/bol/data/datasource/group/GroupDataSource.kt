@@ -8,6 +8,7 @@ import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 
 interface GroupDataSource {
 
@@ -39,4 +40,8 @@ interface GroupDataSource {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeResponse>>
+
+    fun deleteGroup(
+        groupId: String,
+    ): Flow<ApiResult<ResponseBody>>
 }

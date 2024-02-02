@@ -18,6 +18,7 @@ import com.yapp.bol.domain.model.RandomImageItem
 import com.yapp.bol.domain.model.Role
 import com.yapp.bol.domain.model.UserRankItem
 import com.yapp.bol.domain.model.UserRankListItem
+import okhttp3.ResponseBody
 
 object GroupMapper {
 
@@ -137,6 +138,13 @@ object GroupMapper {
                     data.url,
                 ),
             )
+            is ApiResult.Error -> ApiResult.Error(exception)
+        }
+    }
+
+    fun ApiResult<ResponseBody>.toGroupDeleteItem(): ApiResult<String> {
+        return when(this) {
+            is ApiResult.Success -> ApiResult.Success(data.toString())
             is ApiResult.Error -> ApiResult.Error(exception)
         }
     }
