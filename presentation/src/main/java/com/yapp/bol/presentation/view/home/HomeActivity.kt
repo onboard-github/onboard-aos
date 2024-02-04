@@ -53,6 +53,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(R.layout.activity_home) {
             context.startActivity(
                 Intent(context, HomeActivity::class.java)
                     .apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         groupId?.let { putExtra(HOME_GROUP_ID_KEY, groupId) }
                         gameId?.let { putExtra(HOME_GAME_ID_KEY, gameId) }
                     },
