@@ -16,16 +16,12 @@ import javax.inject.Inject
 class GroupSettingViewModel @Inject constructor(
     private val deleteGroupUseCase: DeleteGroupUseCase,
 ) : ViewModel() {
-    private var groupId: Long = NEED_TO_SET
+    var groupId: Long = NEED_TO_SET
     var groupName: String = EMPTY_STRING
         private set
 
     private val _isGroupDeleted = MutableLiveData<Boolean?>(null)
     val isGroupDeleted: LiveData<Boolean?> = _isGroupDeleted
-
-    fun setGroupId(groupId: Long) {
-        this.groupId = groupId
-    }
 
     fun setGroupName(groupName: String) {
         this.groupName = groupName

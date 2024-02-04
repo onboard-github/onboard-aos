@@ -1,5 +1,6 @@
 package com.yapp.bol.presentation.view.setting.group
 
+import android.content.Intent
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -8,11 +9,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
+import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentChangeOwnerBinding
 import com.yapp.bol.presentation.utils.KeyboardManager
 import com.yapp.bol.presentation.utils.textChangesToFlow
+import com.yapp.bol.presentation.view.login.splash.SplashActivity
 import com.yapp.bol.presentation.view.match.member_select.MembersAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
@@ -34,7 +37,7 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
         KeyboardManager(requireActivity())
     }
 
-    val dialog by lazy {
+    private val dialog by lazy {
         CancelAndActionDialog.create {
             topMessage = "관리자 권한을 넘기면 취소가 불가능합니다."
             boldStringOfBottomMessage = listOf(changeOwnerViewModel.selectedMember?.nickname ?: "")
@@ -43,6 +46,18 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
         }.apply {
             setOnActionClickListener {
                 changeOwnerViewModel.updateOwner(groupId)
+            }
+        }
+    }
+
+    private val completeDialog by lazy {
+        OneButtonDialog.create {
+            topMessage = "관리자 ${changeOwnerViewModel.selectedMember?.nickname}님으로 변경했습니다.\n서비스를 다식 시작합니다."
+            boldStringOfBottomMessage = listOf(changeOwnerViewModel.selectedMember?.nickname ?: "")
+        }.apply {
+            setOnButtonClickListener {
+                startActivity(Intent(requireActivity(), SplashActivity::class.java))
+                requireActivity().finish()
             }
         }
     }
@@ -94,9 +109,9 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
             binding.btnComplete.isEnabled = it
         }
 
-        changeOwnerViewModel.ownerState.observe(viewLifecycleOwner) {
-            if (it.not()) return@observe
-            requireActivity().finish()
+        changeOwnerViewModel.ownerState.observe(viewLifecycleOwner) { state ->
+            if (state.not()) return@observe
+            activity?.supportFragmentManager?.let { completeDialog.show(it, null) }
         }
 
         binding.btnComplete.setOnClickListener {
