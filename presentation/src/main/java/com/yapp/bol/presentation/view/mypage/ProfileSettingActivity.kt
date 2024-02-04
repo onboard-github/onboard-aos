@@ -1,5 +1,7 @@
 package com.yapp.bol.presentation.view.mypage
 
+import android.content.Context
+import android.content.Intent
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
@@ -11,10 +13,6 @@ import com.yapp.bol.presentation.databinding.ActivityProfileSettingBinding
 import com.yapp.bol.presentation.utils.Converter
 import com.yapp.bol.presentation.utils.isNicknameValid
 import com.yapp.bol.presentation.utils.textChangesToFlow
-import com.yapp.bol.presentation.view.mypage.MyPageFragment.Companion.GROUP_ID
-import com.yapp.bol.presentation.view.mypage.MyPageFragment.Companion.GROUP_NAME
-import com.yapp.bol.presentation.view.mypage.MyPageFragment.Companion.MEMBER_ID
-import com.yapp.bol.presentation.view.mypage.MyPageFragment.Companion.NICKNAME
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -105,5 +103,22 @@ class ProfileSettingActivity : BaseActivity<ActivityProfileSettingBinding>(R.lay
             else -> com.yapp.bol.designsystem.R.color.Gray_8
         }
         tvNicknameSettingGuide.setTextColor(ContextCompat.getColor(applicationContext, guideTextColorResId))
+    }
+
+    companion object {
+        const val GROUP_ID = "group_id"
+        const val GROUP_NAME = "group_name"
+        const val NICKNAME = "nickname"
+        const val MEMBER_ID = "member_id"
+
+        fun startActivity(context: Context, groupId: Int, groupName: String, nickname: String, memberId: Int) {
+            val intent = Intent(context, ProfileSettingActivity::class.java).apply {
+                putExtra(GROUP_ID, groupId)
+                putExtra(GROUP_NAME, groupName)
+                putExtra(NICKNAME, nickname)
+                putExtra(MEMBER_ID, memberId)
+            }
+            context.startActivity(intent)
+        }
     }
 }
