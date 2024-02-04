@@ -13,13 +13,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
 
     private val myGroupAdapter: MyGroupAdapter by lazy {
         MyGroupAdapter { groupId, groupName, nickname, memberId ->
-            val intent = Intent(requireActivity(), ProfileSettingActivity::class.java).apply {
-                putExtra(GROUP_ID, groupId)
-                putExtra(GROUP_NAME, groupName)
-                putExtra(NICKNAME, nickname)
-                putExtra(MEMBER_ID, memberId)
-            }
-            startActivity(intent)
+            ProfileSettingActivity.startActivity(
+                context = binding.root.context,
+                groupId = groupId,
+                groupName = groupName,
+                nickname = nickname,
+                memberId = memberId
+            )
         }
     }
 
@@ -49,12 +49,5 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(R.layout.fragment_my_
         super.onStart()
         myPageViewModel.getMyInfo()
         myPageViewModel.getJoinedGroup()
-    }
-
-    companion object {
-        const val GROUP_ID = "group_id"
-        const val GROUP_NAME = "group_name"
-        const val NICKNAME = "nickname"
-        const val MEMBER_ID = "member_id"
     }
 }
