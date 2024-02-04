@@ -6,6 +6,7 @@ import com.yapp.bol.data.model.member.MemberListResponse
 import com.yapp.bol.data.model.member.MemberValidApiResponse
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 
 interface MemberDataSource {
 
@@ -31,4 +32,9 @@ interface MemberDataSource {
     ): Flow<ApiResult<ErrorResponse>>
 
     fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupResponse>>
+
+    fun quitGroup(
+        groupId: Long,
+        nickname: String,
+    ): Flow<ApiResult<ResponseBody>>
 }

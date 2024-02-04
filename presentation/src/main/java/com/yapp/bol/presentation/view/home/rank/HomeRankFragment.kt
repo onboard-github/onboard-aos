@@ -9,21 +9,21 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
 import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
-import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
+import com.yapp.bol.presentation.model.GroupQuitUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
+import com.yapp.bol.presentation.view.group.GroupDiscoveryActivity
 import com.yapp.bol.presentation.view.home.HomeUiState
 import com.yapp.bol.presentation.view.home.HomeViewModel
 import com.yapp.bol.presentation.view.home.rank.UserRankViewModel.Companion.RV_SELECTED_POSITION_RESET
@@ -32,9 +32,11 @@ import com.yapp.bol.presentation.view.home.rank.game.UserRankGameAdapter
 import com.yapp.bol.presentation.view.home.rank.game.UserRankGameLayoutManager
 import com.yapp.bol.presentation.view.home.rank.group_info.DrawerGroupInfoAdapter
 import com.yapp.bol.presentation.view.home.rank.user.UserRankAdapter
+import com.yapp.bol.presentation.view.login.splash.SplashActivity
 import com.yapp.bol.presentation.view.match.MatchActivity
 import com.yapp.bol.presentation.view.setting.UpgradeActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import com.yapp.bol.designsystem.R as designsystemR
 
 @AndroidEntryPoint
@@ -48,9 +50,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private val userRankAdapter by lazy { UserRankAdapter() }
     private val groupChangeDialog by lazy {
         GroupChangeDialog(
-            onGroupClick = { viewModel.fetchAll(it) },
+            onGroupClick = {
+                activityViewModel.groupId = it
+                viewModel.fetchAll(it)
+            },
             onSearchGroupClick = {
-                binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+                moveToGroupDiscovery()
             }
         )
     }
@@ -63,6 +68,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         observeGameAndGroupUiState(drawerGroupInfoAdapter, userRankGameAdapter)
         observeJoinedGroupUiState(groupChangeDialog)
         observeUserRankUiState(userRankAdapter)
+        observeOwnerCheckUiState()
 
         setStatusBarColor(this@HomeRankFragment.requireActivity(), designsystemR.color.Gray_15, isIconBlack = false)
 
@@ -102,8 +108,11 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
     }
 
-    private fun navigateToGroupSearchFragment() {
-        binding.root.findNavController().navigate(R.id.action_homeRankFragment_to_groupSearchFragment)
+    private fun moveToGroupDiscovery() {
+        // todo 잘 돌아가는지 체크 필요
+        Intent(binding.root.context, GroupDiscoveryActivity::class.java).apply {
+            startActivity(this)
+        }
     }
 
     private fun setHomeRecyclerView() {
@@ -162,6 +171,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setDrawer() {
         setDrawerOpen()
         setDrawerAdapter()
+        setDrawerGroupSettingButton()
         bindGroupQuitButton()
     }
 
@@ -193,6 +203,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter
     }
 
+    private fun setDrawerGroupSettingButton() {
+        binding.viewHeader.btnGroupSetting.setOnClickListener {
+            // todo group setting 연결
+        }
+    }
+
     private fun bindGroupQuitButton() {
         binding.viewFooter.llBtnQuit.setOnClickListener {
             activity?.supportFragmentManager?.let { makeQuitDialog().show(it, null) }
@@ -209,21 +225,52 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             actionButtonText = "나가기"
         }
         quitDialog.setOnActionClickListener {
-            // todo: server api 요청으로 변경
-            activity?.supportFragmentManager?.let {
-                groupQuitFailDialog(GroupQuitFailCase.OnlyMember).show(it, null)
+            viewModel.quitGroup()
+            val fragmentManager = activity?.supportFragmentManager
+            viewModel.groupQuitUiState.collectWithLifecycle(this) {
+                when (it) {
+                    is GroupQuitUiModel.Success -> {
+                        this.cancel()
+                        val intent = Intent(binding.root.context, SplashActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                    is GroupQuitUiModel.FailCauseOwner -> {
+                        this.cancel()
+                        val dialog = makeFailCause(GroupQuitFailCase.Owner) {
+                            // todo 이동하기 로직 연결
+                        }
+                        fragmentManager?.let { manager -> dialog.show(manager, null) }
+                    }
+                    is GroupQuitUiModel.FailUnknownError -> {
+                        this.cancel()
+                        binding.root.context.showToast("알 수 없는 에러가 발생했습니다. 다음에 다시 시도해주세요.")
+                    }
+                    is GroupQuitUiModel.FailCauseOnlyOneMember -> {
+                        this.cancel()
+                        val dialog = makeFailCause(GroupQuitFailCase.OnlyMember) {
+                            // todo 이동하기 로직 연결
+                        }
+                        fragmentManager?.let { manager -> dialog.show(manager, null) }
+                    }
+                    is GroupQuitUiModel.Loading -> {}
+                }
             }
         }
         return quitDialog
     }
 
-    private fun groupQuitFailDialog(case: GroupQuitFailCase): OneButtonDialog {
-        return OneButtonDialog.create {
+    private fun makeFailCause(case: GroupQuitFailCase, onAction: () -> Unit): CancelAndActionDialog {
+        val dialog = CancelAndActionDialog.create {
             topMessage = resources.getString(case.dialogTopMessageId)
             boldStringsOfTopMessage = listOf(resources.getString(case.dialogTopBoldMessageId))
             bottomMessage = resources.getString(case.dialogBottomMessageId)
-            buttonText = "cancel"
+            actionButtonText = "이동하기"
         }
+        dialog.setOnActionClickListener {
+            onAction.invoke()
+        }
+        return dialog
     }
 
     private fun setCurrentGroupInfo(currentGroupInfo: DrawerGroupInfoUiModel.CurrentGroupInfo) {
@@ -337,12 +384,12 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                     }
                     drawerGroupInfoAdapter.submitList(uiState.data)
 
-                    binding.btnGroupName.visibility = View.VISIBLE
+                    binding.tvGroupName.visibility = View.VISIBLE
                     binding.loadingGroupName.visibility = View.INVISIBLE
                 }
 
                 is HomeUiState.Loading -> {
-                    binding.btnGroupName.visibility = View.INVISIBLE
+                    binding.tvGroupName.visibility = View.INVISIBLE
                     binding.loadingGroupName.visibility = View.VISIBLE
                 }
 
@@ -366,6 +413,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                 }
                 is HomeUiState.Loading -> { setGroupNameButtonEnable(false) }
                 is HomeUiState.Error -> { setGroupNameButtonEnable(false) }
+            }
+        }
+    }
+
+    private fun observeOwnerCheckUiState() {
+        viewModel.ownerCheckUiState.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                is HomeUiState.Success -> { binding.viewHeader.btnGroupSetting.isVisible = uiState.data }
+                is HomeUiState.Loading -> { binding.viewHeader.btnGroupSetting.isVisible = false }
+                is HomeUiState.Error -> { binding.viewHeader.btnGroupSetting.isVisible = false }
             }
         }
     }
@@ -414,7 +471,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setGroupSearchButton() {
         binding.viewNoJoinedGroup.btnGroupSearch.setOnClickListener {
-            navigateToGroupSearchFragment()
+            moveToGroupDiscovery()
         }
     }
 

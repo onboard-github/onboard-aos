@@ -9,6 +9,9 @@
 
     <application>
         <activity
+            android:name=".view.group.GroupDiscoveryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.mypage.SettingActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
@@ -21,7 +24,8 @@
             android:exported="false" />
         <activity
             android:name=".view.home.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".view.login.splash.SplashActivity"
             android:exported="false"
