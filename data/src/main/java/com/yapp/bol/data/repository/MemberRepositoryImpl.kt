@@ -2,6 +2,7 @@ package com.yapp.bol.data.repository
 
 import com.yapp.bol.data.datasource.member.MemberDataSource
 import com.yapp.bol.data.mapper.CoreMapper.mapperToBaseItem
+import com.yapp.bol.data.mapper.MemberMapper.groupQuitToDomain
 import com.yapp.bol.data.mapper.MemberMapper.matchCountToDomain
 import com.yapp.bol.data.mapper.MemberMapper.memberListToDomain
 import com.yapp.bol.data.mapper.MemberMapper.validToDomain
@@ -10,6 +11,7 @@ import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
+import com.yapp.bol.domain.model.user.GroupQuitItem
 import com.yapp.bol.domain.repository.MemberRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -51,5 +53,12 @@ class MemberRepositoryImpl @Inject constructor(
 
     override fun getMatchCountInGroup(groupId: Long): Flow<ApiResult<MatchCountInGroupItem>> {
         return memberDataSource.getMatchCountInGroup(groupId).map { it.matchCountToDomain() }
+    }
+
+    override fun quitGroup(
+        groupId: Long,
+        nickname: String,
+    ): Flow<GroupQuitItem> {
+        return memberDataSource.quitGroup(groupId, nickname).map { it.groupQuitToDomain() }
     }
 }
