@@ -10,6 +10,7 @@ import com.yapp.bol.domain.usecase.group.QuitGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
+import com.yapp.bol.presentation.mapper.HomeMapper.getMyInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toHomeGameItemUiModelList
 import com.yapp.bol.presentation.mapper.HomeMapper.toMyGroupProfileInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfo
@@ -226,12 +227,10 @@ class UserRankViewModel @Inject constructor(
                 }
                 .catch {
                     _userUiState.value = HomeUiState.Error(it)
-                    _currentGroupUiState.value = HomeUiState.Error(it)
                     _ownerCheckUiState.value = HomeUiState.Error(it)
                 }
                 .collectLatest {
                     _userUiState.value = HomeUiState.Success(userRank)
-                    _currentGroupUiState.value = HomeUiState.Success(group)
                     _ownerCheckUiState.value = HomeUiState.Success(isOwner)
                 }
         }
