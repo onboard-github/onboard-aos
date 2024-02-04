@@ -4,11 +4,13 @@ import android.content.Intent
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.yapp.bol.designsystem.ui.dialog.CancelAndActionDialog
+import com.yapp.bol.designsystem.ui.dialog.OneButtonDialog
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentGroupSettingBinding
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.home.HomeActivity
+import com.yapp.bol.presentation.view.login.splash.SplashActivity
 
 class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.fragment_group_setting) {
 
@@ -20,6 +22,18 @@ class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.
             boldStringOfBottomMessage = listOf(activityViewModel.groupName)
             bottomMessage = "${activityViewModel.groupName} 모임을 삭제하시겠습니까 ?"
             actionButtonText = "삭제하기"
+        }
+    }
+
+    private val completeDialog by lazy {
+        OneButtonDialog.create {
+            topMessage = "${activityViewModel.groupName} 모임을 삭제했습니다.\n서비스를 다식 시작합니다."
+            boldStringsOfTopMessage = listOf(activityViewModel.groupName)
+        }.apply {
+            setOnButtonClickListener {
+                startActivity(Intent(requireActivity(), SplashActivity::class.java))
+                requireActivity().finish()
+            }
         }
     }
 
@@ -51,9 +65,7 @@ class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.
         activityViewModel.isGroupDeleted.observe(viewLifecycleOwner) { isGroupDeleted ->
             if (isGroupDeleted == null) return@observe
             if (isGroupDeleted) {
-                val intent = Intent(requireActivity(), HomeActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
+                activity?.supportFragmentManager?.let { completeDialog.show(it, null) }
             } else {
                 binding.root.context.showToast("알 수 없는 에러가 발생했습니다. 다음에 다시 시도해주세요.")
             }
