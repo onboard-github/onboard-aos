@@ -9,6 +9,17 @@
 
     <application>
         <activity
+            android:name=".view.group.GroupDiscoveryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.mypage.SettingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.mypage.ProfileSettingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".view.setting.group.GroupSettingActivity"
             android:exported="false" />
         <activity
@@ -16,7 +27,8 @@
             android:exported="false" />
         <activity
             android:name=".view.home.HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".view.login.splash.SplashActivity"
             android:exported="false"
@@ -30,9 +42,6 @@
         <activity
             android:name=".view.login.TermsWebViewActivity"
             android:exported="false" />
-        <activity
-            android:name=".view.group.GroupActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".view.match.MatchActivity"
             android:exported="false"

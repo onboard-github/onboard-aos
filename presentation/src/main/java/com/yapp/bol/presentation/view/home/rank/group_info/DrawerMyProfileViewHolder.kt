@@ -3,7 +3,7 @@ package com.yapp.bol.presentation.view.home.rank.group_info
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.yapp.bol.domain.model.UserRankItem
+import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.databinding.ViewHomeDrawerUserProfileBinding
 import com.yapp.bol.presentation.utils.Converter.convertPlayCount
@@ -13,11 +13,11 @@ class DrawerMyProfileViewHolder(
     private val onClick: (Long) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(userRankItem: UserRankItem) {
-        binding.tvName.text = userRankItem.name
-        binding.tvPlayCount.text = userRankItem.playCount.convertPlayCount()
+    fun bind(myProfileInfo: JoinedGroupItem) {
+        binding.tvName.text = myProfileInfo.nickname
+        binding.tvPlayCount.text = myProfileInfo.matchCount.convertPlayCount()
         binding.btnEdit.setOnClickListener {
-            onClick(userRankItem.id)
+            onClick(myProfileInfo.memberId)
         }
     }
 

@@ -8,11 +8,13 @@ import com.yapp.bol.data.mapper.GroupMapper.toDetailItem
 import com.yapp.bol.data.mapper.GroupMapper.toDomain
 import com.yapp.bol.data.mapper.GroupMapper.toGroupDeleteItem
 import com.yapp.bol.data.mapper.GroupMapper.toImageDomain
+import com.yapp.bol.data.mapper.GroupMapper.toMemberDomain
 import com.yapp.bol.data.mapper.GroupMapper.toUserRankItem
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.GroupDetailItem
+import com.yapp.bol.domain.model.GroupMemberItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
 import com.yapp.bol.domain.model.RandomImageItem
@@ -84,5 +86,15 @@ class GroupRepositoryImpl @Inject constructor(
 
     override fun deleteGroup(groupId: String): Flow<ApiResult<String>> {
         return groupDataSource.deleteGroup(groupId).map { it.toGroupDeleteItem() }
+    }
+
+    override fun patchGroupMemberNickname(
+        groupId: Long,
+        memberId: Long,
+        newNickname: String,
+    ): Flow<ApiResult<GroupMemberItem>> {
+        return groupDataSource.patchGroupMemberNickname(groupId, memberId, newNickname).map {
+            it.toMemberDomain()
+        }
     }
 }

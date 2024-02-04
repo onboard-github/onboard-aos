@@ -7,10 +7,12 @@ import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.OwnerDTO
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.CheckGroupJoinByAccessCodeItem
 import com.yapp.bol.domain.model.GroupDetailItem
 import com.yapp.bol.domain.model.GroupItem
+import com.yapp.bol.domain.model.GroupMemberItem
 import com.yapp.bol.domain.model.GroupSearchItem
 import com.yapp.bol.domain.model.NewGroupItem
 import com.yapp.bol.domain.model.OwnerItem
@@ -145,6 +147,20 @@ object GroupMapper {
     fun ApiResult<ResponseBody>.toGroupDeleteItem(): ApiResult<String> {
         return when(this) {
             is ApiResult.Success -> ApiResult.Success(data.toString())
+            is ApiResult.Error -> ApiResult.Error(exception)
+        }
+    }
+
+    fun ApiResult<MemberDTO>.toMemberDomain(): ApiResult<GroupMemberItem> {
+        return when (this) {
+            is ApiResult.Success -> ApiResult.Success(
+                GroupMemberItem(
+                    id = data.id,
+                    role = data.role,
+                    nickname = data.nickname,
+                    level = data.level
+                ),
+            )
             is ApiResult.Error -> ApiResult.Error(exception)
         }
     }

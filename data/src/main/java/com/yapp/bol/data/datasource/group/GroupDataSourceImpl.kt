@@ -9,6 +9,8 @@ import com.yapp.bol.data.model.group.GroupSearchApiResponse
 import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import com.yapp.bol.data.model.member.GroupMemberRequest
+import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.data.remote.GroupApi
 import com.yapp.bol.domain.handle.BaseRepository
 import com.yapp.bol.domain.model.ApiResult
@@ -75,6 +77,23 @@ class GroupDataSourceImpl @Inject constructor(
         return flow {
             val result = safeApiCall {
                 groupApi.checkGroupJoinAccessCode(groupId, CheckGroupJonByAccessCodeRequest(accessCode))
+            }
+            emit(result)
+        }
+    }
+
+    override fun patchGroupMemberNickname(
+        groupId: Long,
+        memberId: Long,
+        newNickname: String,
+    ): Flow<ApiResult<MemberDTO>> {
+        return flow {
+            val result = safeApiCall {
+                groupApi.patchGroupMemberNickname(
+                    groupId.toString(),
+                    memberId.toString(),
+                    GroupMemberRequest(newNickname),
+                )
             }
             emit(result)
         }

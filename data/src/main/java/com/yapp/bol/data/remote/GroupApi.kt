@@ -9,6 +9,8 @@ import com.yapp.bol.data.model.group.GroupSearchApiResponse
 import com.yapp.bol.data.model.group.NewGroupApiResponse
 import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
+import com.yapp.bol.data.model.member.GroupMemberRequest
+import com.yapp.bol.data.model.member.MemberDTO
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -52,6 +54,13 @@ interface GroupApi {
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
     ): Response<CheckGroupJoinByAccessCodeResponse>
+
+    @PATCH("/api/v1/group/{groupId}/member/{memberId}")
+    suspend fun patchGroupMemberNickname(
+        @Path("groupId") groupId: String,
+        @Path("memberId") memberId: String,
+        @Body groupMemberRequest: GroupMemberRequest
+    ): Response<MemberDTO>
 
     @PATCH("/v1/group/{groupId}/member/{memberId}/assign-owner")
     suspend fun updateOwner(

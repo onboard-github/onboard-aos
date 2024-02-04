@@ -17,7 +17,6 @@ import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentMainBinding
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.showToast
-import com.yapp.bol.presentation.view.group.GroupActivity
 import com.yapp.bol.presentation.view.home.HomeActivity
 import com.yapp.bol.presentation.view.login.auth.KakaoTestActivity
 import com.yapp.bol.presentation.view.login.dialog.TermsDialog
@@ -140,8 +139,7 @@ class LoginFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) 
 
     private fun moveGroupSearch() {
         loginViewModel.postTerms()
-        val intent = Intent(requireActivity(), GroupActivity::class.java)
-        startActivity(intent)
+        HomeActivity.startActivity(binding.root.context, null)
         requireActivity().finish()
     }
 

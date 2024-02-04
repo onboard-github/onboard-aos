@@ -15,7 +15,6 @@ import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.dpToPx
 import com.yapp.bol.presentation.utils.loadImage
 import com.yapp.bol.presentation.utils.setStatusBarColor
-import com.yapp.bol.presentation.view.group.GroupActivity
 import com.yapp.bol.presentation.view.group.dialog.guest.GuestListDialog
 import com.yapp.bol.presentation.view.group.join.data.Margin
 import com.yapp.bol.presentation.view.group.join.type.GroupResultType
@@ -245,18 +244,7 @@ class GroupJoinFragment : Fragment() {
 
     private fun moveHomeActivity() {
         val groupId = viewModel.groupId.toLong()
-        when (activity) {
-            is GroupActivity -> {
-                HomeActivity.startActivity(binding.root.context, groupId = groupId)
-                requireActivity().finish()
-            }
-
-            is HomeActivity -> {
-                findNavController().navigate(R.id.action_groupJoinFragment_to_homeRankFragment)
-                homeViewModel.groupId = groupId
-                homeViewModel.gameId = null
-            }
-        }
+        HomeActivity.startActivity(binding.root.context, groupId)
     }
 
     private fun subscribeObservables() {

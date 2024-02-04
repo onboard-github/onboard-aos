@@ -6,7 +6,6 @@ import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseActivity
 import com.yapp.bol.presentation.databinding.ActivitySplashBinding
 import com.yapp.bol.presentation.utils.setStatusBarColor
-import com.yapp.bol.presentation.view.group.GroupActivity
 import com.yapp.bol.presentation.view.home.HomeActivity
 import com.yapp.bol.presentation.view.login.LoginActivity
 import com.yapp.bol.presentation.view.login.NetworkErrorActivity
@@ -44,8 +43,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_spl
                     finish()
                 }
                 it.mainGroupId == null -> {
-                    val intent = Intent(this, GroupActivity::class.java)
-                    startActivity(intent)
+                    HomeActivity.startActivity(binding.root.context, null)
                     finish()
                 }
                 else -> {

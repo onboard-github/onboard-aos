@@ -12,6 +12,6 @@ object Converter {
     fun Int?.convertPlayCount(): String {
         return this?.let {
             "${it}회"
-        } ?: kotlin.run { "-" }
+        } ?: kotlin.run { "0회" }
     }
 }

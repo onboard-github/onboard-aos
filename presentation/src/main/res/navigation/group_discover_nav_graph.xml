@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/group_nav_graph"
-    app:startDestination="@id/groupSearchFragment">
+    android:id="@+id/group_discover_nav_graph"
+    app:startDestination="@id/searchFragment">
 
     <fragment
-        android:id="@+id/groupSearchFragment"
+        android:id="@+id/searchFragment"
         android:name="com.yapp.bol.presentation.view.group.search.GroupSearchFragment"
-        android:label="GroupSearchFragment" >
+        android:label="searchFragment" >
         <action
             android:id="@+id/action_groupSearchFragment_to_groupJoinFragment"
             app:destination="@id/groupJoinFragment"
@@ -16,8 +16,11 @@
             app:popEnterAnim="@animator/enter_from_left"
             app:popExitAnim="@animator/exit_to_right"/>
     </fragment>
+
     <fragment
         android:id="@+id/groupJoinFragment"
         android:name="com.yapp.bol.presentation.view.group.join.GroupJoinFragment"
-        android:label="GroupJoinFragment" />
+        android:label="GroupJoinFragment" >
+    </fragment>
+
 </navigation>
