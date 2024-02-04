@@ -50,7 +50,10 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private val userRankAdapter by lazy { UserRankAdapter() }
     private val groupChangeDialog by lazy {
         GroupChangeDialog(
-            onGroupClick = { viewModel.fetchAll(it) },
+            onGroupClick = {
+                activityViewModel.groupId = it
+                viewModel.fetchAll(it)
+            },
             onSearchGroupClick = {
                 moveToGroupDiscovery()
             }
