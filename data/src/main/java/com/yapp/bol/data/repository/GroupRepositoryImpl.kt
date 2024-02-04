@@ -80,6 +80,7 @@ class GroupRepositoryImpl @Inject constructor(
 
     override fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorItem>> {
         return groupDataSource.updateOwner(groupId, memberId).map { it.mapperToBaseItem() }
+    }
 
     override fun deleteGroup(groupId: String): Flow<ApiResult<String>> {
         return groupDataSource.deleteGroup(groupId).map { it.toGroupDeleteItem() }

@@ -82,6 +82,8 @@ class GroupDataSourceImpl @Inject constructor(
 
     override fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorResponse>> = flow {
         val result = safeApiCall { groupApi.updateOwner(groupId = groupId.toString(), memberId = memberId.toString()) }
+        emit(result)
+    }
 
     override fun deleteGroup(groupId: String): Flow<ApiResult<ResponseBody>> = flow {
         val result = safeApiCall { groupApi.deleteGroup(groupId) }
