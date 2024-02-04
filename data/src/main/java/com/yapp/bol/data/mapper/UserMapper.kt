@@ -34,6 +34,9 @@ object UserMapper {
                 description = joinedGroupDTO.description,
                 organization = joinedGroupDTO.organization,
                 profileImageUrl = joinedGroupDTO.profileImageUrl,
+                memberId = joinedGroupDTO.memberId,
+                nickname = joinedGroupDTO.nickname,
+                matchCount = joinedGroupDTO.matchCount,
             )
         }
 
