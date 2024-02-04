@@ -4,6 +4,7 @@ import com.yapp.bol.domain.model.GameItem
 import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.UserRankItem
 import com.yapp.bol.domain.model.UserRankListItem
+import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
 import com.yapp.bol.presentation.model.HomeUserRankItem
@@ -81,5 +82,9 @@ object HomeMapper {
                 isCurrentGroup = it.id == currentGroupId
             )
         }
+    }
+
+    fun List<JoinedGroupItem>.toMyGroupProfileInfo(currentGroupId: Long): DrawerGroupInfoUiModel? {
+        return this.find { it.id == currentGroupId }?.let { DrawerGroupInfoUiModel.MyProfileInfo(it) }
     }
 }

@@ -12,6 +12,7 @@ import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
 import com.yapp.bol.presentation.mapper.HomeMapper.getMyInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toHomeGameItemUiModelList
+import com.yapp.bol.presentation.mapper.HomeMapper.toMyGroupProfileInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toOtherGroupInfo
 import com.yapp.bol.presentation.mapper.HomeMapper.toUserRankUiModel
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
@@ -72,8 +73,6 @@ class UserRankViewModel @Inject constructor(
     var myId: Long = GAME_USER_ID_TO_BE_SET
     var nickName: String = ""
     var currentGroupName: String = ""
-    // todo: 서버 api 만들어지면 사라질 변수.
-    private var groupInfo: List<DrawerGroupInfoUiModel>? = null
 
     fun setGameItemSelected(newPosition: Int) {
         val gameUiList: MutableList<HomeGameItemUiModel> = gameUiState.value._data?.toMutableList() ?: return
@@ -158,7 +157,10 @@ class UserRankViewModel @Inject constructor(
                 .combine(joinedGroupFlow) { _, joinedGroup ->
                     checkedApiResult(
                         apiResult = joinedGroup,
-                        success = { data -> otherGroupList.addAll(data.toOtherGroupInfo(currentGroupId = groupId)) },
+                        success = { data ->
+                            otherGroupList.addAll(data.toOtherGroupInfo(currentGroupId = groupId))
+                            data.toMyGroupProfileInfo(groupId)?.let { group.add(it) }
+                        },
                         error = { throwable -> throw Exception(throwable.code) }
                     )
                 }
@@ -180,8 +182,8 @@ class UserRankViewModel @Inject constructor(
                 .collectLatest {
                     _joinedGroupUiState.value = HomeUiState.Success(otherGroupList)
                     _gameUiState.value = HomeUiState.Success(game)
+                    _currentGroupUiState.value = HomeUiState.Success(group)
 
-                    groupInfo = group
                     fetchUserListFromServer(groupId, gameId)
                     setGameItemSelected(gameIndex)
                 }
@@ -204,24 +206,19 @@ class UserRankViewModel @Inject constructor(
         _ownerCheckUiState.value = HomeUiState.Loading
         userListFetchJob?.cancel()
 
-        val group: MutableList<DrawerGroupInfoUiModel> = mutableListOf()
         val userRank: MutableList<UserRankUiModel> = mutableListOf()
         var isOwner: Boolean = false
-
-        groupInfo?.let { group.addAll(it) }
 
         userListFetchJob = viewModelScope.launch {
             delay(USER_RANK_LOAD_FORCE_DELAY)
 
             getUserRankUseCase(groupId.toInt(), gameId.toInt())
                 .map {
-                    if (groupInfo == null) { throw NullPointerException() }
                     checkedApiResult(
                         apiResult = it,
                         success = { data ->
                             userRank.addAll(data.toUserRankUiModel(myId))
                             data.getMyInfo(myId)?.let { info ->
-                                group.add(DrawerGroupInfoUiModel.MyProfileInfo(info))
                                 isOwner = info.role == Role.OWNER
                             } ?: run { throw NullPointerException() }
                         },
@@ -230,12 +227,10 @@ class UserRankViewModel @Inject constructor(
                 }
                 .catch {
                     _userUiState.value = HomeUiState.Error(it)
-                    _currentGroupUiState.value = HomeUiState.Error(it)
                     _ownerCheckUiState.value = HomeUiState.Error(it)
                 }
                 .collectLatest {
                     _userUiState.value = HomeUiState.Success(userRank)
-                    _currentGroupUiState.value = HomeUiState.Success(group)
                     _ownerCheckUiState.value = HomeUiState.Success(isOwner)
                 }
         }

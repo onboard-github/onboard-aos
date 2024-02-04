@@ -26,7 +26,7 @@ class DrawerGroupInfoAdapter(
                 is DrawerGroupInfoUiModel.CurrentGroupInfo ->
                     (holder as DrawerCurrentGroupInfoViewHolder).bind(uiModel.groupDetailItem)
                 is DrawerGroupInfoUiModel.MyProfileInfo ->
-                    (holder as DrawerMyProfileViewHolder).bind(uiModel.userRankItem)
+                    (holder as DrawerMyProfileViewHolder).bind(uiModel.groupItem)
             }
         }
     }
@@ -49,7 +49,7 @@ class DrawerGroupInfoAdapter(
 
                     is DrawerGroupInfoUiModel.MyProfileInfo -> {
                         newItem is DrawerGroupInfoUiModel.MyProfileInfo &&
-                            oldItem.userRankItem.id == newItem.userRankItem.id
+                            oldItem.groupItem.id == newItem.groupItem.id
                     }
                 }
             }
