@@ -9,7 +9,6 @@ import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentGroupSettingBinding
 import com.yapp.bol.presentation.utils.showToast
-import com.yapp.bol.presentation.view.home.HomeActivity
 import com.yapp.bol.presentation.view.login.splash.SplashActivity
 
 class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.fragment_group_setting) {
