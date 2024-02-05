@@ -145,7 +145,7 @@ object GroupMapper {
     }
 
     fun ApiResult<ResponseBody>.toGroupDeleteItem(): ApiResult<String> {
-        return when(this) {
+        return when (this) {
             is ApiResult.Success -> ApiResult.Success(data.toString())
             is ApiResult.Error -> ApiResult.Error(exception)
         }
@@ -158,7 +158,7 @@ object GroupMapper {
                     id = data.id,
                     role = data.role,
                     nickname = data.nickname,
-                    level = data.level
+                    level = data.level,
                 ),
             )
             is ApiResult.Error -> ApiResult.Error(exception)
