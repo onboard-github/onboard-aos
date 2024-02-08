@@ -10,6 +10,7 @@ import com.yapp.bol.domain.handle.BaseRepository
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class UserDataSourceImpl @Inject constructor(
@@ -39,5 +40,9 @@ class UserDataSourceImpl @Inject constructor(
 
     override fun getMyTotalMatchCount(): Flow<ApiResult<TotalMatchCountResponse>> = flow {
         emit(safeApiCall { userApi.getMyTotalMatchCount() })
+    }
+
+    override fun deleteAccount(): Flow<ApiResult<ResponseBody>> = flow {
+        emit(safeApiCall { userApi.deleteAccount() })
     }
 }

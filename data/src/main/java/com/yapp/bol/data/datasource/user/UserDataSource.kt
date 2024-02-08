@@ -7,6 +7,7 @@ import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.data.model.user.UserResponse
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 
 interface UserDataSource {
 
@@ -19,4 +20,6 @@ interface UserDataSource {
     fun getUserInfo(): Flow<ApiResult<UserResponse>>
 
     fun getMyTotalMatchCount(): Flow<ApiResult<TotalMatchCountResponse>>
+
+    fun deleteAccount(): Flow<ApiResult<ResponseBody>>
 }
