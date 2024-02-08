@@ -110,7 +110,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun moveToGroupDiscovery() {
-        // todo 잘 돌아가는지 체크 필요
         Intent(binding.root.context, GroupDiscoveryActivity::class.java).apply {
             startActivity(this)
         }
