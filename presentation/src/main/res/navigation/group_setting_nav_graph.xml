@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/group_setting_nav_graph"
+    app:startDestination="@id/groupSettingFragment">
+
+    <fragment
+        android:id="@+id/groupSettingFragment"
+        android:name="com.yapp.bol.presentation.view.setting.group.GroupSettingFragment"
+        android:label="GroupSettingFragment" >
+        <action
+            android:id="@+id/action_groupSettingFragment_to_changeOwnerFragment"
+            app:destination="@id/changeOwnerFragment"
+            app:enterAnim="@animator/enter_from_right"
+            app:exitAnim="@animator/exit_to_left"
+            app:popEnterAnim="@animator/enter_from_left"
+            app:popExitAnim="@animator/exit_to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeOwnerFragment"
+        android:name="com.yapp.bol.presentation.view.setting.group.ChangeOwnerFragment"
+        android:label="ChangeOwnerFragment" />
+</navigation>

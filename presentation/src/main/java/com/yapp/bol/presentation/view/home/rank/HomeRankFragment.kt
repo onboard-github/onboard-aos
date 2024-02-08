@@ -56,7 +56,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             },
             onSearchGroupClick = {
                 moveToGroupDiscovery()
-            }
+            },
         )
     }
 
@@ -89,7 +89,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         activityViewModel.groupId?.let {
             viewModel.fetchAll(
                 initGroupId = activityViewModel.groupId,
-                initGameId = activityViewModel.gameId
+                initGameId = activityViewModel.gameId,
             )
         }
     }
@@ -134,7 +134,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             layoutManager = UserRankGameLayoutManager(
                 binding.rvGameList.context,
                 LinearLayoutManager.HORIZONTAL,
-                false
+                false,
             )
 
             adapter = userRankGameAdapter
@@ -219,7 +219,8 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         val quitDialog = CancelAndActionDialog.create {
             topMessage = resources.getString(R.string.group_quit_dialog_top)
             bottomMessage = String.format(
-                resources.getString(R.string.group_quit_dialog_bottom), viewModel.currentGroupName
+                resources.getString(R.string.group_quit_dialog_bottom),
+                viewModel.currentGroupName,
             )
             boldStringOfBottomMessage = listOf(viewModel.currentGroupName)
             actionButtonText = "나가기"
@@ -294,7 +295,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private val userRankSnackBar: SnackBarHomeReload by lazy {
         SnackBarHomeReload.make(
             view = binding.root,
-            onClick = { viewModel.fetchUserList() }
+            onClick = { viewModel.fetchUserList() },
         )
     }
 
@@ -343,7 +344,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private val gameSnackBar: SnackBarHomeReload by lazy {
         SnackBarHomeReload.make(
             view = binding.root,
-            onClick = { viewModel.fetchAll(initGroupId = activityViewModel.groupId) }
+            onClick = { viewModel.fetchAll(initGroupId = activityViewModel.groupId) },
         )
     }
 

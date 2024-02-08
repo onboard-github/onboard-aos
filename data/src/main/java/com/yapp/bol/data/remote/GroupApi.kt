@@ -1,5 +1,6 @@
 package com.yapp.bol.data.remote
 
+import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.group.CheckGroupJonByAccessCodeRequest
 import com.yapp.bol.data.model.group.NewGroupApiRequest
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
@@ -10,8 +11,10 @@ import com.yapp.bol.data.model.group.RandomImageResponse
 import com.yapp.bol.data.model.group.UserRankApiResponse
 import com.yapp.bol.data.model.member.GroupMemberRequest
 import com.yapp.bol.data.model.member.MemberDTO
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -46,7 +49,7 @@ interface GroupApi {
         @Path("groupId") groupId: Long
     ): Response<GroupDetailResponse>
 
-    @POST("v1/group/{groupId}/accessCode")
+    @POST("/v1/group/{groupId}/accessCode")
     suspend fun checkGroupJoinAccessCode(
         @Path("groupId") groupId: String,
         @Body accessCode: CheckGroupJonByAccessCodeRequest,
@@ -58,4 +61,15 @@ interface GroupApi {
         @Path("memberId") memberId: String,
         @Body groupMemberRequest: GroupMemberRequest
     ): Response<MemberDTO>
+
+    @PATCH("/v1/group/{groupId}/member/{memberId}/assign-owner")
+    suspend fun updateOwner(
+        @Path("groupId") groupId: String,
+        @Path("memberId") memberId: String,
+    ): Response<ErrorResponse>
+
+    @DELETE("/v1/group/{groupId}")
+    suspend fun deleteGroup(
+        @Path("groupId") groupId: String,
+    ): Response<ResponseBody>
 }

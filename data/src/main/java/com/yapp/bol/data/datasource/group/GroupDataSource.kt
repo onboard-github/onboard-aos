@@ -1,5 +1,6 @@
 package com.yapp.bol.data.datasource.group
 
+import com.yapp.bol.data.model.base.ErrorResponse
 import com.yapp.bol.data.model.group.CheckGroupJoinByAccessCodeResponse
 import com.yapp.bol.data.model.group.GroupDetailResponse
 import com.yapp.bol.data.model.group.GroupSearchApiResponse
@@ -9,6 +10,7 @@ import com.yapp.bol.data.model.group.UserRankApiResponse
 import com.yapp.bol.data.model.member.MemberDTO
 import com.yapp.bol.domain.model.ApiResult
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 
 interface GroupDataSource {
 
@@ -40,6 +42,12 @@ interface GroupDataSource {
         groupId: String,
         accessCode: String,
     ): Flow<ApiResult<CheckGroupJoinByAccessCodeResponse>>
+
+    fun updateOwner(groupId: Int, memberId: Int): Flow<ApiResult<ErrorResponse>>
+
+    fun deleteGroup(
+        groupId: String,
+    ): Flow<ApiResult<ResponseBody>>
 
     fun patchGroupMemberNickname(
         groupId: Long,
