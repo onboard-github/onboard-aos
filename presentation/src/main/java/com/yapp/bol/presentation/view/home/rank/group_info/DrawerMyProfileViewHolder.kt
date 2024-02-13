@@ -10,21 +10,21 @@ import com.yapp.bol.presentation.utils.Converter.convertPlayCount
 
 class DrawerMyProfileViewHolder(
     private val binding: ViewHomeDrawerUserProfileBinding,
-    private val onClick: (Long) -> Unit
+    private val onClick: (Long, String) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(myProfileInfo: JoinedGroupItem) {
         binding.tvName.text = myProfileInfo.nickname
         binding.tvPlayCount.text = myProfileInfo.matchCount.convertPlayCount()
         binding.btnEdit.setOnClickListener {
-            onClick(myProfileInfo.memberId)
+            onClick(myProfileInfo.memberId, myProfileInfo.nickname)
         }
     }
 
     companion object {
         fun create(
             parent: ViewGroup,
-            onClick: (Long) -> Unit
+            onClick: (Long, String) -> Unit
         ): DrawerMyProfileViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val view = inflater.inflate(R.layout.view_home_drawer_user_profile, parent, false)

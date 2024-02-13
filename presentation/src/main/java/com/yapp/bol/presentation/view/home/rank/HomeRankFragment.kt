@@ -34,6 +34,7 @@ import com.yapp.bol.presentation.view.home.rank.group_info.DrawerGroupInfoAdapte
 import com.yapp.bol.presentation.view.home.rank.user.UserRankAdapter
 import com.yapp.bol.presentation.view.login.splash.SplashActivity
 import com.yapp.bol.presentation.view.match.MatchActivity
+import com.yapp.bol.presentation.view.mypage.ProfileSettingActivity
 import com.yapp.bol.presentation.view.setting.UpgradeActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
@@ -182,13 +183,15 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun setDrawerAdapter() {
-        // todo : 마이페이지 그룹 프로필 수정 화면으로 바로 이동해주어야 할듯.
-        val otherGroupOnClick: (Long) -> Unit = { id ->
-            activityViewModel.groupId = id
-            viewModel.apply {
-                binding.drawerLayout.closeDrawer(GravityCompat.END)
-                fetchAll(initGroupId = id)
-            }
+        val userProfileEditOnClick: (Long, String) -> Unit = { id, name ->
+            ProfileSettingActivity.startActivity(
+                context = binding.root.context,
+                groupId = viewModel.groupId.toInt(),
+                groupName = viewModel.currentGroupName,
+                nickname = name,
+                memberId = id.toInt()
+            )
+            binding.drawerLayout.closeDrawer(GravityCompat.END)
         }
 
         val copyButtonOnClick: (String) -> Unit = {
@@ -197,7 +200,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         }
 
         drawerGroupInfoAdapter = DrawerGroupInfoAdapter(
-            userProfileEditOnClick = otherGroupOnClick,
+            userProfileEditOnClick = userProfileEditOnClick,
             copyButtonOnClick = copyButtonOnClick,
         )
         binding.rvGroupInfo.adapter = drawerGroupInfoAdapter

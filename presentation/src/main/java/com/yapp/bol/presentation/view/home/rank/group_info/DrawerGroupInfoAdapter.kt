@@ -8,7 +8,7 @@ import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 
 class DrawerGroupInfoAdapter(
-    private val userProfileEditOnClick: (Long) -> Unit,
+    private val userProfileEditOnClick: (Long, String) -> Unit,
     private val copyButtonOnClick: (String) -> Unit,
 ) : ListAdapter<DrawerGroupInfoUiModel, RecyclerView.ViewHolder>(diff) {
 
