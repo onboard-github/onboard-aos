@@ -4,12 +4,10 @@ import com.yapp.bol.data.datasource.user.UserDataSource
 import com.yapp.bol.data.mapper.UserMapper.toBoardDomain
 import com.yapp.bol.data.mapper.UserMapper.toJoinedGroupItem
 import com.yapp.bol.data.mapper.UserMapper.totalMatchCountToDomain
-import com.yapp.bol.data.mapper.UserMapper.toJoinedGroupV2Item
 import com.yapp.bol.data.mapper.UserMapper.toUserDomain
 import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.JoinedGroupItem
-import com.yapp.bol.domain.model.JoinedGroupV2Item
 import com.yapp.bol.domain.model.OnBoardingItem
 import com.yapp.bol.domain.model.user.TotalMatchCountItem
 import com.yapp.bol.domain.model.user.UserItem
@@ -28,9 +26,6 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getJoinedGroup(): Flow<ApiResult<List<JoinedGroupItem>>> =
         userDataSource.getJoinedGroup().map { it.toJoinedGroupItem() }
-
-    override fun getJoinedGroupV2(): Flow<ApiResult<List<JoinedGroupV2Item>>> =
-        userDataSource.getJoinedGroupV2().map { it.toJoinedGroupV2Item() }
 
     override fun getOnBoard(): Flow<ApiResult<OnBoardingItem>> {
         return userDataSource.getOnBoard().map { it.toBoardDomain() }
