@@ -1,7 +1,6 @@
 package com.yapp.bol.data.remote
 
 import com.yapp.bol.data.model.user.JoinedGroupResponse
-import com.yapp.bol.data.model.user.JoinedGroupV2Response
 import com.yapp.bol.data.model.user.OnBoardResponse
 import com.yapp.bol.data.model.user.TotalMatchCountResponse
 import com.yapp.bol.data.model.user.UserRequest
@@ -20,9 +19,6 @@ interface UserApi {
 
     @GET("/v1/user/me/group")
     suspend fun getJoinedGroup(): Response<JoinedGroupResponse>
-
-    @GET("/v2/user/me/group")
-    suspend fun getJoinedGroupV2(): Response<JoinedGroupV2Response>
 
     @GET("/v1/user/me/onboarding")
     suspend fun getOnboard(): Response<OnBoardResponse>

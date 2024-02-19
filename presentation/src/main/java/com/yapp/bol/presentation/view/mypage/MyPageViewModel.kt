@@ -38,7 +38,7 @@ class MyPageViewModel @Inject constructor(
 
     fun getJoinedGroup() {
         viewModelScope.launch {
-            getJoinedGroupUseCase.fetchV2().collectLatest {
+            getJoinedGroupUseCase().collectLatest {
                 checkedApiResult(
                     apiResult = it,
                     success = { data ->
