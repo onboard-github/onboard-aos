@@ -99,6 +99,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun initUi(isGroupIdExist: Boolean) {
         binding.apply {
             viewRankLoading.isVisible = isGroupIdExist
+            ivGameListSample.isVisible = !isGroupIdExist
             rvUserRank.isVisible = isGroupIdExist
             rvGameList.visibility = if (isGroupIdExist) { View.VISIBLE } else { View.INVISIBLE }
             viewNoJoinedGroup.root.isVisible = !isGroupIdExist
