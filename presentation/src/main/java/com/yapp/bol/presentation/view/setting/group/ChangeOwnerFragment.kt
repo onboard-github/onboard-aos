@@ -91,7 +91,9 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
                 .launchIn(this)
         }
         binding.btnBack.setOnClickListener {
-            findNavController().popBackStack()
+            if (findNavController().popBackStack().not()) {
+                requireActivity().finish()
+            }
         }
 
         val scrollListener = object : RecyclerView.OnScrollListener() {

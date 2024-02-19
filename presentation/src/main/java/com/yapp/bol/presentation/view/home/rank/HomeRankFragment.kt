@@ -36,6 +36,7 @@ import com.yapp.bol.presentation.view.login.splash.SplashActivity
 import com.yapp.bol.presentation.view.match.MatchActivity
 import com.yapp.bol.presentation.view.mypage.ProfileSettingActivity
 import com.yapp.bol.presentation.view.setting.UpgradeActivity
+import com.yapp.bol.presentation.view.setting.group.GroupSettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.cancel
 import com.yapp.bol.designsystem.R as designsystemR
@@ -110,7 +111,6 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     }
 
     private fun moveToGroupDiscovery() {
-        // todo 잘 돌아가는지 체크 필요
         Intent(binding.root.context, GroupDiscoveryActivity::class.java).apply {
             startActivity(this)
         }
@@ -208,8 +208,16 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private fun setDrawerGroupSettingButton() {
         binding.viewHeader.btnGroupSetting.setOnClickListener {
-            // todo group setting 연결
+            moveToGroupSetting()
         }
+    }
+
+    private fun moveToGroupSetting() {
+        GroupSettingActivity.startActivity(
+            context = binding.root.context,
+            groupId = viewModel.groupId,
+            groupName = viewModel.currentGroupName,
+        )
     }
 
     private fun bindGroupQuitButton() {
@@ -239,29 +247,40 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
                         startActivity(intent)
                         requireActivity().finish()
                     }
+
                     is GroupQuitUiModel.FailCauseOwner -> {
                         this.cancel()
                         val dialog = makeFailCause(GroupQuitFailCase.Owner) {
-                            // todo 이동하기 로직 연결
+                            moveToChangeGroupOwner()
                         }
                         fragmentManager?.let { manager -> dialog.show(manager, null) }
                     }
+
                     is GroupQuitUiModel.FailUnknownError -> {
                         this.cancel()
                         binding.root.context.showToast("알 수 없는 에러가 발생했습니다. 다음에 다시 시도해주세요.")
                     }
+
                     is GroupQuitUiModel.FailCauseOnlyOneMember -> {
                         this.cancel()
-                        val dialog = makeFailCause(GroupQuitFailCase.OnlyMember) {
-                            // todo 이동하기 로직 연결
-                        }
+                        val dialog = makeFailCause(GroupQuitFailCase.OnlyMember) { moveToGroupSetting() }
                         fragmentManager?.let { manager -> dialog.show(manager, null) }
                     }
+
                     is GroupQuitUiModel.Loading -> {}
                 }
             }
         }
         return quitDialog
+    }
+
+    private fun moveToChangeGroupOwner() {
+        GroupSettingActivity.startActivity(
+            context = binding.root.context,
+            groupId = viewModel.groupId,
+            groupName = viewModel.currentGroupName,
+            purpose = GroupSettingActivity.Companion.Purpose.GROUP_CHANGE_OWNER,
+        )
     }
 
     private fun makeFailCause(case: GroupQuitFailCase, onAction: () -> Unit): CancelAndActionDialog {
