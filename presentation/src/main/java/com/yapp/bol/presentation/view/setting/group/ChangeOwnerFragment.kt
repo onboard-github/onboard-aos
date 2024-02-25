@@ -52,7 +52,7 @@ class ChangeOwnerFragment : BaseFragment<FragmentChangeOwnerBinding>(R.layout.fr
 
     private val completeDialog by lazy {
         OneButtonDialog.create {
-            topMessage = "관리자 ${changeOwnerViewModel.selectedMember?.nickname}님으로 변경했습니다.\n서비스를 다식 시작합니다."
+            topMessage = "관리자 ${changeOwnerViewModel.selectedMember?.nickname}님으로 변경했습니다.\n서비스를 다시 시작합니다."
             boldStringOfBottomMessage = listOf(changeOwnerViewModel.selectedMember?.nickname ?: "")
         }.apply {
             setOnButtonClickListener {

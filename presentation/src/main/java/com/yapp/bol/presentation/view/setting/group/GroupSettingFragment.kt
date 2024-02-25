@@ -26,7 +26,7 @@ class GroupSettingFragment : BaseFragment<FragmentGroupSettingBinding>(R.layout.
 
     private val completeDialog by lazy {
         OneButtonDialog.create {
-            topMessage = "${activityViewModel.groupName} 모임을 삭제했습니다.\n서비스를 다식 시작합니다."
+            topMessage = "${activityViewModel.groupName} 모임을 삭제했습니다.\n서비스를 다시 시작합니다."
             boldStringsOfTopMessage = listOf(activityViewModel.groupName)
         }.apply {
             setOnButtonClickListener {
