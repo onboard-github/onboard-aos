@@ -10,6 +10,7 @@ import com.yapp.bol.presentation.databinding.FragmentQuitBinding
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.login.splash.SplashActivity
+import com.yapp.bol.presentation.view.setting.group.GroupSettingActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,6 +38,12 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
         }
     }
 
+    private fun openFailQuitDialog(changeOwnerGroupId: Long, changeOwnerGroupName: String) {
+        activity?.supportFragmentManager?.let { fragmentManager ->
+            makeQuitFailDialog(changeOwnerGroupId, changeOwnerGroupName).show(fragmentManager, null)
+        }
+    }
+
     private fun makeQuitDialog(): CancelAndActionDialog {
         val quitDialog = CancelAndActionDialog.create {
             topMessage = resources.getString(R.string.delete_account_dialog_top)
@@ -49,16 +56,28 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
         return quitDialog
     }
 
-    private fun makeQuitFailDialog(): CancelAndActionDialog {
+    private fun makeQuitFailDialog(changeOwnerGroupId: Long, changeOwnerGroupName: String): CancelAndActionDialog {
+        val quitFailGuideTopMsg = String.format(
+            resources.getString(R.string.delete_account_fail_dialog_top),
+            changeOwnerGroupName
+        )
+        val quitFailGuideTopBoldMsg = listOf(
+            resources.getString(R.string.delete_account_fail_dialog_top_bold),
+            changeOwnerGroupName
+        )
         val failDialog = CancelAndActionDialog.create {
-            topMessage = resources.getString(R.string.delete_account_fail_dialog_top)
-            boldStringsOfTopMessage = listOf(resources.getString(R.string.delete_account_fail_dialog_top_bold))
+            topMessage = quitFailGuideTopMsg
+            boldStringsOfTopMessage = quitFailGuideTopBoldMsg
             bottomMessage = resources.getString(R.string.delete_account_fail_dialog_bottom)
             actionButtonText = resources.getString(R.string.delete_account_fail_dialog_action)
         }
 
         failDialog.setOnActionClickListener {
-            // todo 그룹 오너 이관 프로세스 구현 필요
+            GroupSettingActivity.startActivity(
+                context = binding.root.context,
+                groupId = changeOwnerGroupId,
+                groupName = changeOwnerGroupName
+            )
         }
 
         return failDialog
@@ -85,7 +104,7 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
                 }
 
                 is SettingUiState.FailCauseOwner -> {
-                    makeQuitFailDialog()
+                    openFailQuitDialog(uiState.groupId, uiState.groupName)
                 }
             }
         }
