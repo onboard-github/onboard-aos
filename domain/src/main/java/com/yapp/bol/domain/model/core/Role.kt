@@ -7,7 +7,7 @@ sealed class Role(val string: String) {
 
     companion object {
         fun toRole(rawRole: String): Role {
-            return when(rawRole) {
+            return when (rawRole) {
                 OWNER.string -> OWNER
                 HOST.string -> HOST
                 GUEST.string -> GUEST
