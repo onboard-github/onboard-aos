@@ -94,11 +94,11 @@
     <!-- 회원 탈퇴 -->
     <string name="quit_text_1">탈퇴 시 온보드에서 회원님의 계정 및 개인정보(닉네임, 모임 참여 내역)는 즉시 삭제되며, 삭제된 데이터는 복구할 수 없습니다.</string>
     <string name="quit_text_2">게임 기록 데이터는 다른 회원의 서비스 이용에 영향을 미칠 수 있는 정보입니다. 해당 데이터는 타인이 식별 불가능 하도록 처리되어 보관될 수 있습니다.</string>
-    <string name="delete_account_dialog_top">탈퇴 시 온보드에서 회원님의 랭킹과 게임 기록이 모두 삭제되며, 취소 또는 복구는 불가능합니다.</string>
+    <string name="delete_account_dialog_top">탈퇴 시 온보드에서 회원님의 랭킹과 게임 기록이\n모두 삭제되며, 취소 또는 복구는 불가능합니다.</string>
     <string name="delete_account_dialog_bottom">정말 탈퇴하시겠습니까?</string>
     <string name="delete_account_dialog_action">탈퇴하기</string>
-    <string name="delete_account_fail_dialog_top">현재 모임의 관리자입니다.
-모임 설정 > 관리자 변경 메뉴에서 다른 멤버를
+    <string name="delete_account_fail_dialog_top">현재 %s 모임의 관리자입니다.\n
+모임 설정 > 관리자 변경 메뉴에서 다른 멤버를\n
 관리자로 지정한 후 다시 시도해 주세요.</string>
     <string name="delete_account_fail_dialog_top_bold">모임 설정 > 관리자 변경</string>
     <string name="delete_account_fail_dialog_bottom">관리자 변경 페이지로 이동하시겠습니까?</string>
