@@ -80,8 +80,12 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
                     moveSplashActivity()
                 }
 
-                is SettingUiState.Error -> {
+                is SettingUiState.UnknownError -> {
                     requireContext().showToast("현재 요청하신 작업을 수행할 수 없습니다. 다시 시도해 주십시오.")
+                }
+
+                is SettingUiState.FailCauseOwner -> {
+                    makeQuitFailDialog()
                 }
             }
         }
