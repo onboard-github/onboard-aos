@@ -58,5 +58,4 @@ class QuitViewModel @Inject constructor(
             )
         }
     }
-
 }

@@ -91,9 +91,7 @@ class QuitFragment : BaseFragment<FragmentQuitBinding>(R.layout.fragment_quit) {
     private fun observeQuitUiState() {
         viewModel.userUiState.collectWithLifecycle(this) { uiState ->
             when (uiState) {
-                is SettingUiState.Loading -> {
-
-                }
+                is SettingUiState.Loading -> {}
 
                 is SettingUiState.Success -> {
                     moveSplashActivity()
