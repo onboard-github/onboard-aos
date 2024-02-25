@@ -8,6 +8,7 @@ import com.yapp.bol.data.model.user.UserResponse
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.OnBoardingItem
+import com.yapp.bol.domain.model.core.Role
 import com.yapp.bol.domain.model.user.DeleteAccountItem
 import com.yapp.bol.domain.model.user.TotalMatchCountItem
 import com.yapp.bol.domain.model.user.UserItem
@@ -32,6 +33,7 @@ object UserMapper {
                 memberId = joinedGroupDTO.memberId,
                 nickname = joinedGroupDTO.nickname,
                 matchCount = joinedGroupDTO.matchCount,
+                role = Role.toRole(rawRole = joinedGroupDTO.role)
             )
         }
 
