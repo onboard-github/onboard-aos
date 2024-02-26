@@ -9,4 +9,5 @@ data class JoinedGroupDTO(
     val memberId: Long,
     val nickname: String,
     val matchCount: Int,
+    val role: String,
 )

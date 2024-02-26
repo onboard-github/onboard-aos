@@ -1,6 +1,7 @@
 package com.yapp.bol.data.repository
 
 import com.yapp.bol.data.datasource.user.UserDataSource
+import com.yapp.bol.data.mapper.UserMapper.deleteAccountToDomain
 import com.yapp.bol.data.mapper.UserMapper.toBoardDomain
 import com.yapp.bol.data.mapper.UserMapper.toJoinedGroupItem
 import com.yapp.bol.data.mapper.UserMapper.totalMatchCountToDomain
@@ -9,6 +10,7 @@ import com.yapp.bol.data.model.user.UserRequest
 import com.yapp.bol.domain.model.ApiResult
 import com.yapp.bol.domain.model.JoinedGroupItem
 import com.yapp.bol.domain.model.OnBoardingItem
+import com.yapp.bol.domain.model.user.DeleteAccountItem
 import com.yapp.bol.domain.model.user.TotalMatchCountItem
 import com.yapp.bol.domain.model.user.UserItem
 import com.yapp.bol.domain.repository.UserRepository
@@ -39,5 +41,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getMyTotalMatchCount(): Flow<ApiResult<TotalMatchCountItem>> {
         return userDataSource.getMyTotalMatchCount().map { it.totalMatchCountToDomain() }
+    }
+
+    override fun deleteAccount(): Flow<DeleteAccountItem> {
+        return userDataSource.deleteAccount().map { it.deleteAccountToDomain() }
     }
 }
