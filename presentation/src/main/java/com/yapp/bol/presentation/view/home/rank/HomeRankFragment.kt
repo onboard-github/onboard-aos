@@ -105,7 +105,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             viewNoJoinedGroup.root.isVisible = !isGroupIdExist
             viewRankLoading.isVisible = isGroupIdExist
             loadingGroupName.isVisible = isGroupIdExist
-            btnGroupName.visibility = if(isGroupIdExist) { View.VISIBLE } else { View.INVISIBLE }
+            btnGroupName.visibility = if (isGroupIdExist) { View.VISIBLE } else { View.INVISIBLE }
             btnMeatBall.isVisible = isGroupIdExist
             btnCreateGroup.isVisible = isGroupIdExist
         }
