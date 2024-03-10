@@ -72,7 +72,9 @@ class UserRankViewModel @Inject constructor(
     private val _groupQuitUiState = MutableStateFlow<GroupQuitUiModel>(GroupQuitUiModel.Loading)
     val groupQuitUiState: StateFlow<GroupQuitUiModel> = _groupQuitUiState
 
-    private val _checkNicknameValidation = MutableStateFlow<NicknameValidationUiModel>(NicknameValidationUiModel.Loading)
+    private val _checkNicknameValidation = MutableStateFlow<NicknameValidationUiModel>(
+        NicknameValidationUiModel.Loading
+    )
     val checkNicknameValidation: StateFlow<NicknameValidationUiModel> = _checkNicknameValidation
 
     private val _checkAddingGuestCompleted = MutableStateFlow<HomeUiState<Boolean>>(HomeUiState.Loading)
@@ -277,11 +279,11 @@ class UserRankViewModel @Inject constructor(
         groupId: Long
     ) = viewModelScope.launch {
         addGuestMemberUseCase.addGuest(groupId, guestName).collectLatest {
-            when(it) {
+            when (it) {
                 is BaseStateItem.Success -> { _checkAddingGuestCompleted.value = HomeUiState.Success(true) }
-                is BaseStateItem.Error -> { _checkAddingGuestCompleted.value = HomeUiState.Error(
-                    IllegalStateException(it.exception.message)
-                ) }
+                is BaseStateItem.Error -> {
+                    _checkAddingGuestCompleted.value = HomeUiState.Error(IllegalStateException(it.exception.message))
+                }
             }
         }
     }

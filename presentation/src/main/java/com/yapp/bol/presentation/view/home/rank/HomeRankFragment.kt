@@ -52,9 +52,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private lateinit var drawerGroupInfoAdapter: DrawerGroupInfoAdapter
     private lateinit var userRankGameAdapter: UserRankGameAdapter
-    private val userRankAdapter by lazy { UserRankAdapter(
-        onGuestAddingButtonClicked = { guestAddDialog.show() }
-    ) }
+    private val userRankAdapter by lazy {
+        UserRankAdapter(onGuestAddingButtonClicked = { guestAddDialog.show() })
+    }
     private val guestAddDialog by lazy { createAddingGuestDialog() }
     private val groupChangeDialog by lazy {
         GroupChangeDialog(
@@ -516,10 +516,9 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         guestAddDialog.show()
     }
 
-
     private fun createAddingGuestDialog() = HomeGuestAddDialog(
         context = requireContext(),
-        onAddGuestButtonClicked = { guestName ->  viewModel.addGuestMember(guestName) },
+        onAddGuestButtonClicked = { guestName -> viewModel.addGuestMember(guestName) },
         scope = viewLifecycleOwner.lifecycleScope,
         checkNicknameValidation = { guestName -> viewModel.checkNicknameValidation(guestName) },
     )
