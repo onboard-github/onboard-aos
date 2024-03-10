@@ -22,7 +22,7 @@ interface MemberDataSource {
         nickname: String? = null,
     ): Flow<ApiResult<MemberListResponse>>
 
-    suspend fun postGuestMember(groupId: Int, nickname: String)
+    suspend fun postGuestMember(groupId: Int, nickname: String): Flow<ApiResult<ResponseBody>>
 
     fun joinGroup(
         groupId: String,

@@ -36,7 +36,7 @@ interface MemberApi {
     suspend fun postGuestMember(
         @Path("groupId") groupId: Int,
         @Body guestAddApiRequest: GuestAddApiRequest
-    )
+    ): Response<ResponseBody>
 
     @POST("v1/group/{groupId}/host")
     suspend fun joinGroup(
