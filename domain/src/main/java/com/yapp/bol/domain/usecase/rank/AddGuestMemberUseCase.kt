@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AddGuestMemberUseCase @Inject constructor(
-  private val repository: MemberRepository
+    private val repository: MemberRepository
 ) {
     suspend fun addGuest(groupId: Long, guestNickname: String) = repository.postGuestMember(
         groupId.toInt(), guestNickname
@@ -16,5 +16,4 @@ class AddGuestMemberUseCase @Inject constructor(
     fun checkNicknameValidation(groupId: Long, nickname: String): Flow<ApiResult<NicknameValidItem>> {
         return repository.getValidateNickName(groupId.toInt(), nickname)
     }
-
 }
