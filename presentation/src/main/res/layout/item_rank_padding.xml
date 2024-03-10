@@ -5,8 +5,31 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent">
+
+        <TextView
+            android:id="@+id/btn_guest_add"
+            android:layout_width="204dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="6dp"
+            android:text="+ 임시 멤버 추가"
+            android:background="@drawable/bg_gray_05_radius_56dp"
+            android:textColor="@color/Gray_10"
+            android:gravity="center"
+            android:textAppearance="@style/Typography.Body5_M"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_guest_add"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
