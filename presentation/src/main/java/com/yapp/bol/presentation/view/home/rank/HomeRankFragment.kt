@@ -105,9 +105,17 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
             viewNoJoinedGroup.root.isVisible = !isGroupIdExist
             viewRankLoading.isVisible = isGroupIdExist
             loadingGroupName.isVisible = isGroupIdExist
-            btnGroupName.isVisible = isGroupIdExist
+            btnGroupName.visibility = if (isGroupIdExist) { View.VISIBLE } else { View.INVISIBLE }
             btnMeatBall.isVisible = isGroupIdExist
             btnCreateGroup.isVisible = isGroupIdExist
+        }
+
+        if (isGroupIdExist.not()) { setSampleImageInteraction() }
+    }
+
+    private fun setSampleImageInteraction() {
+        binding.ivGameListSample.setOnClickListener {
+            requireContext().showToast("모임에 가입한 후 사용할 수 있습니다.")
         }
     }
 
