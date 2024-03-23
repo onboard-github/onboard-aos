@@ -278,6 +278,7 @@ class UserRankViewModel @Inject constructor(
         guestName: String,
         groupId: Long
     ) = viewModelScope.launch {
+        _checkAddingGuestCompleted.value = HomeUiState.Loading
         addGuestMemberUseCase.addGuest(groupId, guestName).collectLatest {
             when (it) {
                 is BaseStateItem.Success -> { _checkAddingGuestCompleted.value = HomeUiState.Success(true) }
