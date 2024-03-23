@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -18,12 +19,14 @@ import com.yapp.bol.presentation.base.BaseFragment
 import com.yapp.bol.presentation.databinding.FragmentHomeRankBinding
 import com.yapp.bol.presentation.model.DrawerGroupInfoUiModel
 import com.yapp.bol.presentation.model.GroupQuitUiModel
+import com.yapp.bol.presentation.model.NicknameValidationUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.collectWithLifecycle
 import com.yapp.bol.presentation.utils.copyToClipboard
 import com.yapp.bol.presentation.utils.setStatusBarColor
 import com.yapp.bol.presentation.utils.showToast
 import com.yapp.bol.presentation.view.group.GroupDiscoveryActivity
+import com.yapp.bol.presentation.view.home.guest.HomeGuestAddDialog
 import com.yapp.bol.presentation.view.home.HomeUiState
 import com.yapp.bol.presentation.view.home.HomeViewModel
 import com.yapp.bol.presentation.view.home.rank.UserRankViewModel.Companion.RV_SELECTED_POSITION_RESET
@@ -49,7 +52,10 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
 
     private lateinit var drawerGroupInfoAdapter: DrawerGroupInfoAdapter
     private lateinit var userRankGameAdapter: UserRankGameAdapter
-    private val userRankAdapter by lazy { UserRankAdapter() }
+    private val userRankAdapter by lazy {
+        UserRankAdapter(onGuestAddingButtonClicked = { guestAddDialog.show() })
+    }
+    private val guestAddDialog by lazy { createAddingGuestDialog() }
     private val groupChangeDialog by lazy {
         GroupChangeDialog(
             onGroupClick = {
@@ -71,6 +77,8 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         observeJoinedGroupUiState(groupChangeDialog)
         observeUserRankUiState(userRankAdapter)
         observeOwnerCheckUiState()
+        observeTypedGuestNameValidation()
+        observeAddingGuestResponse()
 
         setStatusBarColor(this@HomeRankFragment.requireActivity(), designsystemR.color.Gray_15, isIconBlack = false)
 
@@ -79,6 +87,7 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
         setFloatingButton()
         setGroupNameButton()
         setGroupSearchButton()
+        setAddingGuestEventHandler()
     }
 
     override fun onStart() {
@@ -504,6 +513,54 @@ class HomeRankFragment : BaseFragment<FragmentHomeRankBinding>(R.layout.fragment
     private fun setGroupSearchButton() {
         binding.viewNoJoinedGroup.btnGroupSearch.setOnClickListener {
             moveToGroupDiscovery()
+        }
+    }
+
+    private fun setAddingGuestEventHandler() {
+        binding.viewRankNotFound.btnGuestAdd.setOnClickListener { showAddingGuestDialog() }
+    }
+
+    private fun showAddingGuestDialog() {
+        guestAddDialog.show()
+    }
+
+    private fun createAddingGuestDialog() = HomeGuestAddDialog(
+        context = requireContext(),
+        onAddGuestButtonClicked = { guestName -> viewModel.addGuestMember(guestName) },
+        scope = viewLifecycleOwner.lifecycleScope,
+        checkNicknameValidation = { guestName -> viewModel.checkNicknameValidation(guestName) },
+    )
+
+    private fun observeTypedGuestNameValidation() {
+        viewModel.checkNicknameValidation.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                NicknameValidationUiModel.InvalidCauseDuplicated -> {
+                    guestAddDialog.setTypedNicknameInvalid(isDuplicated = true)
+                }
+                NicknameValidationUiModel.InvalidCauseIncorrectFormat -> {
+                    guestAddDialog.setTypedNicknameInvalid(isDuplicated = false)
+                }
+                NicknameValidationUiModel.Loading -> { /* todo loading progress bar needed */ }
+                NicknameValidationUiModel.UnknownError -> {
+                    requireContext().showToast("네트워크 오류가 발생했습니다. 다음에 다시 시도해주세요.")
+                }
+                NicknameValidationUiModel.Valid -> guestAddDialog.setTypedNicknameValid()
+            }
+        }
+    }
+
+    private fun observeAddingGuestResponse() {
+        viewModel.checkAddingGuestCompleted.collectWithLifecycle(this) { uiState ->
+            when (uiState) {
+                is HomeUiState.Error -> {
+                    requireContext().showToast("네트워크 오류가 발생했습니다. 다음에 다시 시도해주세요.")
+                }
+                HomeUiState.Loading -> { /* todo loading progress bar showing...*/ }
+                is HomeUiState.Success -> {
+                    guestAddDialog.dismiss()
+                    viewModel.fetchUserList()
+                }
+            }
         }
     }
 

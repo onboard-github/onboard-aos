@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import com.yapp.bol.presentation.R
 import com.yapp.bol.presentation.model.UserRankUiModel
 
-class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(diff) {
+class UserRankAdapter(
+    private val onGuestAddingButtonClicked: () -> Unit
+) : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(diff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         if (viewType == R.layout.item_rank_1_to_3) {
@@ -17,7 +19,7 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
         } else if (viewType == R.layout.item_rank_no_rank) {
             UserNoRankItemViewHolder.create(parent)
         } else {
-            UserRankPaddingViewHolder.create(parent)
+            UserRankPaddingViewHolder.create(parent, onGuestAddingButtonClicked)
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -31,7 +33,7 @@ class UserRankAdapter : ListAdapter<UserRankUiModel, RecyclerView.ViewHolder>(di
                     (holder as UserRankItemAfter4ViewHolder).bind(uiModel.item)
 
                 is UserRankUiModel.UserRankPadding ->
-                    (holder as UserRankPaddingViewHolder)
+                    (holder as UserRankPaddingViewHolder).bind()
 
                 is UserRankUiModel.UserRankNoRank ->
                     (holder as UserNoRankItemViewHolder)

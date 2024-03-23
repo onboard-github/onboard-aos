@@ -37,8 +37,12 @@ class MemberDataSourceImpl @Inject constructor(
         emit(result)
     }
 
-    override suspend fun postGuestMember(groupId: Int, nickname: String) {
-        memberApi.postGuestMember(groupId, GuestAddApiRequest(nickname))
+    override suspend fun postGuestMember(
+        groupId: Int,
+        nickname: String
+    ): Flow<ApiResult<ResponseBody>> = flow {
+        val result = safeApiCall { memberApi.postGuestMember(groupId, GuestAddApiRequest(nickname)) }
+        emit(result)
     }
 
     override fun joinGroup(

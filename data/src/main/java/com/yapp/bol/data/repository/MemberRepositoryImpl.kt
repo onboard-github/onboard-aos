@@ -11,6 +11,8 @@ import com.yapp.bol.domain.model.ErrorItem
 import com.yapp.bol.domain.model.MatchCountInGroupItem
 import com.yapp.bol.domain.model.MemberItems
 import com.yapp.bol.domain.model.NicknameValidItem
+import com.yapp.bol.domain.model.core.BaseStateItem
+import com.yapp.bol.domain.model.core.BaseStateItem.Success.toBaseItem
 import com.yapp.bol.domain.model.user.GroupQuitItem
 import com.yapp.bol.domain.repository.MemberRepository
 import kotlinx.coroutines.flow.Flow
@@ -38,8 +40,11 @@ class MemberRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postGuestMember(groupId: Int, nickname: String) {
-        memberDataSource.postGuestMember(groupId, nickname)
+    override suspend fun postGuestMember(
+        groupId: Int,
+        nickname: String
+    ): Flow<BaseStateItem> {
+        return memberDataSource.postGuestMember(groupId, nickname).map { it.toBaseItem() }
     }
 
     override fun joinGroup(

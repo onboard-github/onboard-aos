@@ -73,6 +73,7 @@ class UserRankItem1to3ViewHolder(
             tvPlayCount.visibility = View.INVISIBLE
             llWinRate.visibility = View.INVISIBLE
             imgDice.visibility = View.INVISIBLE
+            imgDiceGuest.visibility = View.INVISIBLE
             ivRecentUser.visibility = View.GONE
         }
 
@@ -109,6 +110,7 @@ class UserRankItem1to3ViewHolder(
             tvPlayCount.visibility = View.INVISIBLE
             llWinRate.visibility = View.INVISIBLE
             imgDice.visibility = View.INVISIBLE
+            imgDiceGuest.visibility = View.INVISIBLE
             ivRecentUser.visibility = View.GONE
         }
 
@@ -145,6 +147,7 @@ class UserRankItem1to3ViewHolder(
             tvPlayCount.visibility = View.INVISIBLE
             llWinRate.visibility = View.INVISIBLE
             imgDice.visibility = View.INVISIBLE
+            imgDiceGuest.visibility = View.INVISIBLE
             ivRecentUser.visibility = View.GONE
         }
 

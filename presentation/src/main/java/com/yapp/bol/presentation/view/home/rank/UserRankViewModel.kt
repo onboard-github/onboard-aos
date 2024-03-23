@@ -3,11 +3,13 @@ package com.yapp.bol.presentation.view.home.rank
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yapp.bol.domain.model.Role
+import com.yapp.bol.domain.model.core.BaseStateItem
 import com.yapp.bol.domain.model.user.GroupQuitItem
 import com.yapp.bol.domain.usecase.group.GetGroupDetailUseCase
 import com.yapp.bol.domain.usecase.group.GetJoinedGroupUseCase
 import com.yapp.bol.domain.usecase.group.QuitGroupUseCase
 import com.yapp.bol.domain.usecase.login.GetMyInfoUseCase
+import com.yapp.bol.domain.usecase.rank.AddGuestMemberUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankGameListUseCase
 import com.yapp.bol.domain.usecase.rank.GetUserRankUseCase
 import com.yapp.bol.presentation.mapper.HomeMapper.getMyInfo
@@ -20,6 +22,7 @@ import com.yapp.bol.presentation.model.GameItemWithSelected
 import com.yapp.bol.presentation.model.GroupQuitUiModel
 import com.yapp.bol.presentation.model.HomeGameItemUiModel
 import com.yapp.bol.presentation.model.JoinedGroupUiModel
+import com.yapp.bol.presentation.model.NicknameValidationUiModel
 import com.yapp.bol.presentation.model.UserRankUiModel
 import com.yapp.bol.presentation.utils.checkedApiResult
 import com.yapp.bol.presentation.utils.config.HomeConfig.USER_RANK_LOAD_FORCE_DELAY
@@ -44,6 +47,7 @@ class UserRankViewModel @Inject constructor(
     private val getGroupDetailUseCase: GetGroupDetailUseCase,
     private val getMyInfoUseCase: GetMyInfoUseCase,
     private val quitGroupUseCase: QuitGroupUseCase,
+    private val addGuestMemberUseCase: AddGuestMemberUseCase,
 ) : ViewModel() {
 
     private var userListFetchJob: Job? = null
@@ -67,6 +71,14 @@ class UserRankViewModel @Inject constructor(
 
     private val _groupQuitUiState = MutableStateFlow<GroupQuitUiModel>(GroupQuitUiModel.Loading)
     val groupQuitUiState: StateFlow<GroupQuitUiModel> = _groupQuitUiState
+
+    private val _checkNicknameValidation = MutableStateFlow<NicknameValidationUiModel>(
+        NicknameValidationUiModel.Loading
+    )
+    val checkNicknameValidation: StateFlow<NicknameValidationUiModel> = _checkNicknameValidation
+
+    private val _checkAddingGuestCompleted = MutableStateFlow<HomeUiState<Boolean>>(HomeUiState.Loading)
+    val checkAddingGuestCompleted: StateFlow<HomeUiState<Boolean>> = _checkAddingGuestCompleted
 
     var groupId: Long = GAME_USER_ID_TO_BE_SET
     var gameId: Long = GAME_USER_ID_TO_BE_SET
@@ -255,6 +267,52 @@ class UserRankViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun addGuestMember(guestName: String) {
+        addGuestToServer(guestName, this.groupId)
+    }
+
+    private fun addGuestToServer(
+        guestName: String,
+        groupId: Long
+    ) = viewModelScope.launch {
+        _checkAddingGuestCompleted.value = HomeUiState.Loading
+        addGuestMemberUseCase.addGuest(groupId, guestName).collectLatest {
+            when (it) {
+                is BaseStateItem.Success -> { _checkAddingGuestCompleted.value = HomeUiState.Success(true) }
+                is BaseStateItem.Error -> {
+                    _checkAddingGuestCompleted.value = HomeUiState.Error(IllegalStateException(it.exception.message))
+                }
+            }
+        }
+    }
+
+    fun checkNicknameValidation(nickname: String) {
+        queryNicknameValidationToServer(nickname, groupId)
+    }
+
+    private fun queryNicknameValidationToServer(nickname: String, groupId: Long) = viewModelScope.launch {
+        _checkNicknameValidation.value = NicknameValidationUiModel.Loading
+
+        addGuestMemberUseCase.checkNicknameValidation(groupId, nickname).collectLatest {
+            checkedApiResult(
+                apiResult = it,
+                success = { data ->
+                    when (data.isAvailable) {
+                        true -> { _checkNicknameValidation.value = NicknameValidationUiModel.Valid }
+                        false -> {
+                            _checkNicknameValidation.value = when (data.reason) {
+                                "DUPLICATED_NICKNAME" -> { NicknameValidationUiModel.InvalidCauseDuplicated }
+                                "INVALID_NICKNAME" -> { NicknameValidationUiModel.InvalidCauseIncorrectFormat }
+                                else -> { NicknameValidationUiModel.UnknownError }
+                            }
+                        }
+                    }
+                },
+                error = { _checkNicknameValidation.value = NicknameValidationUiModel.UnknownError }
+            )
         }
     }
 
